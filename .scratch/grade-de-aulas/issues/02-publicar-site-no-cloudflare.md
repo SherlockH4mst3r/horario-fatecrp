@@ -1,0 +1,10 @@
+# 02: Publicar o site no Cloudflare
+
+**O que entrega:** o site do ticket 01 abre por uma URL pública, ligado ao Supabase de produção, com deploy a cada push na `main`.
+**Bloqueado por:** 01, 10
+**Status:** ready-for-human
+
+- [ ] O projeto Supabase de produção tem a migração e o seed aplicados.
+- [ ] Um push na `main` gera o build Flutter Web e publica no Cloudflare Pages.
+- [ ] A URL pública mostra a grade semeada no celular e no computador.
+- [ ] Só a URL e a anon key do Supabase vão no build; a service key não aparece no repo nem no bundle.
