@@ -22,6 +22,7 @@ Future<void> main() async {
       painelAdmin: PainelAdmin(
         sessao: SessaoSimulada(email: 'admin@fatecrp.local', senha: 'admin123'),
         importacao: ImportacaoDeGrade(repositorio),
+        edicao: EdicaoDeAulas(repositorio),
         escolherPlanilha: _escolherPlanilhaNoNavegador,
       ),
     ),
@@ -60,6 +61,8 @@ class AppDaGrade extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: temaFatec(Brightness.light),
       darkTheme: temaFatec(Brightness.dark),
+      builder: (context, tela) =>
+          Theme(data: comFonteDaTela(Theme.of(context), MediaQuery.sizeOf(context).width), child: tela!),
       routes: {
         '/': (_) => TelaDaGrade(consulta: consulta, relogio: relogio),
         if (painelAdmin case final painel?) '/admin': (_) => painel,

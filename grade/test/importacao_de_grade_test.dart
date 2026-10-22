@@ -146,7 +146,10 @@ void main() {
     });
 
     test('salas escritas de jeitos diferentes viram salas diferentes, e a prévia mostra as duas', () async {
-      final previa = await importacao.importar(planilha([linha(sala: 'Lab 1'), linha(sala: 'lab 1')]), semestreLetivo);
+      final previa = await importacao.importar(
+        planilha([linha(sala: 'Lab 1'), linha(dia: 'Terça', sala: 'lab 1')]),
+        semestreLetivo,
+      );
 
       expect(previa.erros, isEmpty);
       expect(previa.salas.map((s) => s.sala), ['Lab 1', 'lab 1']);
@@ -229,7 +232,7 @@ void main() {
   group('planilha com erro', () {
     test('campo vazio gera erro com o número da linha e o nome da coluna', () async {
       final previa = await importacao.importar(
-        planilha([linha(), linha(sala: ''), linha(dia: 'Terça', professor: '  ')]),
+        planilha([linha(), linha(dia: 'Quarta', sala: ''), linha(dia: 'Terça', professor: '  ')]),
         semestreLetivo,
       );
 
@@ -330,6 +333,38 @@ void main() {
 
       expect(previa.turmas.map((t) => t.curso), ['ADS', 'Gestão']);
       expect(previa.salas.map((s) => s.sala), ['A10', 'Lab 1']);
+    });
+
+    test('a mesma turma com duas aulas ao mesmo tempo gera erro nas duas linhas', () async {
+      final previa = await importacao.importar(
+        planilha([linha(), linha(disciplina: 'Redes', inicio: '20:00', fim: '21:40', sala: 'S15')]),
+        semestreLetivo,
+      );
+
+      expect(erros(previa), ['2 Início', '3 Início']);
+    });
+
+    test('o conflito diz com qual aula, e em que linha, a aula se choca', () async {
+      final previa = await importacao.importar(
+        planilha([linha(), linha(semestre: '5', disciplina: 'Redes', inicio: '20:00', fim: '21:40')]),
+        semestreLetivo,
+      );
+
+      final erro = previa.erros.first;
+      expect(erro.mensagem, 'a sala Lab 1 já tem aula nesse horário: Redes, ADS – Noite – 5º, 20:00–21:40');
+      expect(erro.outraLinha, 3);
+    });
+
+    test('o mesmo professor em duas aulas ao mesmo tempo é aviso, e a prévia ainda pode ser publicada', () async {
+      final previa = await importacao.importar(
+        planilha([linha(), linha(semestre: '5', disciplina: 'Redes', sala: 'S15')]),
+        semestreLetivo,
+      );
+
+      expect(previa.erros, isEmpty);
+      expect(previa.podePublicar, isTrue);
+      expect([for (final aviso in previa.avisos) '${aviso.linha} ${aviso.coluna}'], ['2 Professor', '3 Professor']);
+      expect(previa.avisos.first.mensagem, contains('Rita Alves já tem aula nesse horário: Redes'));
     });
 
     test('aulas na mesma sala que só se encostam não geram erro', () async {

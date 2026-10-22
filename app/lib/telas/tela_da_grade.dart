@@ -87,7 +87,7 @@ class _TelaDaGradeState extends State<TelaDaGrade> {
                   GradeNaoPublicada() => _avisoGradeNaoPublicada,
                   TurmaSemAulas() => const _Aviso('Esta turma não tem aulas nesta grade.'),
                   AulasDaTurma aulas =>
-                    MediaQuery.sizeOf(context).width >= _larguraDaGradeDeHorarios
+                    MediaQuery.sizeOf(context).width >= larguraDeComputador
                         ? _GradeDeHorarios(aulas)
                         : _ListaAPartirDeHoje(aulas),
                 },
@@ -104,9 +104,6 @@ String _salaComAndar(Aula aula) =>
     aula.andares.isEmpty ? 'Sala ${aula.sala}' : 'Sala ${aula.sala} · ${aula.andaresPorExtenso}';
 
 const _avisoGradeNaoPublicada = _Aviso('Grade ainda não publicada');
-
-/// A partir desta largura de tela cabem seis dias lado a lado; abaixo dela, a grade vira lista.
-const _larguraDaGradeDeHorarios = 840.0;
 
 /// Espera a consulta: mostra o progresso enquanto carrega e um aviso se ela falhar.
 class _AoCarregar<T> extends StatelessWidget {
@@ -274,13 +271,9 @@ class _BlocoDaAula extends StatelessWidget {
   Widget build(BuildContext context) {
     final textos = Theme.of(context).textTheme;
     final corDoTexto = coresDoTextoNoCartao(Theme.of(context));
-    // Na grade do computador o texto vai 2px acima do padrão do tema, para ler de longe.
     Text linha(String texto, TextStyle? estilo, {bool secundaria = false}) => Text(
       texto,
-      style: estilo?.copyWith(
-        color: secundaria ? corDoTexto.secundaria : corDoTexto.principal,
-        fontSize: (estilo.fontSize ?? 14) + 2,
-      ),
+      style: estilo?.copyWith(color: secundaria ? corDoTexto.secundaria : corDoTexto.principal),
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
     );

@@ -4,25 +4,38 @@ import 'package:flutter/material.dart';
 import 'package:grade/grade.dart';
 
 import '../leitor_de_planilha.dart';
+import '../telas/avisos.dart';
 import '../telas/moldura.dart';
+import 'correcao_de_aulas.dart';
 import 'sessao.dart';
 
 /// Abre a janela de arquivos e devolve o .xlsx escolhido, ou `null` se o admin desistir.
 typedef EscolherPlanilha = Future<Uint8List?> Function();
 
-/// O painel `/admin`: entrada do admin e importação da planilha do semestre letivo.
+/// O painel `/admin`: entrada do admin, importação da planilha do semestre letivo e correção de aulas avulsas.
 class PainelAdmin extends StatefulWidget {
-  const PainelAdmin({super.key, required this.sessao, required this.importacao, required this.escolherPlanilha});
+  const PainelAdmin({
+    super.key,
+    required this.sessao,
+    required this.importacao,
+    required this.edicao,
+    required this.escolherPlanilha,
+  });
 
   final Sessao sessao;
   final ImportacaoDeGrade importacao;
+  final EdicaoDeAulas edicao;
   final EscolherPlanilha escolherPlanilha;
 
   @override
   State<PainelAdmin> createState() => _PainelAdminState();
 }
 
+enum _Area { importar, corrigir }
+
 class _PainelAdminState extends State<PainelAdmin> {
+  _Area _area = _Area.importar;
+
   Future<void> _sair() async {
     await widget.sessao.sair();
     setState(() {});
@@ -50,9 +63,28 @@ class _PainelAdminState extends State<PainelAdmin> {
           ColunaDeConteudo(
             children: [
               const SizedBox(height: 24),
-              if (ativa)
-                _Importacao(importacao: widget.importacao, escolherPlanilha: widget.escolherPlanilha)
-              else
+              if (ativa) ...[
+                SegmentedButton<_Area>(
+                  segments: const [
+                    ButtonSegment(
+                      value: _Area.importar,
+                      label: Text('Importar planilha'),
+                      icon: Icon(Icons.upload_file),
+                    ),
+                    ButtonSegment(value: _Area.corrigir, label: Text('Corrigir aulas'), icon: Icon(Icons.edit_note)),
+                  ],
+                  selected: {_area},
+                  onSelectionChanged: (escolha) => setState(() => _area = escolha.single),
+                ),
+                const SizedBox(height: 24),
+                switch (_area) {
+                  _Area.importar => _Importacao(
+                    importacao: widget.importacao,
+                    escolherPlanilha: widget.escolherPlanilha,
+                  ),
+                  _Area.corrigir => CorrecaoDeAulas(edicao: widget.edicao),
+                },
+              ] else
                 _Entrada(sessao: widget.sessao, aoEntrar: () => setState(() {})),
             ],
           ),
@@ -215,31 +247,53 @@ class _ImportacaoState extends State<_Importacao> {
           ? const _Inicio()
           : _NaPrevia(await widget.importacao.importar(lerPlanilhaXlsx(arquivo), semestreLetivo));
     } on PlanilhaIlegivel catch (erro) {
-      _mostrar(_Inicio(problema: 'Não deu para ler o arquivo: ${erro.mensagem}.'));
+      _mostrar(_Inicio(problema: 'Não deu para ler o arquivo: ${erro.mensagem}.'), aviso: TipoDeAviso.alerta);
       return;
     } catch (_) {
-      _mostrar(const _Inicio(problema: 'Não deu para ler a grade publicada, para comparar. Tente de novo.'));
+      _mostrar(
+        const _Inicio(problema: 'Não deu para ler a grade publicada, para comparar. Tente de novo.'),
+        aviso: TipoDeAviso.erro,
+      );
       return;
     }
     _mostrar(proxima);
+    if (proxima case _NaPrevia(:final previa) when previa.erros.isNotEmpty && mounted) {
+      final quantos = previa.erros.length;
+      mostrarAviso(
+        context,
+        'A planilha tem $quantos ${quantos == 1 ? 'erro' : 'erros'}. Corrija no Excel e importe de novo.',
+        TipoDeAviso.alerta,
+      );
+    }
   }
 
   Future<void> _publicar(Previa previa) async {
     setState(() => _ocupado = true);
     try {
       await widget.importacao.publicar(previa);
-      _mostrar(_Publicada(previa.semestreLetivo));
     } catch (_) {
-      _mostrar(_NaPrevia(previa, problema: 'Não deu para publicar. A grade publicada não mudou; tente de novo.'));
+      _mostrar(
+        _NaPrevia(previa, problema: 'Não deu para publicar. A grade publicada não mudou; tente de novo.'),
+        aviso: TipoDeAviso.erro,
+      );
+      return;
     }
+    _mostrar(_Publicada(previa.semestreLetivo));
+    if (mounted) mostrarAviso(context, 'Grade ${previa.semestreLetivo.rotulo} publicada.', TipoDeAviso.sucesso);
   }
 
-  void _mostrar(_Etapa etapa) {
+  /// Troca de etapa; com [aviso], repete o problema da etapa num snackbar dessa cor.
+  void _mostrar(_Etapa etapa, {TipoDeAviso? aviso}) {
     if (!mounted) return;
     setState(() {
       _ocupado = false;
       _etapa = etapa;
     });
+    final problema = switch (etapa) {
+      _Inicio(:final problema) || _NaPrevia(:final problema) => problema,
+      _Publicada() => null,
+    };
+    if (aviso != null && problema != null) mostrarAviso(context, problema, aviso);
   }
 
   void _recomecar() => setState(() => _etapa = const _Inicio());
@@ -349,11 +403,19 @@ class _VistaDaPrevia extends StatelessWidget {
         ),
         if (erros.isNotEmpty) ...[
           const SizedBox(height: 16),
-          for (final ErroNaPlanilha(:linha, :coluna, :mensagem) in erros)
+          for (final erro in erros)
             Padding(
               padding: const EdgeInsets.only(bottom: 4),
-              child: Text('Linha $linha · $coluna: $mensagem', style: TextStyle(color: cores.error)),
+              child: Text(_apontamento(erro), style: TextStyle(color: cores.error)),
             ),
+        ],
+        if (previa.avisos.isNotEmpty) ...[
+          const SizedBox(height: 16),
+          FaixaDeAviso(
+            tipo: TipoDeAviso.alerta,
+            titulo: 'Confira antes de publicar (não impede a publicação):',
+            detalhes: [for (final aviso in previa.avisos) _apontamento(aviso)],
+          ),
         ],
         if (previa.diferencas case final diferencas?) ...[const SizedBox(height: 24), _OQueMuda(diferencas)],
         const SizedBox(height: 24),
@@ -381,6 +443,12 @@ class _VistaDaPrevia extends StatelessWidget {
       ],
     );
   }
+}
+
+/// "Linha 2 · Sala: a sala B12 já tem aula nesse horário: ... (conflita com a linha 6)".
+String _apontamento(ErroNaPlanilha erro) {
+  final ErroNaPlanilha(:linha, :coluna, :mensagem, :outraLinha) = erro;
+  return 'Linha $linha · $coluna: $mensagem${outraLinha == null ? '' : ' (conflita com a linha $outraLinha)'}';
 }
 
 class _Etiquetas extends StatelessWidget {

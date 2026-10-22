@@ -1,5 +1,23 @@
 import 'package:flutter/material.dart';
 
+/// A partir desta largura de tela, o site se comporta como no computador (grade de horários, fonte maior).
+const larguraDeComputador = 840.0;
+
+/// Texto corrido de 16px no computador e de 14px no celular; os demais tamanhos acompanham.
+ThemeData comFonteDaTela(ThemeData tema, double larguraDaTela) {
+  final computador = larguraDaTela >= larguraDeComputador;
+  final corpo = computador ? 16.0 : 14.0;
+  final textos = tema.textTheme;
+  return tema.copyWith(
+    textTheme: textos.copyWith(
+      bodyLarge: textos.bodyLarge?.copyWith(fontSize: corpo),
+      bodyMedium: textos.bodyMedium?.copyWith(fontSize: corpo),
+      bodySmall: textos.bodySmall?.copyWith(fontSize: corpo - 2),
+      titleSmall: textos.titleSmall?.copyWith(fontSize: corpo),
+    ),
+  );
+}
+
 /// Vermelho da marca Fatec, aproximado da logo (não há manual público com o código oficial).
 const vermelhoFatec = Color(0xFFB20000);
 

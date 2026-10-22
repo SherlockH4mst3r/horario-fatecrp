@@ -64,6 +64,8 @@ O admin entra num painel com login. Lá ele importa a planilha do semestre letiv
 28. Como admin, quero que horário inválido (formato errado, ou fim antes do início) bloqueie a importação, para não publicar aula impossível.
 29. Como admin, quero que dia fora de segunda a sábado bloqueie a importação, para pegar erro de digitação.
 30. Como admin, quero que duas aulas na mesma sala, no mesmo dia e em horários sobrepostos bloqueiem a importação, para não mandar duas turmas ao mesmo lugar.
+30a. Como admin, quero que duas aulas da mesma turma em horários sobrepostos bloqueiem a importação, porque o aluno não pode estar em dois lugares.
+30b. Como admin, quero ser avisado (sem bloquear) quando o mesmo professor tem duas aulas ao mesmo tempo, porque às vezes é de propósito e às vezes é erro de digitação.
 31. Como admin, quero ver na prévia as turmas e as salas encontradas, para notar nomes digitados de dois jeitos ("ADS" × "Análise e Desenv.").
 32. Como admin, quero ver na prévia o que muda em relação à grade atual (aulas novas, removidas e alteradas), para conferir o impacto.
 33. Como admin, quero confirmar a publicação só quando a prévia não tem erros, para nunca publicar grade inválida.

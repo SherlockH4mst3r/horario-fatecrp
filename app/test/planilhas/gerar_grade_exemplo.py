@@ -4,6 +4,7 @@ Uso (com openpyxl instalado): python gerar_grade_exemplo.py <pasta de saída>
 - grade_exemplo.xlsx: válida, com horas em células de hora, números, coluna de observação, célula de texto vazia
   e linha vazia.
 - grade_com_erros.xlsx: um erro de cada tipo que o admin costuma cometer.
+- grade_com_avisos.xlsx: válida, mas com o mesmo professor em duas aulas ao mesmo tempo.
 """
 import sys
 from datetime import time
@@ -43,4 +44,8 @@ salvar(pasta / "grade_com_erros.xlsx", [
     ["ADS", "Noite", 3, "Quarta", "19h", time(20, 40), "Redes", "Paulo Nunes", "Lab 2", "2º andar", "horário"],
     ["ADS", "Noite", 5, "Segunda", time(20, 0), time(21, 30), "Mobile", "Marta Reis", "B12", "1º andar", "conflito com a linha 2"],
     ["ADS", "Noite", 5, "Terça", time(20, 50), time(22, 30), "Testes", "Paulo Nunes", "B12", "Térreo", "B12 em outro andar"],
+])
+salvar(pasta / "grade_com_avisos.xlsx", [
+    ["ADS", "Noite", 1, "Segunda", time(19, 0), time(20, 40), "Algoritmos", "Carlos E", "B12", "1º andar", None],
+    ["SBM", "Noite", 2, "Segunda", time(19, 0), time(20, 40), "Int D A Comp", "Carlos E", "L3", "3º andar", None],
 ])

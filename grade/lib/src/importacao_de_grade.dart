@@ -12,11 +12,14 @@ class Planilha {
 
 /// Um problema da planilha, apontado como o admin o encontra no Excel: linha e coluna.
 class ErroNaPlanilha {
-  const ErroNaPlanilha({required this.linha, required this.coluna, required this.mensagem});
+  const ErroNaPlanilha({required this.linha, required this.coluna, required this.mensagem, this.outraLinha});
 
   final int linha;
   final String coluna;
   final String mensagem;
+
+  /// Num conflito, a linha da outra aula envolvida.
+  final int? outraLinha;
 }
 
 typedef SalaEncontrada = ({String sala, Andar andar});
@@ -26,6 +29,7 @@ class Previa {
   Previa._({
     required this.semestreLetivo,
     required this.erros,
+    required this.avisos,
     required this.turmas,
     required this.salas,
     required this.diferencas,
@@ -36,6 +40,10 @@ class Previa {
 
   /// Em ordem de linha e, na mesma linha, de coluna.
   final List<ErroNaPlanilha> erros;
+
+  /// Como os erros, mas não impedem a publicação: o mesmo professor em duas aulas ao mesmo tempo, que pode ser
+  /// de propósito (a grade oficial da Fatec tem casos assim).
+  final List<ErroNaPlanilha> avisos;
 
   /// As turmas das linhas legíveis, mesmo as que têm erro em outra coluna; sem repetição e em ordem.
   final List<Turma> turmas;
@@ -67,7 +75,9 @@ class ImportacaoDeGrade {
     final (:colunas, errosDoCabecalho: erros) = _lerCabecalho(planilha.cabecalho);
     final linhas = erros.isEmpty ? _lerLinhas(planilha.linhas, colunas) : const <_LinhaLida>[];
     erros.addAll([for (final linha in linhas) ...linha.erros]);
-    erros.addAll(_conflitosDeSala(linhas));
+    final aoMesmoTempo = _aoMesmoTempo(linhas).toList();
+    erros.addAll(_conflitosDeSala(aoMesmoTempo));
+    erros.addAll(_conflitosDeTurma(aoMesmoTempo));
     erros.addAll(_salasEmAndaresDiferentes(linhas));
 
     final aulas = [for (final linha in linhas) ?linha.aula];
@@ -80,6 +90,7 @@ class ImportacaoDeGrade {
     return Previa._(
       semestreLetivo: semestreLetivo,
       erros: [for (final erro in _emOrdem(erros)) erro.paraOAdmin],
+      avisos: [for (final aviso in _emOrdem(_professorEmDoisLugares(aoMesmoTempo).toList())) aviso.paraOAdmin],
       diferencas: diferencas,
       turmas: {for (final linha in linhas) ?linha.turma}.toList()..sort(),
       salas: {for (final linha in linhas) ...linha.salasEncontradas}.toList()..sort(_porSalaEAndar),
@@ -121,21 +132,54 @@ class ImportacaoDeGrade {
         }),
   ];
 
-  /// Duas aulas na mesma sala, no mesmo dia, com horários que se sobrepõem. Encostar (uma acaba quando a
-  /// outra começa) não é conflito. Vale também para linhas com erro em outra coluna.
-  Iterable<_Erro> _conflitosDeSala(List<_LinhaLida> linhas) sync* {
-    final ocupadas = [
+  /// Os pares de linhas com aula no mesmo dia e horários que se sobrepõem. Encostar (uma acaba quando a outra
+  /// começa) não é sobrepor. Vale também para linhas com erro em outra coluna.
+  Iterable<(_LinhaLida, _LinhaLida)> _aoMesmoTempo(List<_LinhaLida> linhas) sync* {
+    final comHorario = [
       for (final linha in linhas)
-        if (linha.ocupacao case final ocupacao?) (linha: linha.numero, ocupacao: ocupacao),
+        if (linha.dia != null && linha.inicio != null && linha.fim != null) linha,
     ];
-    for (final (i, (linha: linhaA, ocupacao: a)) in ocupadas.indexed) {
-      for (final (linha: linhaB, ocupacao: b) in ocupadas.skip(i + 1)) {
-        final sobrepoe = a.inicio.compareTo(b.fim) < 0 && b.inicio.compareTo(a.fim) < 0;
-        if (a.sala == b.sala && a.dia == b.dia && sobrepoe) {
-          yield _Erro(linhaA, _Coluna.sala, 'a sala ${a.sala} já tem aula nesse horário (linha $linhaB)');
-          yield _Erro(linhaB, _Coluna.sala, 'a sala ${b.sala} já tem aula nesse horário (linha $linhaA)');
-        }
+    for (final (i, a) in comHorario.indexed) {
+      for (final b in comHorario.skip(i + 1)) {
+        if (a.dia == b.dia && a.inicio!.compareTo(b.fim!) < 0 && b.inicio!.compareTo(a.fim!) < 0) yield (a, b);
       }
+    }
+  }
+
+  /// Duas aulas na mesma sala ao mesmo tempo: erro nas duas linhas.
+  Iterable<_Erro> _conflitosDeSala(List<(_LinhaLida, _LinhaLida)> aoMesmoTempo) => _nasDuasLinhas(
+    aoMesmoTempo,
+    coluna: _Coluna.sala,
+    seConflitam: (a, b) => a.sala != null && a.sala == b.sala,
+    mensagem: (linha, outra) => 'a sala ${linha.sala} já tem aula nesse horário: ${outra.descricao()}',
+  );
+
+  /// A mesma turma em duas aulas ao mesmo tempo: o aluno não pode estar nos dois lugares.
+  Iterable<_Erro> _conflitosDeTurma(List<(_LinhaLida, _LinhaLida)> aoMesmoTempo) => _nasDuasLinhas(
+    aoMesmoTempo,
+    coluna: _Coluna.inicio,
+    seConflitam: (a, b) => a.turma != null && a.turma == b.turma,
+    mensagem: (linha, outra) =>
+        'a turma ${linha.turma!.rotulo} já tem aula nesse horário: ${outra.descricao(comTurma: false)}',
+  );
+
+  Iterable<_Erro> _professorEmDoisLugares(List<(_LinhaLida, _LinhaLida)> aoMesmoTempo) => _nasDuasLinhas(
+    aoMesmoTempo,
+    coluna: _Coluna.professor,
+    seConflitam: (a, b) => a.professor != null && a.professor == b.professor,
+    mensagem: (linha, outra) => 'o professor ${linha.professor} já tem aula nesse horário: ${outra.descricao()}',
+  );
+
+  Iterable<_Erro> _nasDuasLinhas(
+    List<(_LinhaLida, _LinhaLida)> aoMesmoTempo, {
+    required _Coluna coluna,
+    required bool Function(_LinhaLida a, _LinhaLida b) seConflitam,
+    required String Function(_LinhaLida linha, _LinhaLida outra) mensagem,
+  }) sync* {
+    for (final (a, b) in aoMesmoTempo) {
+      if (!seConflitam(a, b)) continue;
+      yield _Erro(a.numero, coluna, mensagem(a, b), outraLinha: b.numero);
+      yield _Erro(b.numero, coluna, mensagem(b, a), outraLinha: a.numero);
     }
   }
 
@@ -172,6 +216,9 @@ class ImportacaoDeGrade {
   }
 }
 
+/// As colunas que a planilha precisa ter, como o admin as escreve no cabeçalho.
+final colunasDaPlanilha = [for (final coluna in _Coluna.values) coluna.nome];
+
 /// As colunas da planilha, na ordem em que os erros de uma mesma linha aparecem.
 enum _Coluna {
   curso('Curso'),
@@ -191,13 +238,15 @@ enum _Coluna {
 }
 
 class _Erro implements Comparable<_Erro> {
-  _Erro(this.linha, this.coluna, this.mensagem);
+  _Erro(this.linha, this.coluna, this.mensagem, {this.outraLinha});
 
   final int linha;
   final _Coluna coluna;
   final String mensagem;
+  final int? outraLinha;
 
-  ErroNaPlanilha get paraOAdmin => ErroNaPlanilha(linha: linha, coluna: coluna.nome, mensagem: mensagem);
+  ErroNaPlanilha get paraOAdmin =>
+      ErroNaPlanilha(linha: linha, coluna: coluna.nome, mensagem: mensagem, outraLinha: outraLinha);
 
   @override
   int compareTo(_Erro other) =>
@@ -331,6 +380,13 @@ class _LinhaLida {
     ],
     _ => const [],
   };
+
+  /// A aula da linha para uma mensagem de conflito: "Redes, ADS – Noite – 5º, 20:00–21:40".
+  String descricao({bool comTurma = true}) => [
+    ?disciplina,
+    if (comTurma) ?turma?.rotulo,
+    if ((inicio, fim) case (final inicio?, final fim?)) '$inicio–$fim',
+  ].join(', ');
 
   /// Onde e quando a linha ocupa uma sala, se ela diz isso sem erro.
   ({String sala, DiaDaSemana dia, Horario inicio, Horario fim})? get ocupacao => switch ((sala, dia, inicio, fim)) {

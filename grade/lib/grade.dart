@@ -3,6 +3,7 @@ library;
 
 export 'src/consulta_de_grade.dart';
 export 'src/diferencas.dart';
+export 'src/edicao_de_aulas.dart';
 export 'src/grade.dart';
 export 'src/importacao_de_grade.dart';
 export 'src/memoria_da_turma.dart';

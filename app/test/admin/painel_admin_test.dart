@@ -7,6 +7,7 @@ import 'package:grade/grade.dart';
 import 'package:grade_app/admin/painel_admin.dart';
 import 'package:grade_app/admin/sessao.dart';
 import 'package:grade_app/tema.dart';
+import 'package:grade_app/telas/avisos.dart';
 
 Uint8List planilha(String nome) => File('test/planilhas/$nome').readAsBytesSync();
 
@@ -37,6 +38,7 @@ void main() {
         home: PainelAdmin(
           sessao: sessao,
           importacao: ImportacaoDeGrade(repositorioQueFalha ?? repositorio),
+          edicao: EdicaoDeAulas(repositorioQueFalha ?? repositorio),
           escolherPlanilha: () async {
             escolhas++;
             return arquivo;
@@ -97,6 +99,17 @@ void main() {
     });
   });
 
+  testWidgets('o painel alterna entre importar a planilha e corrigir aulas', (tester) async {
+    await abrirPainel(tester);
+
+    await tocar(tester, 'Corrigir aulas');
+    expect(find.text('Escolher planilha .xlsx'), findsNothing);
+    expect(find.text('Ainda não há grade publicada. Importe uma planilha primeiro.'), findsOneWidget);
+
+    await tocar(tester, 'Importar planilha');
+    expect(find.text('Escolher planilha .xlsx'), findsOneWidget);
+  });
+
   group('importação', () {
     testWidgets('planilha válida mostra a prévia e, ao publicar, substitui a grade', (tester) async {
       await abrirPainel(tester, arquivo: planilha('grade_exemplo.xlsx'));
@@ -114,7 +127,7 @@ void main() {
       final publicada = (await tester.runAsync(repositorio.gradeAtual))!;
       expect(publicada.semestreLetivo.rotulo, '2027/1');
       expect(publicada.aulas, hasLength(4));
-      expect(find.text('Grade 2027/1 publicada.'), findsOneWidget);
+      expect(find.text('Grade 2027/1 publicada.'), findsWidgets);
     });
 
     testWidgets('planilha com erro lista cada erro pela linha e não deixa publicar', (tester) async {
@@ -161,7 +174,7 @@ void main() {
 
       await importar(tester);
 
-      expect(find.textContaining('não é uma planilha .xlsx'), findsOneWidget);
+      expect(find.textContaining('não é uma planilha .xlsx'), findsWidgets);
       expect(find.textContaining('Prévia da grade'), findsNothing);
     });
 
@@ -232,7 +245,7 @@ void main() {
 
       await tocar(tester, 'Publicar');
 
-      expect(find.textContaining('Não deu para publicar'), findsOneWidget);
+      expect(find.textContaining('Não deu para publicar'), findsWidgets);
       expect(publicarHabilitado(tester), isTrue);
     });
 
@@ -241,8 +254,48 @@ void main() {
 
       await importar(tester);
 
-      expect(find.textContaining('Não deu para ler a grade publicada'), findsOneWidget);
+      expect(find.textContaining('Não deu para ler a grade publicada'), findsWidgets);
       expect(find.textContaining('Prévia da grade'), findsNothing);
+    });
+
+    Color? corDoSnackbar(WidgetTester tester) => tester.widget<SnackBar>(find.byType(SnackBar)).backgroundColor;
+
+    testWidgets('publicar com sucesso avisa em verde', (tester) async {
+      await abrirPainel(tester, arquivo: planilha('grade_exemplo.xlsx'));
+      await importar(tester);
+
+      await tocar(tester, 'Publicar');
+
+      expect(corDoSnackbar(tester), TipoDeAviso.sucesso.fundo);
+    });
+
+    testWidgets('falha ao publicar avisa em vermelho', (tester) async {
+      await abrirPainel(tester, arquivo: planilha('grade_exemplo.xlsx'), repositorioQueFalha: _PublicacaoQueFalha());
+      await importar(tester);
+
+      await tocar(tester, 'Publicar');
+
+      expect(corDoSnackbar(tester), TipoDeAviso.erro.fundo);
+    });
+
+    testWidgets('planilha com erro alerta em amarelo, apontando também a outra linha do conflito', (tester) async {
+      await abrirPainel(tester, arquivo: planilha('grade_com_erros.xlsx'));
+
+      await importar(tester);
+
+      expect(corDoSnackbar(tester), TipoDeAviso.alerta.fundo);
+      expect(find.textContaining('(conflita com a linha 6)'), findsOneWidget);
+    });
+
+    testWidgets('professor em dois lugares aparece como aviso, e a prévia pode ser publicada', (tester) async {
+      await abrirPainel(tester, arquivo: planilha('grade_com_avisos.xlsx'));
+
+      await importar(tester);
+
+      final faixa = tester.widget<FaixaDeAviso>(find.byType(FaixaDeAviso));
+      expect(faixa.tipo, TipoDeAviso.alerta);
+      expect(faixa.detalhes.join(), contains('Carlos E já tem aula nesse horário'));
+      expect(publicarHabilitado(tester), isTrue);
     });
   });
 }

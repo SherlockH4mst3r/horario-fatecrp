@@ -162,6 +162,22 @@ class Aula {
 
   /// Como o aluno lê: "1º andar/3º andar", um andar só quando as salas ficam no mesmo, e vazio na sala a definir.
   String get andaresPorExtenso => {for (final andar in andares) andar.rotulo}.join('/');
+
+  @override
+  bool operator ==(Object other) =>
+      other is Aula &&
+      other.turma == turma &&
+      other.dia == dia &&
+      other.inicio == inicio &&
+      other.fim == fim &&
+      other.disciplina == disciplina &&
+      other.professor == professor &&
+      other.sala == sala &&
+      other.andares.length == andares.length &&
+      [for (final (i, andar) in andares.indexed) other.andares[i] == andar].every((igual) => igual);
+
+  @override
+  int get hashCode => Object.hash(turma, dia, inicio, fim, disciplina, professor, sala, Object.hashAll(andares));
 }
 
 /// O conjunto de aulas de um semestre letivo.

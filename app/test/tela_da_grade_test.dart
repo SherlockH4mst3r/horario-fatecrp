@@ -338,4 +338,14 @@ void main() {
     expect(find.text('Sala L1/S2 · 1º andar'), findsOneWidget);
     expect(find.text('Sala A definir – ADS Noite 1º'), findsOneWidget);
   });
+
+  for (final (tela, largura, tamanho) in [('computador', 1280.0, 16.0), ('celular', 360.0, 14.0)]) {
+    testWidgets('no $tela, o texto tem ${tamanho.toInt()}px', (tester) async {
+      usarTela(tester, largura, 800);
+      await abrirSite(tester, RepositorioGradeEmMemoria(grade));
+
+      final textos = Theme.of(tester.element(find.text('Grade 2026/2'))).textTheme;
+      expect([textos.bodyLarge?.fontSize, textos.bodyMedium?.fontSize], [tamanho, tamanho]);
+    });
+  }
 }
