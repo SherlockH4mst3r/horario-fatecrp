@@ -27,11 +27,13 @@ Aula aula({
   required int semestre,
   DiaDaSemana dia = DiaDaSemana.segunda,
   String disciplina = 'Contabilidade',
+  String inicio = '19:00',
+  String fim = '22:30',
 }) => Aula(
   turma: Turma(curso: curso, turno: turno, semestre: semestre),
   dia: dia,
-  inicio: Horario.parse('19:00'),
-  fim: Horario.parse('22:30'),
+  inicio: Horario.parse(inicio),
+  fim: Horario.parse(fim),
   disciplina: disciplina,
   professor: 'Rita Alves',
   sala: 'Lab 1',
@@ -131,7 +133,6 @@ void main() {
       await escolher(tester, 'Curso', 'ADS – Noite');
       await escolher(tester, 'Semestre', '3º');
 
-      expect(find.byType(Table), findsNothing);
       expect(find.text('Sem aulas hoje'), findsOneWidget);
       final topo = [
         for (final texto in ['Quinta · hoje', 'Sem aulas hoje', 'Quarta']) tester.getTopLeft(find.text(texto)).dy,
@@ -157,10 +158,10 @@ void main() {
       await escolher(tester, 'Curso', 'ADS – Noite');
       await escolher(tester, 'Semestre', '3º');
 
-      expect(find.byType(Table), findsOneWidget);
-      for (final dia in ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado']) {
-        expect(find.descendant(of: find.byType(Table), matching: find.text(dia)), findsOneWidget);
-      }
+      final dias = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+      final cantos = [for (final dia in dias) tester.getTopLeft(find.text(dia))];
+      expect(cantos.map((c) => c.dy).toSet(), hasLength(1), reason: 'os dias ficam lado a lado');
+      expect(cantos.map((c) => c.dx), orderedEquals([...cantos.map((c) => c.dx)]..sort()));
       expect(find.text('Banco de Dados'), findsOneWidget);
       expect(find.text('Sem aulas hoje'), findsNothing);
     });
@@ -171,7 +172,88 @@ void main() {
       await escolher(tester, 'Curso', 'Gestão Empresarial – Manhã');
       await escolher(tester, 'Semestre', '2º');
 
-      expect(find.descendant(of: find.byType(Table), matching: find.text('Sábado')), findsNothing);
+      expect(find.text('Sexta'), findsOneWidget);
+      expect(find.text('Sábado'), findsNothing);
+    });
+
+    testWidgets('cada aula ocupa a altura do início ao fim', (tester) async {
+      usarTela(tester, 1280, 800);
+      await abrirSite(
+        tester,
+        RepositorioGradeEmMemoria(
+          Grade(
+            semestreLetivo: grade.semestreLetivo,
+            aulas: [
+              for (final (dia, inicio, fim, disciplina) in [
+                (DiaDaSemana.segunda, '19:00', '20:40', 'Algoritmos'),
+                (DiaDaSemana.segunda, '20:50', '22:30', 'Matemática Discreta'),
+                (DiaDaSemana.terca, '19:00', '22:30', 'Lógica de Programação'),
+              ])
+                aula(
+                  curso: 'ADS',
+                  turno: Turno.noite,
+                  semestre: 1,
+                  dia: dia,
+                  inicio: inicio,
+                  fim: fim,
+                  disciplina: disciplina,
+                ),
+            ],
+          ),
+        ),
+      );
+      await escolher(tester, 'Curso', 'ADS – Noite');
+      await escolher(tester, 'Semestre', '1º');
+
+      Rect bloco(String disciplina) =>
+          tester.getRect(find.ancestor(of: find.text(disciplina), matching: find.byType(Card)));
+      final longa = bloco('Lógica de Programação');
+      expect(longa.top, moreOrLessEquals(bloco('Algoritmos').top, epsilon: 0.5));
+      expect(longa.bottom, moreOrLessEquals(bloco('Matemática Discreta').bottom, epsilon: 0.5));
+      expect(bloco('Algoritmos').bottom, lessThan(bloco('Matemática Discreta').top));
     });
   });
+
+  for (final (tela, largura) in [('computador', 1280.0), ('celular', 360.0)]) {
+    testWidgets('no $tela, cada disciplina tem sua cor, a mesma em todas as aulas dela', (tester) async {
+      usarTela(tester, largura, 2000);
+      await abrirSite(
+        tester,
+        RepositorioGradeEmMemoria(
+          Grade(
+            semestreLetivo: grade.semestreLetivo,
+            aulas: [
+              for (final (dia, inicio, disciplina) in [
+                (DiaDaSemana.segunda, '19:00', 'Algoritmos'),
+                (DiaDaSemana.segunda, '20:50', 'Matemática Discreta'),
+                (DiaDaSemana.quarta, '19:00', 'Algoritmos'),
+              ])
+                aula(
+                  curso: 'ADS',
+                  turno: Turno.noite,
+                  semestre: 1,
+                  dia: dia,
+                  inicio: inicio,
+                  fim: '20:40',
+                  disciplina: disciplina,
+                ),
+            ],
+          ),
+        ),
+      );
+      await escolher(tester, 'Curso', 'ADS – Noite');
+      await escolher(tester, 'Semestre', '1º');
+
+      List<Color?> cores(String disciplina) => [
+        for (final card in tester.widgetList<Card>(
+          find.ancestor(of: find.text(disciplina), matching: find.byType(Card)),
+        ))
+          card.color,
+      ];
+      final algoritmos = cores('Algoritmos');
+      expect(algoritmos, hasLength(2));
+      expect(algoritmos.toSet(), hasLength(1));
+      expect(cores('Matemática Discreta').single, isNot(algoritmos.first));
+    });
+  }
 }

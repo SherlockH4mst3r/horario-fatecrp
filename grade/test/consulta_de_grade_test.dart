@@ -78,10 +78,25 @@ void main() {
       expect(resultado.semana.map((d) => d.dia).last, DiaDaSemana.sabado);
     });
 
-    test('os inícios são os horários distintos em que a turma tem aula, em ordem', () async {
+    test('as horas da grade vão da hora cheia antes da primeira aula à hora cheia depois da última', () async {
       final resultado = await aulasDaTurma(consultaCom(aulasDeAds3));
 
-      expect(resultado.inicios.map((h) => '$h'), ['19:00', '20:50']);
+      expect(resultado.horas.map((h) => '$h'), ['19:00', '20:00', '21:00', '22:00', '23:00']);
+    });
+
+    test('as disciplinas da turma aparecem uma vez, na ordem da semana', () async {
+      final resultado = await aulasDaTurma(consultaCom([
+        ...aulasDeAds3,
+        aula(semestre: 3, dia: DiaDaSemana.sexta, disciplina: 'Redes'),
+      ]));
+
+      expect(resultado.disciplinas, ['Engenharia de Software', 'Redes', 'Banco de Dados']);
+    });
+
+    test('aulas em hora cheia não esticam a grade', () async {
+      final resultado = await aulasDaTurma(consultaCom([aula(semestre: 3, inicio: '08:00', fim: '10:00')]));
+
+      expect(resultado.horas.map((h) => '$h'), ['08:00', '09:00', '10:00']);
     });
 
     test('hoje traz as aulas do dia, e os próximos dias seguem a semana, só com aula', () async {
@@ -135,6 +150,10 @@ void main() {
 
       expect(resultado, isA<TurmaSemAulas>().having((r) => r.semestreLetivo.rotulo, 'semestre letivo', '2026/2'));
     });
+  });
+
+  test('um horário sabe quantos minutos passaram desde outro', () {
+    expect(Horario.parse('20:50').minutosDesde(Horario.parse('19:00')), 110);
   });
 }
 

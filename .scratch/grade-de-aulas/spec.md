@@ -21,7 +21,7 @@ A secretaria, por sua vez, não tem um jeito simples de publicar a grade e corri
 
 ## Solution
 
-Um site responsivo onde o aluno escolhe curso (com turno) e semestre e vê a grade da semana da sua turma. No computador ela aparece em tabela; no celular, como lista por dia que abre no dia de hoje. O site lembra a última escolha.
+Um site responsivo onde o aluno escolhe curso (com turno) e semestre e vê a grade da semana da sua turma. No computador ela aparece numa grade de horários; no celular, como lista por dia que abre no dia de hoje. O site lembra a última escolha.
 
 O admin entra num painel com login. Lá ele importa a planilha do semestre letivo, revisa a prévia (erros, diferenças, turmas e salas encontradas) e publica. Depois, corrige aulas avulsas sem reimportar.
 
@@ -40,7 +40,7 @@ O admin entra num painel com login. Lá ele importa a planilha do semestre letiv
 10. Como aluno, quero poder trocar de curso e semestre a qualquer momento, para consultar outra turma.
 
 ### Aluno: telas
-11. Como aluno no computador, quero a grade como tabela de dias × horários, para ver a semana inteira de uma vez.
+11. Como aluno no computador, quero a grade como uma grade de horários (dias nas colunas, horas na vertical, cada aula com a altura da sua duração), para ver a semana inteira de uma vez.
 12. Como aluno no celular, quero a grade como lista por dia, para ler sem rolar para o lado.
 13. Como aluno no celular, quero que a lista abra no dia de hoje, para ver logo as aulas de agora.
 14. Como aluno, quero ver as aulas de sábado quando houver, para não perder aula no fim de semana.
@@ -118,8 +118,9 @@ O admin entra num painel com login. Lá ele importa a planilha do semestre letiv
 - **Bom teste:** verifica o comportamento pela interface pública do módulo, não pela implementação. Segue F.I.R.S.T. e usa os termos do `GLOSSARY.md` nos nomes.
 - **Seam 1: domínio `grade`.** Testes unitários em Dart puro, com repositório em memória. Cobrem toda a validação (campo vazio, horário inválido, dia fora da faixa, conflito de sala), a prévia (erros por linha, diferenças, turmas e salas encontradas), a substituição, as aulas avulsas, o agrupamento e a ordenação por dia, o dia de hoje e os estados vazios.
 - **Seam 2: banco Supabase local (`supabase start`).** Testes de integração só para o que o banco garante sozinho: a substituição é tudo ou nada, a constraint barra conflito de sala tanto na importação quanto na edição avulsa, e a RLS deixa o anônimo só ler e o admin escrever.
-- **Fora:** testes de widget Flutter e do leitor de .xlsx além de um caso de fumaça. A casca não decide nada.
-- **Prior art:** nenhum. O repo ainda não tem código; estes testes inauguram o padrão.
+- **Seam 3: tela Flutter.** Testes de widget com repositório em memória, relógio fixo e larguras fixas (celular e computador). Verificam o que o aluno vê: textos, mensagens, ordem e posição na tela, não o widget usado. Cobrem cada critério de tela dos tickets. A casca continua sem decidir nada; os testes pegam erros de montagem, como o domingo marcado como "hoje".
+- **Fora:** testes do leitor de .xlsx além de um caso de fumaça.
+- **Prior art:** `grade/test/consulta_de_grade_test.dart` (domínio) e `app/test/tela_da_grade_test.dart` (tela).
 
 ## Out of Scope
 

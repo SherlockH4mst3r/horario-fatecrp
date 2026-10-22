@@ -83,6 +83,8 @@ class Horario implements Comparable<Horario> {
 
   int get _minutosDoDia => hora * 60 + minuto;
 
+  int minutosDesde(Horario outro) => _minutosDoDia - outro._minutosDoDia;
+
   @override
   int compareTo(Horario other) => _minutosDoDia.compareTo(other._minutosDoDia);
 

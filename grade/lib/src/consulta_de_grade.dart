@@ -40,7 +40,8 @@ class AulasDaTurma extends ResultadoDaTurma {
   const AulasDaTurma({
     required this.semestreLetivo,
     required this.semana,
-    required this.inicios,
+    required this.horas,
+    required this.disciplinas,
     required this.hoje,
     required this.proximosDias,
   });
@@ -50,8 +51,11 @@ class AulasDaTurma extends ResultadoDaTurma {
   /// A semana da turma: de segunda a sexta, com ou sem aula, e o sábado só quando há aula nele.
   final List<DiaComAulas> semana;
 
-  /// Os horários distintos em que a turma começa uma aula, em ordem.
-  final List<Horario> inicios;
+  /// A régua da grade de horários: as horas cheias da primeira aula até depois do fim da última.
+  final List<Horario> horas;
+
+  /// As disciplinas da turma, sem repetição, na ordem em que aparecem na semana.
+  final List<String> disciplinas;
 
   /// O dia de hoje, mesmo sem aula; `null` no domingo.
   final DiaComAulas? hoje;
@@ -112,13 +116,24 @@ class ConsultaDeGrade {
         for (final dia in porDia.values)
           if (dia.dia != DiaDaSemana.sabado || dia.aulas.isNotEmpty) dia,
       ],
-      inicios: {for (final aula in aulas) aula.inicio}.toList(),
+      horas: _horasCobertas(aulas),
+      disciplinas: {
+        for (final dia in porDia.values)
+          for (final aula in dia.aulas) aula.disciplina,
+      }.toList(),
       hoje: porDia[diaDeHoje],
       proximosDias: [
         for (final dia in diasSeguintes)
           if (porDia[dia]! case final dia when dia.aulas.isNotEmpty) dia,
       ],
     );
+  }
+
+  /// Recebe as aulas em ordem de início.
+  List<Horario> _horasCobertas(List<Aula> aulas) {
+    final ultimoFim = aulas.map((aula) => aula.fim).reduce((a, b) => a.compareTo(b) >= 0 ? a : b);
+    final ultimaHora = ultimoFim.minuto == 0 ? ultimoFim.hora : ultimoFim.hora + 1;
+    return [for (var hora = aulas.first.inicio.hora; hora <= ultimaHora; hora++) Horario(hora, 0)];
   }
 
   List<CursoOferecido> _cursosOferecidos(Grade grade) {
