@@ -1,4 +1,5 @@
 import 'diferencas.dart';
+import 'edicao_de_aulas.dart';
 import 'grade.dart';
 import 'repositorio_grade.dart';
 
@@ -95,6 +96,22 @@ class ImportacaoDeGrade {
       turmas: {for (final linha in linhas) ?linha.turma}.toList()..sort(),
       salas: {for (final linha in linhas) ...linha.salasEncontradas}.toList()..sort(_porSalaEAndar),
       aulas: aulas,
+    );
+  }
+
+  /// A grade publicada como planilha, nas mesmas colunas e escritas que [importar] aceita, por turma, dia e
+  /// início: o admin baixa, edita no Excel e importa de volta. `null` sem grade publicada.
+  Future<({SemestreLetivo semestreLetivo, Planilha planilha})?> exportar() async {
+    final grade = await _repositorio.gradeAtual();
+    if (grade == null) return null;
+    return (
+      semestreLetivo: grade.semestreLetivo,
+      planilha: Planilha(
+        cabecalho: colunasDaPlanilha,
+        linhas: [
+          for (final aula in [...grade.aulas]..sort()) AulaDigitada.de(aula).comoLinha,
+        ],
+      ),
     );
   }
 

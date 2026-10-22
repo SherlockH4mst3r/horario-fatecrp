@@ -42,8 +42,8 @@ class AulaDigitada {
   final String sala;
   final String andar;
 
-  /// Na ordem de [colunasDaPlanilha].
-  List<String> get _comoLinha => [curso, turno, semestre, dia, inicio, fim, disciplina, professor, sala, andar];
+  /// Como uma linha da planilha, na ordem de [colunasDaPlanilha].
+  List<String> get comoLinha => [curso, turno, semestre, dia, inicio, fim, disciplina, professor, sala, andar];
 }
 
 sealed class ResultadoDaEdicao {
@@ -85,7 +85,7 @@ class EdicaoDeAulas {
   Future<List<Aula>> aulasDaTurma(Turma turma) async => [
     for (final aula in (await _repositorio.gradeAtual())?.aulas ?? const <Aula>[])
       if (aula.turma == turma) aula,
-  ]..sort((a, b) => a.dia != b.dia ? a.dia.index.compareTo(b.dia.index) : a.inicio.compareTo(b.inicio));
+  ]..sort();
 
   /// Cria a aula ou, com [original], troca a original por ela.
   Future<ResultadoDaEdicao> salvar(AulaDigitada digitada, {Aula? original}) async {
@@ -98,7 +98,7 @@ class EdicaoDeAulas {
     final previa = await importacao.importar(
       Planilha(
         cabecalho: colunasDaPlanilha,
-        linhas: [for (final aula in demais) AulaDigitada.de(aula)._comoLinha, digitada._comoLinha],
+        linhas: [for (final aula in demais) AulaDigitada.de(aula).comoLinha, digitada.comoLinha],
       ),
       grade.semestreLetivo,
     );

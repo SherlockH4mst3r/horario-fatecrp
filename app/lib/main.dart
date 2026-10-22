@@ -25,6 +25,7 @@ Future<void> main() async {
         importacao: ImportacaoDeGrade(repositorio),
         edicao: EdicaoDeAulas(repositorio),
         escolherPlanilha: _escolherPlanilhaNoNavegador,
+        salvarPlanilha: _baixarNoNavegador,
       ),
       preferenciaDeTema: PreferenciaDeTemaNoNavegador(),
     ),
@@ -43,6 +44,14 @@ Future<void> _semearNaPrimeiraVisita(RepositorioGrade repositorio) async {
 Future<Uint8List?> _escolherPlanilhaNoNavegador() async {
   final escolhido = await FilePicker.pickFile(type: FileType.custom, allowedExtensions: ['xlsx']);
   return escolhido?.readAsBytes();
+}
+
+Future<void> _baixarNoNavegador(String nome, Uint8List bytes) async {
+  await FilePicker.saveFile(
+    fileName: nome,
+    bytes: bytes,
+    mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  );
 }
 
 class AppDaGrade extends StatefulWidget {

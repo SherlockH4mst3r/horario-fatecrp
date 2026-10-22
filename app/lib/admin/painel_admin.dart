@@ -7,7 +7,7 @@ import 'entrada_do_admin.dart';
 import 'importacao_da_planilha.dart';
 import 'sessao.dart';
 
-export 'importacao_da_planilha.dart' show EscolherPlanilha;
+export 'importacao_da_planilha.dart' show EscolherPlanilha, SalvarPlanilha;
 
 /// O painel `/admin`: entrada do admin, importação da planilha do semestre letivo e correção de aulas avulsas.
 class PainelAdmin extends StatefulWidget {
@@ -17,12 +17,14 @@ class PainelAdmin extends StatefulWidget {
     required this.importacao,
     required this.edicao,
     required this.escolherPlanilha,
+    required this.salvarPlanilha,
   });
 
   final Sessao sessao;
   final ImportacaoDeGrade importacao;
   final EdicaoDeAulas edicao;
   final EscolherPlanilha escolherPlanilha;
+  final SalvarPlanilha salvarPlanilha;
 
   @override
   State<PainelAdmin> createState() => _PainelAdminState();
@@ -78,6 +80,7 @@ class _PainelAdminState extends State<PainelAdmin> {
                   _Area.importar => ImportacaoDaPlanilha(
                     importacao: widget.importacao,
                     escolherPlanilha: widget.escolherPlanilha,
+                    salvarPlanilha: widget.salvarPlanilha,
                   ),
                   _Area.corrigir => CorrecaoDeAulas(edicao: widget.edicao),
                 },

@@ -72,6 +72,7 @@ O admin entra num painel com login. Lá ele importa a planilha do semestre letiv
 34. Como admin, quero que a importação substitua a grade inteira, para não ter que mesclar com a anterior.
 35. Como admin, quero que a substituição seja tudo ou nada, para que uma falha no meio não deixe a grade pela metade.
 36. Como admin, quero desistir na prévia sem alterar nada, para poder corrigir a planilha antes.
+36a. Como admin, quero baixar a grade publicada como planilha, para editá-la no Excel e importar de volta sem montar tudo do zero.
 
 ### Admin: correções
 37. Como admin, quero criar uma aula avulsa, para incluir o que faltou sem reimportar.

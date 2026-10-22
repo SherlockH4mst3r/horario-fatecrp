@@ -6,6 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:grade/grade.dart';
 import 'package:grade_app/admin/painel_admin.dart';
 import 'package:grade_app/admin/sessao.dart';
+import 'package:grade_app/leitor_de_planilha.dart';
 import 'package:grade_app/tema.dart';
 import 'package:grade_app/telas/avisos.dart';
 
@@ -16,6 +17,7 @@ final gradeAtual = Grade(semestreLetivo: const SemestreLetivo(ano: 2026, periodo
 void main() {
   late RepositorioGradeEmMemoria repositorio;
   late int escolhas;
+  late List<(String, Uint8List)> salvos;
 
   /// Abre o painel; [arquivo] é o que o admin escolhe na janela de arquivos (`null` = desistiu).
   Future<void> abrirPainel(
@@ -30,6 +32,7 @@ void main() {
     addTearDown(tester.view.reset);
     repositorio = RepositorioGradeEmMemoria(publicada ?? gradeAtual);
     escolhas = 0;
+    salvos = [];
     final sessao = SessaoSimulada(email: 'admin@fatecrp.local', senha: 'admin123');
     if (jaEntrou) await sessao.entrar(email: 'admin@fatecrp.local', senha: 'admin123');
     await tester.pumpWidget(
@@ -43,6 +46,7 @@ void main() {
             escolhas++;
             return arquivo;
           },
+          salvarPlanilha: (nome, bytes) async => salvos.add((nome, bytes)),
         ),
       ),
     );
@@ -296,6 +300,60 @@ void main() {
       expect(faixa.tipo, TipoDeAviso.alerta);
       expect(faixa.detalhes.join(), contains('Carlos E já tem aula nesse horário'));
       expect(publicarHabilitado(tester), isTrue);
+    });
+
+    testWidgets('baixar a grade publicada entrega um .xlsx que a importação lê de volta', (tester) async {
+      await abrirPainel(
+        tester,
+        publicada: Grade(
+          semestreLetivo: const SemestreLetivo(ano: 2026, periodo: 2),
+          aulas: [
+            Aula(
+              turma: const Turma(curso: 'ADS', turno: Turno.noite, semestre: 1),
+              dia: DiaDaSemana.segunda,
+              inicio: Horario.parse('19:00'),
+              fim: Horario.parse('20:40'),
+              disciplina: 'Algoritmos',
+              professor: 'Ana Souza',
+              sala: 'B12',
+              andares: const [Andar.primeiro],
+            ),
+          ],
+        ),
+      );
+
+      await tocar(tester, 'Baixar a grade publicada');
+
+      final (nome, bytes) = salvos.single;
+      expect(nome, 'grade_2026-2.xlsx');
+      expect(lerPlanilhaXlsx(bytes).linhas.single.take(7), [
+        'ADS',
+        'Noite',
+        '1',
+        'Segunda',
+        '19:00',
+        '20:40',
+        'Algoritmos',
+      ]);
+      expect(corDoSnackbar(tester), TipoDeAviso.sucesso.fundo);
+    });
+
+    testWidgets('sem grade publicada, não há o que baixar, e o painel avisa em amarelo', (tester) async {
+      await abrirPainel(tester, repositorioQueFalha: _PublicacaoQueFalha());
+
+      await tocar(tester, 'Baixar a grade publicada');
+
+      expect(salvos, isEmpty);
+      expect(corDoSnackbar(tester), TipoDeAviso.alerta.fundo);
+    });
+
+    testWidgets('se a grade publicada não pode ser lida, baixar avisa em vermelho', (tester) async {
+      await abrirPainel(tester, repositorioQueFalha: _LeituraQueFalha());
+
+      await tocar(tester, 'Baixar a grade publicada');
+
+      expect(salvos, isEmpty);
+      expect(corDoSnackbar(tester), TipoDeAviso.erro.fundo);
     });
   });
 }

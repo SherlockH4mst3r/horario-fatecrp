@@ -553,4 +553,70 @@ void main() {
       expect(previa.diferencas, isNull);
     });
   });
+
+  group('exportação', () {
+    test('sem grade publicada, não há o que exportar', () async {
+      expect(await importacao.exportar(), isNull);
+    });
+
+    test('a grade publicada vira planilha com as colunas da importação, por turma, dia e início', () async {
+      repositorio = RepositorioGradeEmMemoria(
+        Grade(
+          semestreLetivo: const SemestreLetivo(ano: 2026, periodo: 2),
+          aulas: [
+            aulaPublicada(
+              semestre: 5,
+              dia: DiaDaSemana.terca,
+              sala: 'L1/S2',
+              andares: const [Andar.primeiro, Andar.primeiro],
+            ),
+            aulaPublicada(dia: DiaDaSemana.quarta, disciplina: 'Redes'),
+            aulaPublicada(sala: 'A definir – ADS Noite 3º', andares: const []),
+          ],
+        ),
+      );
+      importacao = ImportacaoDeGrade(repositorio);
+
+      final exportada = (await importacao.exportar())!;
+
+      expect(exportada.semestreLetivo.rotulo, '2026/2');
+      expect(exportada.planilha.cabecalho, colunasDaPlanilha);
+      expect(exportada.planilha.linhas, [
+        [
+          'ADS',
+          'Noite',
+          '3',
+          'Segunda',
+          '19:00',
+          '20:40',
+          'Banco de Dados',
+          'Rita Alves',
+          'A definir – ADS Noite 3º',
+          '',
+        ],
+        ['ADS', 'Noite', '3', 'Quarta', '19:00', '20:40', 'Redes', 'Rita Alves', 'Lab 1', '2º andar'],
+        ['ADS', 'Noite', '5', 'Terça', '19:00', '20:40', 'Banco de Dados', 'Rita Alves', 'L1/S2', '1º andar/1º andar'],
+      ]);
+    });
+
+    test('importar a planilha exportada não muda nada', () async {
+      repositorio = RepositorioGradeEmMemoria(
+        Grade(
+          semestreLetivo: semestreLetivo,
+          aulas: [
+            aulaPublicada(),
+            aulaPublicada(semestre: 4, sala: 'S4/L3', andares: const [Andar.primeiro, Andar.terceiro]),
+            aulaPublicada(semestre: 6, sala: 'A definir – ADS Noite 6º', andares: const []),
+          ],
+        ),
+      );
+      importacao = ImportacaoDeGrade(repositorio);
+
+      final exportada = (await importacao.exportar())!;
+      final previa = await importacao.importar(exportada.planilha, exportada.semestreLetivo);
+
+      expect(previa.erros, isEmpty);
+      expect(previa.diferencas!.nenhuma, isTrue);
+    });
+  });
 }

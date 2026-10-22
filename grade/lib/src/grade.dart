@@ -135,7 +135,7 @@ class Horario implements Comparable<Horario> {
 }
 
 /// Um encontro semanal fixo de uma turma.
-class Aula {
+class Aula implements Comparable<Aula> {
   const Aula({
     required this.turma,
     required this.dia,
@@ -178,6 +178,15 @@ class Aula {
 
   @override
   int get hashCode => Object.hash(turma, dia, inicio, fim, disciplina, professor, sala, Object.hashAll(andares));
+
+  /// Na ordem da grade: por turma, dia e início.
+  @override
+  int compareTo(Aula other) {
+    final porTurma = turma.compareTo(other.turma);
+    if (porTurma != 0) return porTurma;
+    final porDia = dia.index.compareTo(other.dia.index);
+    return porDia != 0 ? porDia : inicio.compareTo(other.inicio);
+  }
 }
 
 /// O conjunto de aulas de um semestre letivo.

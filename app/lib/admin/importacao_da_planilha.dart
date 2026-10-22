@@ -3,11 +3,15 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:grade/grade.dart';
 
+import '../escritor_de_planilha.dart';
 import '../leitor_de_planilha.dart';
 import '../telas/avisos.dart';
 
 /// Abre a janela de arquivos e devolve o .xlsx escolhido, ou `null` se o admin desistir.
 typedef EscolherPlanilha = Future<Uint8List?> Function();
+
+/// Entrega o .xlsx ao admin com esse nome (no navegador, um download).
+typedef SalvarPlanilha = Future<void> Function(String nome, Uint8List bytes);
 
 /// As etapas da importação, na ordem em que o admin passa por elas.
 sealed class _Etapa {
@@ -38,10 +42,16 @@ class _Publicada extends _Etapa {
 
 /// A importação da planilha: semestre letivo, escolha do .xlsx, prévia e publicação.
 class ImportacaoDaPlanilha extends StatefulWidget {
-  const ImportacaoDaPlanilha({super.key, required this.importacao, required this.escolherPlanilha});
+  const ImportacaoDaPlanilha({
+    super.key,
+    required this.importacao,
+    required this.escolherPlanilha,
+    required this.salvarPlanilha,
+  });
 
   final ImportacaoDeGrade importacao;
   final EscolherPlanilha escolherPlanilha;
+  final SalvarPlanilha salvarPlanilha;
 
   @override
   State<ImportacaoDaPlanilha> createState() => _ImportacaoDaPlanilhaState();
@@ -157,6 +167,35 @@ class _ImportacaoDaPlanilhaState extends State<ImportacaoDaPlanilha> {
     };
   }
 
+  /// Baixa a grade publicada como .xlsx, para o admin editar no Excel e importar de volta.
+  Future<void> _baixar() async {
+    setState(() => _ocupado = true);
+    try {
+      final exportada = await widget.importacao.exportar();
+      if (exportada == null) {
+        _avisar('Ainda não há grade publicada para baixar.', TipoDeAviso.alerta);
+        return;
+      }
+      final SemestreLetivo(:ano, :periodo) = exportada.semestreLetivo;
+      await widget.salvarPlanilha(
+        'grade_$ano-$periodo.xlsx',
+        escreverPlanilhaXlsx(exportada.planilha, aba: 'Grade $ano-$periodo'),
+      );
+      _avisar(
+        'Grade ${exportada.semestreLetivo.rotulo} baixada. Edite no Excel e importe de volta.',
+        TipoDeAviso.sucesso,
+      );
+    } catch (_) {
+      _avisar('Não deu para baixar a grade publicada. Tente de novo.', TipoDeAviso.erro);
+    }
+  }
+
+  void _avisar(String mensagem, TipoDeAviso tipo) {
+    if (!mounted) return;
+    setState(() => _ocupado = false);
+    mostrarAviso(context, mensagem, tipo);
+  }
+
   Widget _escolha(String? problema) {
     final textos = Theme.of(context).textTheme;
     return Column(
@@ -166,7 +205,14 @@ class _ImportacaoDaPlanilhaState extends State<ImportacaoDaPlanilha> {
         const SizedBox(height: 8),
         const Text(
           'A planilha substitui a grade inteira. Uma linha por aula, com as colunas Curso, Turno, Semestre, '
-          'Dia, Início, Fim, Disciplina, Professor, Sala e Andar.',
+          'Dia, Início, Fim, Disciplina, Professor, Sala e Andar. Para mudar a grade atual, baixe-a, edite no '
+          'Excel e importe de volta.',
+        ),
+        const SizedBox(height: 12),
+        OutlinedButton.icon(
+          onPressed: _ocupado ? null : _baixar,
+          icon: const Icon(Icons.download),
+          label: const Text('Baixar a grade publicada'),
         ),
         const SizedBox(height: 16),
         SizedBox(

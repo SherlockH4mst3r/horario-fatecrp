@@ -56,9 +56,9 @@ class Diferencas {
       semestreLetivo: semestreAntes != null && semestreAntes != importada.semestreLetivo
           ? (antes: semestreAntes, depois: importada.semestreLetivo)
           : null,
-      novas: novas..sort(_naOrdemDaGrade),
-      removidas: removidas..sort(_naOrdemDaGrade),
-      alteradas: alteradas..sort((a, b) => _naOrdemDaGrade(a.antes, b.antes)),
+      novas: novas..sort(),
+      removidas: removidas..sort(),
+      alteradas: alteradas..sort((a, b) => a.antes.compareTo(b.antes)),
     );
   }
 
@@ -115,10 +115,3 @@ List<MudancaDeCampo> _mudancas(Aula antes, Aula depois) => [
 ];
 
 String _andares(Aula aula) => aula.andares.isEmpty ? 'sem andar' : aula.andaresPorExtenso;
-
-int _naOrdemDaGrade(Aula a, Aula b) {
-  final porTurma = a.turma.compareTo(b.turma);
-  if (porTurma != 0) return porTurma;
-  final porDia = a.dia.index.compareTo(b.dia.index);
-  return porDia != 0 ? porDia : a.inicio.compareTo(b.inicio);
-}
