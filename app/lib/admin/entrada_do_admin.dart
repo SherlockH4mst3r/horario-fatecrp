@@ -9,8 +9,8 @@ class EntradaDoAdmin extends StatefulWidget {
 
   final Sessao sessao;
 
-  /// O repositório da grade, como "dono/nome", para as instruções do token; `null` na simulação local.
-  final String? repositorio;
+  /// O repositório da grade, como "dono/nome", para as instruções do token.
+  final String repositorio;
   final VoidCallback aoEntrar;
 
   @override
@@ -68,10 +68,7 @@ class _EntradaDoAdminState extends State<EntradaDoAdmin> {
             const SizedBox(height: 16),
             FilledButton(onPressed: _conferindo ? null : _entrar, child: const Text('Entrar')),
             const SizedBox(height: 24),
-            switch (widget.repositorio) {
-              final repositorio? => _ComoGerarOToken(repositorio),
-              null => const _Quadro(['Simulação local: use o token admin123.']),
-            },
+            _ComoGerarOToken(widget.repositorio),
           ],
         ),
       ),

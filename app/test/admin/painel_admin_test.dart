@@ -5,10 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:grade/grade.dart';
 import 'package:grade_app/admin/painel_admin.dart';
-import 'package:grade_app/admin/sessao.dart';
 import 'package:grade_app/github/repositorio_grade_no_github.dart';
 import 'package:grade_app/leitor_de_planilha.dart';
 import 'package:grade_app/tema.dart';
+
+import 'sessao_de_teste.dart';
 import 'package:grade_app/telas/avisos.dart';
 
 Uint8List planilha(String nome) => File('test/planilhas/$nome').readAsBytesSync();
@@ -34,7 +35,7 @@ void main() {
     repositorio = RepositorioGradeEmMemoria(publicada ?? gradeAtual);
     escolhas = 0;
     salvos = [];
-    final sessao = SessaoSimulada(tokenAceito: 'token-certo');
+    final sessao = SessaoDeTeste(tokenAceito: 'token-certo');
     if (jaEntrou) await sessao.entrar('token-certo');
     await tester.pumpWidget(
       MaterialApp(
@@ -98,7 +99,7 @@ void main() {
       await tester.testTextInput.receiveAction(TextInputAction.done);
       await tester.pumpAndSettle();
       expect(find.text('Escolher planilha .xlsx'), findsOneWidget, reason: 'Enter no campo também entra');
-      expect(find.text('Conectado como admin (simulação)'), findsOneWidget);
+      expect(find.text('Conectado como Admin de teste'), findsOneWidget);
 
       await tocar(tester, 'Sair');
       expect(find.widgetWithText(TextField, 'Token do GitHub'), findsOneWidget);

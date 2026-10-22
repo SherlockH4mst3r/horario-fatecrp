@@ -23,8 +23,8 @@ class PainelAdmin extends StatefulWidget {
 
   final Sessao sessao;
 
-  /// O repositório da grade no GitHub, como "dono/nome"; `null` na simulação local.
-  final String? repositorio;
+  /// O repositório da grade no GitHub, como "dono/nome".
+  final String repositorio;
   final ImportacaoDeGrade importacao;
   final EdicaoDeAulas edicao;
   final EscolherPlanilha escolherPlanilha;

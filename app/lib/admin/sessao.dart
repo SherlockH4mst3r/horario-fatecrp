@@ -36,30 +36,3 @@ class EntradaFalhou extends ResultadoDaEntrada {
 
   final String motivo;
 }
-
-/// Sessão de mentira, para testar o painel sem o GitHub: aceita um token fixo e dura enquanto a página está
-/// aberta. Não protege nada.
-class SessaoSimulada implements Sessao {
-  SessaoSimulada({required String tokenAceito}) : _tokenAceito = tokenAceito;
-
-  final String _tokenAceito;
-  bool _ativa = false;
-
-  @override
-  bool get ativa => _ativa;
-
-  @override
-  String? get quem => _ativa ? 'admin (simulação)' : null;
-
-  @override
-  Future<ResultadoDaEntrada> entrar(String token) async {
-    _ativa = token.trim() == _tokenAceito;
-    return _ativa ? EntradaAceita(quem!) : const EntradaRecusada('Token incorreto.');
-  }
-
-  @override
-  Future<ResultadoDaEntrada?> retomar() async => null;
-
-  @override
-  Future<void> sair() async => _ativa = false;
-}
