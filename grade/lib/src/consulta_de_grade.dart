@@ -16,15 +16,17 @@ class GradePublicada extends SituacaoDaGrade {
 
   final SemestreLetivo semestreLetivo;
   final List<CursoOferecido> cursos;
+
+  /// Todo curso vai do 1º ao 6º semestre, mesmo que a grade não traga aulas de algum.
+  List<int> get semestres => const [1, 2, 3, 4, 5, 6];
 }
 
-/// Opção do seletor: um curso num turno, com os semestres que têm aula.
+/// Opção do seletor: um curso num turno.
 class CursoOferecido {
-  const CursoOferecido({required this.curso, required this.turno, required this.semestres});
+  const CursoOferecido({required this.curso, required this.turno});
 
   final String curso;
   final Turno turno;
-  final List<int> semestres;
 
   String get rotulo => '$curso – ${turno.rotulo}';
 }
@@ -85,13 +87,9 @@ class ConsultaDeGrade {
   }
 
   List<CursoOferecido> _cursosOferecidos(Grade grade) {
-    final semestresPorCurso = <(String, Turno), Set<int>>{};
-    for (final Aula(:turma) in grade.aulas) {
-      semestresPorCurso.putIfAbsent((turma.curso, turma.turno), () => {}).add(turma.semestre);
-    }
+    final cursosETurnos = {for (final Aula(:turma) in grade.aulas) (turma.curso, turma.turno)};
     final cursos = [
-      for (final MapEntry(key: (curso, turno), :value) in semestresPorCurso.entries)
-        CursoOferecido(curso: curso, turno: turno, semestres: value.toList()..sort()),
+      for (final (curso, turno) in cursosETurnos) CursoOferecido(curso: curso, turno: turno),
     ];
     return cursos..sort((a, b) => a.rotulo.compareTo(b.rotulo));
   }

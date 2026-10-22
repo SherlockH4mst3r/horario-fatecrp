@@ -7,6 +7,8 @@
 - [ ] Campo vazio gera erro com o número da linha e o nome da coluna.
 - [ ] Horário em formato inválido, ou fim antes do início, gera erro na linha.
 - [ ] Dia fora de segunda a sábado (incluindo domingo) gera erro na linha.
+- [ ] Andar fora de Térreo, 1º, 2º e 3º gera erro na linha.
+- [ ] A mesma sala com andares diferentes em linhas distintas gera erro nessas linhas.
 - [ ] Duas aulas na mesma sala, no mesmo dia e com horários sobrepostos geram erro nas duas linhas.
 - [ ] Aulas na mesma sala que só se encostam (uma termina às 19:00 e a outra começa às 19:00) não geram erro.
 - [ ] Com qualquer erro, "Publicar" fica desabilitado.

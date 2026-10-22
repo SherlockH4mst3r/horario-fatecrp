@@ -4,7 +4,7 @@
 **Bloqueado por:** 05
 **Status:** ready-for-agent
 
-- [ ] O painel aceita um arquivo .xlsx com uma linha por aula: curso, turno, semestre, dia, início, fim, disciplina, professor e sala.
+- [ ] O painel aceita um arquivo .xlsx com uma linha por aula: curso, turno, semestre, dia, início, fim, disciplina, professor, sala e andar.
 - [ ] O admin informa o semestre letivo (ex.: 2026/2) antes da prévia.
 - [ ] A prévia lista as turmas e as salas encontradas na planilha.
 - [ ] "Cancelar" na prévia não altera a grade publicada.

@@ -35,6 +35,10 @@ _Evite_: horário, cronograma, quadro
 O local onde a aula acontece, identificado como está na planilha.
 _Evite_: local, ambiente
 
+**Andar**:
+O piso do prédio onde fica a sala: térreo, 1º, 2º ou 3º. Vem da planilha, numa coluna própria.
+_Evite_: piso, pavimento
+
 **Importação**:
 A troca da grade inteira de um semestre letivo a partir de uma planilha, confirmada depois da prévia.
 _Evite_: upload, carga

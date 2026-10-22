@@ -33,7 +33,7 @@ O admin entra num painel com login. Lá ele importa a planilha do semestre letiv
 3. Como aluno, quero que o turno faça parte da opção do curso (ex.: "ADS – Noite"), para não confundir com a turma de outro turno.
 4. Como aluno, quero escolher meu semestre (1º a 6º), para ver só as aulas da minha turma.
 5. Como aluno, quero ver a grade da semana da minha turma, para planejar meus dias.
-6. Como aluno, quero ver em cada aula a disciplina, o professor, a sala, o início e o fim, para saber aonde ir e confirmar que é a turma certa.
+6. Como aluno, quero ver em cada aula a disciplina, o professor, a sala, o andar, o início e o fim, para saber aonde ir e confirmar que é a turma certa.
 7. Como aluno, quero ver as aulas de cada dia em ordem de horário, para ler a sequência do dia.
 8. Como aluno, quero ver de qual semestre letivo é a grade (ex.: "Grade 2026/2"), para ter certeza de que ela está atual.
 9. Como aluno, quero que o site lembre meu último curso e semestre, para abrir direto na minha grade.
@@ -57,7 +57,7 @@ O admin entra num painel com login. Lá ele importa a planilha do semestre letiv
 ### Admin: importação
 22. Como admin, quero enviar a planilha .xlsx direto, sem converter para CSV, para não ter passo extra.
 23. Como admin, quero informar o semestre letivo na importação, para que a planilha não repita esse dado em toda linha.
-24. Como admin, quero uma linha por aula com curso, turno, semestre, dia, início, fim, disciplina, professor e sala, para montar a planilha num formato simples.
+24. Como admin, quero uma linha por aula com curso, turno, semestre, dia, início, fim, disciplina, professor, sala e andar, para montar a planilha num formato simples.
 25. Como admin, quero ver uma prévia antes de publicar, para não apagar a grade por engano.
 26. Como admin, quero que a prévia aponte cada erro pela linha da planilha, para corrigir rápido no Excel.
 27. Como admin, quero que campo vazio bloqueie a importação, para não publicar aula incompleta.
@@ -92,7 +92,7 @@ O admin entra num painel com login. Lá ele importa a planilha do semestre letiv
 - **Banco Supabase.** Tabelas, função de substituição, constraint e RLS.
 
 ### Dados
-- Tabela de aulas com curso, turno e sala em texto (sem tabelas de cadastro), semestre, dia da semana (segunda a sábado), início, fim, disciplina, professor e semestre letivo.
+- Tabela de aulas com curso, turno e sala em texto (sem tabelas de cadastro), semestre, dia da semana (segunda a sábado), início, fim, disciplina, professor, andar (térreo a 3º) e semestre letivo.
 - Turma = curso + turno + semestre. É derivada das aulas, não é tabela.
 - Só uma grade (a do semestre letivo vigente) existe por vez. Não há histórico.
 

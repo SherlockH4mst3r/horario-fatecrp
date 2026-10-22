@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:grade/grade.dart';
 
 import 'grade_semeada.dart';
+import 'tema.dart';
 import 'telas/tela_da_grade.dart';
 
 void main() {
@@ -19,12 +20,8 @@ class AppDaGrade extends StatelessWidget {
     return MaterialApp(
       title: 'Grade de aulas – FATEC RP',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(colorSchemeSeed: const Color(0xFFB20000), useMaterial3: true),
-      darkTheme: ThemeData(
-        colorSchemeSeed: const Color(0xFFB20000),
-        brightness: Brightness.dark,
-        useMaterial3: true,
-      ),
+      theme: temaFatec(Brightness.light),
+      darkTheme: temaFatec(Brightness.dark),
       home: TelaDaGrade(consulta: consulta),
     );
   }

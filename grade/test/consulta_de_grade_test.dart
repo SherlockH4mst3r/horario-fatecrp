@@ -11,7 +11,7 @@ void main() {
       expect(resultado, isA<GradeNaoPublicada>());
     });
 
-    test('lista cada curso com o turno e os semestres que têm aula, em ordem', () async {
+    test('lista cada curso com o turno, em ordem, e oferece do 1º ao 6º semestre', () async {
       final consulta = ConsultaDeGrade(RepositorioGradeEmMemoria(Grade(
         semestreLetivo: const SemestreLetivo(ano: 2026, periodo: 2),
         aulas: [
@@ -25,10 +25,8 @@ void main() {
       final resultado = await consulta.cursosDisponiveis() as GradePublicada;
 
       expect(resultado.semestreLetivo.rotulo, '2026/2');
-      expect(resultado.cursos.map((c) => '${c.rotulo} ${c.semestres}'), [
-        'ADS – Noite [1, 3]',
-        'Gestão Empresarial – Manhã [2]',
-      ]);
+      expect(resultado.cursos.map((c) => c.rotulo), ['ADS – Noite', 'Gestão Empresarial – Manhã']);
+      expect(resultado.semestres, [1, 2, 3, 4, 5, 6]);
     });
   });
 
