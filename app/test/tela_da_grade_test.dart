@@ -25,6 +25,7 @@ Aula aula({
   disciplina: disciplina,
   professor: 'Rita Alves',
   sala: 'Lab 1',
+  andar: Andar.segundo,
 );
 
 /// Simula a falha do banco ao buscar a grade.
@@ -71,7 +72,7 @@ void main() {
     }
   });
 
-  testWidgets('cada aula mostra disciplina, professor, sala, início e fim', (tester) async {
+  testWidgets('cada aula mostra disciplina, professor, sala com andar, início e fim', (tester) async {
     await abrirSite(tester, RepositorioGradeEmMemoria(grade));
     await escolher(tester, 'Curso', 'ADS – Noite');
     await escolher(tester, 'Semestre', '3º');
@@ -79,7 +80,7 @@ void main() {
     expect(find.text('Quarta'), findsOneWidget);
     expect(find.text('Banco de Dados'), findsOneWidget);
     expect(find.text('Rita Alves'), findsOneWidget);
-    expect(find.text('Sala Lab 1'), findsOneWidget);
+    expect(find.text('Sala Lab 1 · 2º andar'), findsOneWidget);
     expect(find.text('19:00\n22:30'), findsOneWidget);
   });
 

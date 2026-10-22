@@ -250,7 +250,7 @@ class _CartaoDaAula extends StatelessWidget {
         ),
         title: Text(aula.disciplina),
         subtitle: Text(aula.professor),
-        trailing: Text('Sala ${aula.sala}', style: Theme.of(context).textTheme.titleSmall),
+        trailing: Text('Sala ${aula.sala} · ${aula.andar.rotulo}', style: Theme.of(context).textTheme.titleSmall),
       ),
     );
   }

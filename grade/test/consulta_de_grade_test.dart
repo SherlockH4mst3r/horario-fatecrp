@@ -56,6 +56,20 @@ void main() {
       );
     });
 
+    test('cada aula traz o andar da sala, do térreo ao 3º', () async {
+      final consulta = ConsultaDeGrade(RepositorioGradeEmMemoria(Grade(
+        semestreLetivo: const SemestreLetivo(ano: 2026, periodo: 2),
+        aulas: [
+          aula(semestre: 3, inicio: '19:00', andar: Andar.terreo),
+          aula(semestre: 3, inicio: '20:50', fim: '22:30', andar: Andar.terceiro),
+        ],
+      )));
+
+      final resultado = await consulta.gradeDaTurma(ads3) as AulasDaTurma;
+
+      expect(resultado.dias.single.aulas.map((a) => a.andar.rotulo), ['Térreo', '3º andar']);
+    });
+
     test('sem grade publicada, informa que a grade não foi publicada', () async {
       final consulta = ConsultaDeGrade(RepositorioGradeEmMemoria());
 
@@ -87,6 +101,7 @@ Aula aula({
   String disciplina = 'Algoritmos',
   String professor = 'Ana Souza',
   String sala = 'B12',
+  Andar andar = Andar.primeiro,
 }) =>
     Aula(
       turma: Turma(curso: curso, turno: turno, semestre: semestre),
@@ -96,4 +111,5 @@ Aula aula({
       disciplina: disciplina,
       professor: professor,
       sala: sala,
+      andar: andar,
     );

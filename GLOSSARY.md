@@ -36,7 +36,7 @@ O local onde a aula acontece, identificado como está na planilha.
 _Evite_: local, ambiente
 
 **Andar**:
-O piso do prédio onde fica a sala: térreo, 1º, 2º ou 3º. Vem da planilha, numa coluna própria.
+O nível do prédio onde fica a sala: térreo, 1º, 2º ou 3º. Vem da planilha, numa coluna própria.
 _Evite_: piso, pavimento
 
 **Importação**:

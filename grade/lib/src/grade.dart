@@ -23,6 +23,18 @@ enum DiaDaSemana {
   final String rotulo;
 }
 
+/// O andar do prédio onde fica a sala. O prédio da FATEC RP tem térreo e mais três andares.
+enum Andar {
+  terreo('Térreo'),
+  primeiro('1º andar'),
+  segundo('2º andar'),
+  terceiro('3º andar');
+
+  const Andar(this.rotulo);
+
+  final String rotulo;
+}
+
 /// O período acadêmico da faculdade, como 2026/2.
 class SemestreLetivo {
   const SemestreLetivo({required this.ano, required this.periodo});
@@ -81,6 +93,7 @@ class Aula {
     required this.disciplina,
     required this.professor,
     required this.sala,
+    required this.andar,
   });
 
   final Turma turma;
@@ -90,6 +103,7 @@ class Aula {
   final String disciplina;
   final String professor;
   final String sala;
+  final Andar andar;
 }
 
 /// O conjunto de aulas de um semestre letivo.
