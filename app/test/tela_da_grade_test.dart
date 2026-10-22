@@ -53,6 +53,9 @@ class MemoriaQueFalha implements MemoriaDaTurma {
 class RepositorioQueFalha implements RepositorioGrade {
   @override
   Future<Grade?> gradeAtual() async => throw Exception('banco fora do ar');
+
+  @override
+  Future<void> substituir(Grade grade) async => throw Exception('banco fora do ar');
 }
 
 void main() {

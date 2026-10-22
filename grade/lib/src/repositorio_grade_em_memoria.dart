@@ -5,8 +5,11 @@ import 'repositorio_grade.dart';
 class RepositorioGradeEmMemoria implements RepositorioGrade {
   RepositorioGradeEmMemoria([this._grade]);
 
-  final Grade? _grade;
+  Grade? _grade;
 
   @override
   Future<Grade?> gradeAtual() async => _grade;
+
+  @override
+  Future<void> substituir(Grade grade) async => _grade = grade;
 }

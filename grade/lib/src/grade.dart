@@ -53,7 +53,7 @@ class SemestreLetivo {
 }
 
 /// O grupo de alunos de um curso, num turno e num semestre.
-class Turma {
+class Turma implements Comparable<Turma> {
   const Turma({required this.curso, required this.turno, required this.semestre});
 
   final String curso;
@@ -66,15 +66,35 @@ class Turma {
 
   @override
   int get hashCode => Object.hash(curso, turno, semestre);
+
+  /// Por curso, turno e semestre.
+  @override
+  int compareTo(Turma other) {
+    final porCurso = curso.compareTo(other.curso);
+    if (porCurso != 0) return porCurso;
+    final porTurno = turno.index.compareTo(other.turno.index);
+    return porTurno != 0 ? porTurno : semestre.compareTo(other.semestre);
+  }
 }
+
+/// Todo curso vai do 1º ao 6º semestre.
+const semestresDoCurso = [1, 2, 3, 4, 5, 6];
 
 /// Hora do dia em que uma aula começa ou termina.
 class Horario implements Comparable<Horario> {
   const Horario(this.hora, this.minuto);
 
   /// Lê o formato `HH:MM`.
-  factory Horario.parse(String texto) {
-    final [hora, minuto] = texto.split(':').map(int.parse).toList();
+  factory Horario.parse(String texto) =>
+      tentarLer(texto) ?? (throw FormatException('Horário fora do formato HH:MM', texto));
+
+  /// Lê `HH:MM` ou `H:MM`, aceitando segundos zerados (`19:00:00`, como o Excel escreve); devolve `null` se o
+  /// texto não for uma hora válida do dia.
+  static Horario? tentarLer(String texto) {
+    final partes = RegExp(r'^(\d{1,2}):(\d{2})(:00)?$').firstMatch(texto.trim());
+    if (partes == null) return null;
+    final [hora, minuto] = [int.parse(partes[1]!), int.parse(partes[2]!)];
+    if (hora > 23 || minuto > 59) return null;
     return Horario(hora, minuto);
   }
 

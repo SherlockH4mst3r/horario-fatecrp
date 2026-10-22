@@ -22,7 +22,7 @@ class GradePublicada extends SituacaoDaGrade {
   final EscolhaDeTurma? turmaLembrada;
 
   /// Todo curso vai do 1º ao 6º semestre, mesmo que a grade não traga aulas de algum.
-  List<int> get semestres => const [1, 2, 3, 4, 5, 6];
+  List<int> get semestres => semestresDoCurso;
 }
 
 /// Uma turma como o seletor a mostra: o curso oferecido e o semestre.
