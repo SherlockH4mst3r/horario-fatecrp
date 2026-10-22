@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:grade/grade.dart';
 
 import 'grade_semeada.dart';
+import 'memoria_no_navegador.dart';
 import 'tema.dart';
 import 'telas/tela_da_grade.dart';
 
 void main() {
-  final consulta = ConsultaDeGrade(RepositorioGradeEmMemoria(gradeSemeada));
+  final consulta = ConsultaDeGrade(RepositorioGradeEmMemoria(gradeSemeada), memoria: MemoriaNoNavegador());
   runApp(AppDaGrade(consulta: consulta));
 }
 

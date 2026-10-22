@@ -15,10 +15,22 @@ class TelaDaGrade extends StatefulWidget {
 }
 
 class _TelaDaGradeState extends State<TelaDaGrade> {
-  late final Future<SituacaoDaGrade> _situacao = widget.consulta.cursosDisponiveis();
+  // A falha ao carregar já aparece na tela pelo _AoCarregar; aqui só não há turma para abrir.
+  late final Future<SituacaoDaGrade> _situacao = widget.consulta.cursosDisponiveis()
+    ..then(_abrirTurmaLembrada, onError: (Object _) {});
   CursoOferecido? _curso;
   int? _semestre;
   Future<ResultadoDaTurma>? _resultado;
+
+  void _abrirTurmaLembrada(SituacaoDaGrade situacao) {
+    if (situacao case GradePublicada(turmaLembrada: (:final curso, :final semestre)) when mounted) {
+      setState(() {
+        _curso = curso;
+        _semestre = semestre;
+        _resultado = widget.consulta.gradeDaTurma(curso.turma(semestre), hoje: widget.relogio());
+      });
+    }
+  }
 
   void _escolherCurso(CursoOferecido? curso) {
     setState(() {
@@ -33,10 +45,7 @@ class _TelaDaGradeState extends State<TelaDaGrade> {
     if (curso == null || semestre == null) return;
     setState(() {
       _semestre = semestre;
-      _resultado = widget.consulta.gradeDaTurma(
-        Turma(curso: curso.curso, turno: curso.turno, semestre: semestre),
-        hoje: widget.relogio(),
-      );
+      _resultado = widget.consulta.escolher(curso.turma(semestre), hoje: widget.relogio());
     });
   }
 

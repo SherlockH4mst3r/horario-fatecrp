@@ -4,8 +4,8 @@
 **Bloqueado por:** 01
 **Status:** ready-for-agent
 
-- [ ] Ao escolher curso e semestre, a escolha fica guardada no navegador.
-- [ ] Ao reabrir o site, a grade dessa turma aparece sem passar pelo seletor.
-- [ ] O aluno troca de turma a qualquer momento, e a nova escolha substitui a guardada.
-- [ ] Se a turma guardada não existe mais na grade, o site abre no seletor.
-- [ ] Se o navegador bloqueia o armazenamento, o site abre no seletor sem erro.
+- [x] Ao escolher curso e semestre, a escolha fica guardada no navegador.
+- [x] Ao reabrir o site, a grade dessa turma aparece sem passar pelo seletor.
+- [x] O aluno troca de turma a qualquer momento, e a nova escolha substitui a guardada.
+- [x] Se a turma guardada não existe mais na grade, o site abre no seletor.
+- [x] Se o navegador bloqueia o armazenamento, o site abre no seletor sem erro.

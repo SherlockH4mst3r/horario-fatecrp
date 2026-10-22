@@ -1,4 +1,5 @@
 import 'grade.dart';
+import 'memoria_da_turma.dart';
 import 'repositorio_grade.dart';
 
 /// Situação da grade vista pelo aluno.
@@ -12,14 +13,20 @@ class GradeNaoPublicada implements SituacaoDaGrade, ResultadoDaTurma {
 }
 
 class GradePublicada extends SituacaoDaGrade {
-  const GradePublicada({required this.semestreLetivo, required this.cursos});
+  const GradePublicada({required this.semestreLetivo, required this.cursos, this.turmaLembrada});
 
   final SemestreLetivo semestreLetivo;
   final List<CursoOferecido> cursos;
 
+  /// A última turma que o aluno escolheu, se ela ainda tem aulas nesta grade.
+  final EscolhaDeTurma? turmaLembrada;
+
   /// Todo curso vai do 1º ao 6º semestre, mesmo que a grade não traga aulas de algum.
   List<int> get semestres => const [1, 2, 3, 4, 5, 6];
 }
+
+/// Uma turma como o seletor a mostra: o curso oferecido e o semestre.
+typedef EscolhaDeTurma = ({CursoOferecido curso, int semestre});
 
 /// Opção do seletor: um curso num turno.
 class CursoOferecido {
@@ -29,6 +36,8 @@ class CursoOferecido {
   final Turno turno;
 
   String get rotulo => '$curso – ${turno.rotulo}';
+
+  Turma turma(int semestre) => Turma(curso: curso, turno: turno, semestre: semestre);
 }
 
 /// O que o aluno vê ao abrir a grade de uma turma.
@@ -82,14 +91,46 @@ class DiaComAulas {
 
 /// Caso de uso do aluno: escolher a turma e ver as aulas dela.
 class ConsultaDeGrade {
-  ConsultaDeGrade(this._repositorio);
+  ConsultaDeGrade(this._repositorio, {required MemoriaDaTurma memoria}) : _memoria = memoria;
 
   final RepositorioGrade _repositorio;
+  final MemoriaDaTurma _memoria;
 
   Future<SituacaoDaGrade> cursosDisponiveis() async {
     final grade = await _repositorio.gradeAtual();
     if (grade == null) return const GradeNaoPublicada();
-    return GradePublicada(semestreLetivo: grade.semestreLetivo, cursos: _cursosOferecidos(grade));
+    final cursos = _cursosOferecidos(grade);
+    return GradePublicada(
+      semestreLetivo: grade.semestreLetivo,
+      cursos: cursos,
+      turmaLembrada: await _turmaLembrada(grade, cursos),
+    );
+  }
+
+  /// Guarda a escolha do aluno para a próxima visita e devolve a grade da turma.
+  Future<ResultadoDaTurma> escolher(Turma turma, {required DateTime hoje}) async {
+    try {
+      await _memoria.guardar(turma);
+    } catch (_) {
+      // Sem onde guardar, o aluno só precisa escolher de novo na próxima visita.
+    }
+    return gradeDaTurma(turma, hoje: hoje);
+  }
+
+  Future<EscolhaDeTurma?> _turmaLembrada(Grade grade, List<CursoOferecido> cursos) async {
+    final turma = await _lembradaSemFalhar();
+    if (turma == null || !grade.aulas.any((aula) => aula.turma == turma)) return null;
+    final curso = cursos.firstWhere((c) => c.turma(turma.semestre) == turma);
+    return (curso: curso, semestre: turma.semestre);
+  }
+
+  /// Memória que falha conta como nada guardado.
+  Future<Turma?> _lembradaSemFalhar() async {
+    try {
+      return await _memoria.lembrada();
+    } catch (_) {
+      return null;
+    }
   }
 
   Future<ResultadoDaTurma> gradeDaTurma(Turma turma, {required DateTime hoje}) async {

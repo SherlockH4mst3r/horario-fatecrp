@@ -40,6 +40,15 @@ Aula aula({
   andar: Andar.segundo,
 );
 
+/// Simula o navegador que bloqueia o armazenamento.
+class MemoriaQueFalha implements MemoriaDaTurma {
+  @override
+  Future<Turma?> lembrada() async => throw Exception('armazenamento bloqueado');
+
+  @override
+  Future<void> guardar(Turma turma) async => throw Exception('armazenamento bloqueado');
+}
+
 /// Simula a falha do banco ao buscar a grade.
 class RepositorioQueFalha implements RepositorioGrade {
   @override
@@ -48,9 +57,19 @@ class RepositorioQueFalha implements RepositorioGrade {
 
 void main() {
   /// Abre o site numa quinta, salvo outra data.
-  Future<void> abrirSite(WidgetTester tester, RepositorioGrade repositorio, {DateTime? em}) async {
+  Future<void> abrirSite(
+    WidgetTester tester,
+    RepositorioGrade repositorio, {
+    DateTime? em,
+    MemoriaDaTurma? memoria,
+  }) async {
     final hoje = em ?? DateTime(2026, 10, 22);
-    await tester.pumpWidget(AppDaGrade(consulta: ConsultaDeGrade(repositorio), relogio: () => hoje));
+    await tester.pumpWidget(
+      AppDaGrade(
+        consulta: ConsultaDeGrade(repositorio, memoria: memoria ?? MemoriaDaTurmaEmMemoria()),
+        relogio: () => hoje,
+      ),
+    );
     await tester.pumpAndSettle();
   }
 
@@ -256,4 +275,37 @@ void main() {
       expect(cores('Matemática Discreta').single, isNot(algoritmos.first));
     });
   }
+
+  group('turma lembrada', () {
+    const ads3 = Turma(curso: 'ADS', turno: Turno.noite, semestre: 3);
+
+    testWidgets('ao reabrir o site, a grade da última turma aparece sem passar pelo seletor', (tester) async {
+      final memoria = MemoriaDaTurmaEmMemoria();
+      await memoria.guardar(ads3);
+
+      await abrirSite(tester, RepositorioGradeEmMemoria(grade), memoria: memoria);
+
+      expect(find.text('Banco de Dados'), findsOneWidget);
+      final campos = tester.widgetList<TextField>(find.byType(TextField)).map((campo) => campo.controller?.text);
+      expect(campos, ['ADS – Noite', '3º']);
+    });
+
+    testWidgets('a turma escolhida fica guardada', (tester) async {
+      final memoria = MemoriaDaTurmaEmMemoria();
+      await abrirSite(tester, RepositorioGradeEmMemoria(grade), memoria: memoria);
+
+      await escolher(tester, 'Curso', 'ADS – Noite');
+      await escolher(tester, 'Semestre', '3º');
+
+      expect(await tester.runAsync(memoria.lembrada), ads3);
+    });
+
+    testWidgets('se o navegador bloqueia o armazenamento, o site abre no seletor sem erro', (tester) async {
+      await abrirSite(tester, RepositorioGradeEmMemoria(grade), memoria: MemoriaQueFalha());
+
+      expect(find.text('Curso'), findsWidgets);
+      expect(find.text('Banco de Dados'), findsNothing);
+      expect(tester.takeException(), isNull);
+    });
+  });
 }
