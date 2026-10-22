@@ -43,8 +43,16 @@ void main() {
       final aula = grade.aulas.single;
       expect(aula.turma, const Turma(curso: 'ADS', turno: Turno.noite, semestre: 3));
       expect(
-        [aula.dia, '${aula.inicio}', '${aula.fim}', aula.disciplina, aula.professor, aula.sala, aula.andar],
-        [DiaDaSemana.segunda, '19:00', '20:40', 'Banco de Dados', 'Rita Alves', 'Lab 1', Andar.segundo],
+        [aula.dia, '${aula.inicio}', '${aula.fim}', aula.disciplina, aula.professor, aula.sala, aula.andares],
+        [
+          DiaDaSemana.segunda,
+          '19:00',
+          '20:40',
+          'Banco de Dados',
+          'Rita Alves',
+          'Lab 1',
+          [Andar.segundo],
+        ],
       );
     });
 
@@ -61,7 +69,7 @@ void main() {
       expect(previa.erros, isEmpty);
       await importacao.publicar(previa);
       final aulas = (await repositorio.gradeAtual())!.aulas;
-      expect(aulas.map((a) => (a.turma.turno, a.dia, a.turma.semestre, '${a.inicio}', a.andar)), [
+      expect(aulas.map((a) => (a.turma.turno, a.dia, a.turma.semestre, '${a.inicio}', a.andares.single)), [
         (Turno.noite, DiaDaSemana.terca, 3, '07:40', Andar.terreo),
         (Turno.manha, DiaDaSemana.sabado, 1, '19:00', Andar.terceiro),
         (Turno.noite, DiaDaSemana.terca, 3, '19:00', Andar.primeiro),
@@ -123,6 +131,42 @@ void main() {
       expect(previa.salas.map((s) => s.sala), ['Lab 1', 'lab 1']);
     });
 
+    test('aula que alterna entre duas salas traz o andar de cada uma, na mesma ordem', () async {
+      final previa = importacao.importar(
+        planilha([
+          linha(sala: 'S4/L3', andar: '1º andar/3º andar'),
+          linha(dia: 'Terça', sala: 'L1/S2', andar: '1º andar'),
+        ]),
+        semestreLetivo,
+      );
+
+      expect(previa.erros, isEmpty);
+      await importacao.publicar(previa);
+      final aulas = (await repositorio.gradeAtual())!.aulas;
+      expect(aulas.map((a) => '${a.sala} ${a.andares.map((andar) => andar.rotulo).join('/')}'), [
+        'S4/L3 1º andar/3º andar',
+        'L1/S2 1º andar/1º andar',
+      ]);
+      expect(previa.salas.map((s) => '${s.sala} ${s.andar.rotulo}'), [
+        'L1 1º andar',
+        'L3 3º andar',
+        'S2 1º andar',
+        'S4 1º andar',
+      ]);
+    });
+
+    test('sala a definir pode vir sem andar', () async {
+      final previa = importacao.importar(
+        planilha([linha(sala: 'A definir – ADS Noite 6º', andar: '')]),
+        semestreLetivo,
+      );
+
+      expect(previa.erros, isEmpty);
+      await importacao.publicar(previa);
+      expect((await repositorio.gradeAtual())!.aulas.single.andares, isEmpty);
+      expect(previa.salas, isEmpty);
+    });
+
     test('importar não altera a grade publicada; só publicar altera', () async {
       final atual = Grade(semestreLetivo: const SemestreLetivo(ano: 2026, periodo: 2), aulas: const []);
       repositorio = RepositorioGradeEmMemoria(atual);
@@ -146,7 +190,7 @@ void main() {
               disciplina: 'Antiga',
               professor: 'Fulano',
               sala: 'B12',
-              andar: Andar.primeiro,
+              andares: const [Andar.primeiro],
             ),
           ],
         ),
@@ -268,6 +312,30 @@ void main() {
       );
 
       expect(previa.erros, isEmpty);
+    });
+
+    test('sala conhecida sem andar gera erro de campo vazio', () {
+      final previa = importacao.importar(planilha([linha(andar: '')]), semestreLetivo);
+
+      expect(erros(previa), ['2 Andar']);
+    });
+
+    test('número de andares diferente do número de salas gera erro na linha', () {
+      final previa = importacao.importar(planilha([linha(sala: 'S4/L3', andar: '1º/2º/3º')]), semestreLetivo);
+
+      expect(erros(previa), ['2 Andar']);
+    });
+
+    test('a mesma sala em andares diferentes gera erro, também quando ela aparece numa sala dupla', () {
+      final previa = importacao.importar(
+        planilha([
+          linha(dia: 'Segunda', sala: 'L1/S2', andar: '1º andar'),
+          linha(dia: 'Terça', sala: 'L1', andar: '2º andar'),
+        ]),
+        semestreLetivo,
+      );
+
+      expect(erros(previa), ['2 Andar', '3 Andar']);
     });
 
     test('a mesma sala com andares diferentes gera erro nessas linhas', () {

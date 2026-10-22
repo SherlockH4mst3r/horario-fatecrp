@@ -35,8 +35,14 @@ _Evite_: horário, cronograma, quadro
 O local onde a aula acontece, identificado como está na planilha.
 _Evite_: local, ambiente
 
+**Sala dupla**:
+Duas salas entre as quais a aula alterna, conforme o conteúdo do dia, escritas como "S4/L3". Cada uma tem o seu andar.
+
+**Sala a definir**:
+Sala que a grade ainda não informa, escrita como "A definir – ADS Noite 6º". Não tem andar.
+
 **Andar**:
-O nível do prédio onde fica a sala: térreo, 1º, 2º ou 3º. Vem da planilha, numa coluna própria.
+O nível do prédio onde fica a sala: térreo, 1º, 2º ou 3º. Vem da planilha, numa coluna própria; numa sala dupla, um andar para cada sala, na mesma ordem ("1º andar/3º andar").
 _Evite_: piso, pavimento
 
 **Importação**:

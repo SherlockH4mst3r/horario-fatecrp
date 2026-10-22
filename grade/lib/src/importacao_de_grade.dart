@@ -38,8 +38,8 @@ class Previa {
   /// As turmas das linhas legíveis, mesmo as que têm erro em outra coluna; sem repetição e em ordem.
   final List<Turma> turmas;
 
-  /// As salas das linhas legíveis, sem repetição e por nome. Uma sala com dois andares aparece duas vezes,
-  /// para o admin ver o problema.
+  /// Cada sala das linhas legíveis (uma sala dupla, como "S4/L3", conta como duas), sem repetição e por nome.
+  /// Uma sala com dois andares aparece duas vezes, para o admin ver o problema.
   final List<SalaEncontrada> salas;
 
   /// Só as linhas sem erro; com qualquer erro na planilha, nada é publicado.
@@ -68,7 +68,7 @@ class ImportacaoDeGrade {
       semestreLetivo: semestreLetivo,
       erros: [for (final erro in _emOrdem(erros)) erro.paraOAdmin],
       turmas: {for (final linha in linhas) ?linha.turma}.toList()..sort(),
-      salas: {for (final linha in linhas) ?linha.salaEncontrada}.toList()..sort(_porSalaEAndar),
+      salas: {for (final linha in linhas) ...linha.salasEncontradas}.toList()..sort(_porSalaEAndar),
       aulas: [for (final linha in linhas) ?linha.aula],
     );
   }
@@ -125,14 +125,19 @@ class ImportacaoDeGrade {
     }
   }
 
+  /// Olha cada sala sozinha: a L1 de "L1/S2" é a mesma L1 de outra linha.
   Iterable<_Erro> _salasEmAndaresDiferentes(List<_LinhaLida> linhas) sync* {
     final andaresPorSala = <String, Set<Andar>>{};
-    for (final (:sala, :andar) in [for (final linha in linhas) ?linha.salaEncontrada]) {
+    for (final (:sala, :andar) in [for (final linha in linhas) ...linha.salasEncontradas]) {
       andaresPorSala.putIfAbsent(sala, () => {}).add(andar);
     }
     for (final linha in linhas) {
-      if (linha.salaEncontrada case (:final sala, andar: _) when andaresPorSala[sala]!.length > 1) {
-        yield _Erro(linha.numero, _Coluna.andar, 'a sala $sala aparece em andares diferentes');
+      final emDoisAndares = [
+        for (final (:sala, andar: _) in linha.salasEncontradas)
+          if (andaresPorSala[sala]!.length > 1) sala,
+      ];
+      if (emDoisAndares.isNotEmpty) {
+        yield _Erro(linha.numero, _Coluna.andar, 'a sala ${emDoisAndares.join(' e ')} aparece em andares diferentes');
       }
     }
   }
@@ -199,7 +204,7 @@ class _LinhaLida {
     required this.disciplina,
     required this.professor,
     required this.sala,
-    required this.andar,
+    required this.andares,
   });
 
   /// Lê todos os campos de uma vez, juntando os erros da linha em vez de parar no primeiro.
@@ -229,6 +234,27 @@ class _LinhaLida {
       return null;
     }
 
+    /// Um andar por sala, na mesma ordem ("1º andar/3º andar" para "S4/L3"), ou um só para todas. Sala a
+    /// definir pode vir sem andar.
+    List<Andar>? andares(String? sala) {
+      final salas = sala?.split('/') ?? const [];
+      if (celula(_Coluna.andar).isEmpty && sala != null && _aDefinir(sala)) return const [];
+      final lido = texto(_Coluna.andar);
+      if (lido == null) return null;
+      final partes = [for (final parte in lido.split('/')) _andares[_normalizar(parte)]];
+      if (partes.contains(null)) {
+        erros.add(_Erro(numero, _Coluna.andar, 'andar deve ser ${_umDe(Andar.values.map((a) => a.rotulo))}'));
+        return null;
+      }
+      if (partes.length == 1 && salas.length > 1) return List.filled(salas.length, partes.single!);
+      if (sala != null && partes.length != salas.length) {
+        erros.add(_Erro(numero, _Coluna.andar, 'informe um andar por sala, na ordem, como "1º andar/3º andar"'));
+        return null;
+      }
+      return partes.cast<Andar>();
+    }
+
+    final sala = texto(_Coluna.sala);
     final inicio = horario(_Coluna.inicio);
     var fim = horario(_Coluna.fim);
     if (inicio != null && fim != null && fim.compareTo(inicio) <= 0) {
@@ -250,8 +276,8 @@ class _LinhaLida {
       fim: fim,
       disciplina: texto(_Coluna.disciplina),
       professor: texto(_Coluna.professor),
-      sala: texto(_Coluna.sala),
-      andar: valor(_Coluna.andar, _andares, 'andar deve ser ${_umDe(Andar.values.map((a) => a.rotulo))}'),
+      sala: sala,
+      andares: andares(sala),
     );
   }
 
@@ -266,16 +292,18 @@ class _LinhaLida {
   final String? disciplina;
   final String? professor;
   final String? sala;
-  final Andar? andar;
+  final List<Andar>? andares;
 
   Turma? get turma => switch ((curso, turno, semestre)) {
     (final curso?, final turno?, final semestre?) => Turma(curso: curso, turno: turno, semestre: semestre),
     _ => null,
   };
 
-  SalaEncontrada? get salaEncontrada => switch ((sala, andar)) {
-    (final sala?, final andar?) => (sala: sala, andar: andar),
-    _ => null,
+  List<SalaEncontrada> get salasEncontradas => switch ((sala, andares)) {
+    (final sala?, final andares?) when andares.isNotEmpty => [
+      for (final (indice, nome) in sala.split('/').indexed) (sala: nome.trim(), andar: andares[indice]),
+    ],
+    _ => const [],
   };
 
   /// Onde e quando a linha ocupa uma sala, se ela diz isso sem erro.
@@ -294,7 +322,7 @@ class _LinhaLida {
           disciplina: disciplina!,
           professor: professor!,
           sala: sala!,
-          andar: andar!,
+          andares: andares!,
         )
       : null;
 }
@@ -313,6 +341,9 @@ final _andares = {
     if (andar != Andar.terreo) '${andar.index}': andar,
   },
 };
+
+/// Sala ainda sem lugar, como "A definir – ADS Noite 6º".
+bool _aDefinir(String sala) => _normalizar(sala).startsWith('a definir');
 
 String _umDe(Iterable<String> opcoes) {
   final [...primeiras, ultima] = opcoes.toList();

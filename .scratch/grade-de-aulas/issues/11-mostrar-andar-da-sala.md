@@ -10,3 +10,7 @@
 - [x] Testes do domínio e de widget cobrem o andar.
 
 O andar vem de uma coluna nova na planilha. A leitura e a validação dessa coluna ficam nos tickets 06 e 07; a coluna no banco, no 10.
+
+## Comments
+
+**2026-10-22, salas duplas.** A aula agora guarda um andar por sala. A tela mostra "Sala S4/L3 · 1º andar/3º andar", um andar só quando as salas ficam no mesmo, e nenhum na sala a definir.

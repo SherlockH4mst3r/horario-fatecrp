@@ -46,6 +46,13 @@ enum Andar {
 class SemestreLetivo {
   const SemestreLetivo({required this.ano, required this.periodo});
 
+  /// Lê o semestre letivo como o admin digita, `ano/período` (ex.: 2027/1); devolve `null` se não for um.
+  static SemestreLetivo? tentarLer(String texto) {
+    final partes = RegExp(r'^(\d{4})\s*/\s*([12])$').firstMatch(texto.trim());
+    if (partes == null) return null;
+    return SemestreLetivo(ano: int.parse(partes[1]!), periodo: int.parse(partes[2]!));
+  }
+
   final int ano;
   final int periodo;
 
@@ -128,7 +135,7 @@ class Aula {
     required this.disciplina,
     required this.professor,
     required this.sala,
-    required this.andar,
+    required this.andares,
   });
 
   final Turma turma;
@@ -137,8 +144,12 @@ class Aula {
   final Horario fim;
   final String disciplina;
   final String professor;
+
+  /// Como está na planilha. Uma aula pode alternar entre duas salas, conforme o conteúdo do dia ("S4/L3").
   final String sala;
-  final Andar andar;
+
+  /// O andar de cada sala, na ordem em que elas aparecem em [sala]; vazio quando a sala ainda está a definir.
+  final List<Andar> andares;
 }
 
 /// O conjunto de aulas de um semestre letivo.

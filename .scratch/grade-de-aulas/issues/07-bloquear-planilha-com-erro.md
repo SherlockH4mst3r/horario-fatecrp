@@ -17,3 +17,5 @@
 ## Comments
 
 **2026-10-22, domínio pronto.** A prévia aponta linha e coluna de: campo vazio, coluna faltando no cabeçalho, horário inválido, fim antes do início ou igual a ele, dia fora de segunda a sábado, turno, semestre e andar inválidos, conflito de sala (erro nas duas linhas; aulas que só se encostam passam) e sala em andares diferentes. Com erro, `publicar` recusa a prévia. Faltam: botão "Publicar" desabilitado no painel e a exclusion constraint no banco.
+
+**2026-10-22, salas duplas e salas a definir.** A coluna Andar aceita um andar por sala ("1º andar/3º andar" para "S4/L3"), ou um só para todas. Novos erros: número de andares diferente do número de salas. A checagem de "sala em andares diferentes" olha cada sala sozinha (a L1 de "L1/S2" é a mesma L1 de outra linha). Sala a definir ("A definir – ...") pode vir sem andar.

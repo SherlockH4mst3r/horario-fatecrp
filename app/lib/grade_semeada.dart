@@ -37,6 +37,6 @@ Iterable<Aula> _turma(
         disciplina: disciplina,
         professor: professor,
         sala: sala,
-        andar: andar,
+        andares: [andar],
       );
     });

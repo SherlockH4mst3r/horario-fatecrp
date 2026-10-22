@@ -197,12 +197,12 @@ void main() {
     test('cada aula traz o andar da sala, do térreo ao 3º', () async {
       final resultado = await aulasDaTurma(
         consultaCom([
-          aula(semestre: 3, inicio: '19:00', andar: Andar.terreo),
-          aula(semestre: 3, inicio: '20:50', fim: '22:30', andar: Andar.terceiro),
+          aula(semestre: 3, inicio: '19:00', andares: [Andar.terreo]),
+          aula(semestre: 3, inicio: '20:50', fim: '22:30', andares: [Andar.terceiro]),
         ]),
       );
 
-      expect(resultado.semana.first.aulas.map((a) => a.andar.rotulo), ['Térreo', '3º andar']);
+      expect(resultado.semana.first.aulas.map((a) => a.andares.single.rotulo), ['Térreo', '3º andar']);
     });
 
     test('sem grade publicada, informa que a grade não foi publicada', () async {
@@ -235,7 +235,7 @@ Aula aula({
   String disciplina = 'Algoritmos',
   String professor = 'Ana Souza',
   String sala = 'B12',
-  Andar andar = Andar.primeiro,
+  List<Andar> andares = const [Andar.primeiro],
 }) => Aula(
   turma: Turma(curso: curso, turno: turno, semestre: semestre),
   dia: dia,
@@ -244,7 +244,7 @@ Aula aula({
   disciplina: disciplina,
   professor: professor,
   sala: sala,
-  andar: andar,
+  andares: andares,
 );
 
 /// Simula o navegador que bloqueia o armazenamento.

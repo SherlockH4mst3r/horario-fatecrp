@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:grade/grade.dart';
 
 import '../tema.dart';
+import 'moldura.dart';
 
 /// Tela pública: o aluno escolhe curso e semestre e vê as aulas da turma.
 class TelaDaGrade extends StatefulWidget {
@@ -54,9 +55,9 @@ class _TelaDaGradeState extends State<TelaDaGrade> {
     return Scaffold(
       body: _AoCarregar(
         future: _situacao,
-        aoFalhar: (aviso) => Column(children: [const _Cabecalho(), aviso]),
+        aoFalhar: (aviso) => Column(children: [const CabecalhoFatec(), aviso]),
         builder: (situacao) => switch (situacao) {
-          GradeNaoPublicada() => const Column(children: [_Cabecalho(), _avisoGradeNaoPublicada]),
+          GradeNaoPublicada() => const Column(children: [CabecalhoFatec(), _avisoGradeNaoPublicada]),
           GradePublicada publicada => _conteudo(publicada),
         },
       ),
@@ -66,8 +67,8 @@ class _TelaDaGradeState extends State<TelaDaGrade> {
   Widget _conteudo(GradePublicada publicada) {
     return ListView(
       children: [
-        _Cabecalho(semestreLetivo: publicada.semestreLetivo),
-        _Coluna(
+        CabecalhoFatec(titulo: 'Grade ${publicada.semestreLetivo.rotulo}'),
+        ColunaDeConteudo(
           children: [
             const SizedBox(height: 24),
             _SeletorDeTurma(
@@ -98,12 +99,14 @@ class _TelaDaGradeState extends State<TelaDaGrade> {
   }
 }
 
-String _local(Aula aula) => 'Sala ${aula.sala} · ${aula.andar.rotulo}';
+/// "Sala S4/L3 · 1º andar/3º andar"; o andar aparece uma vez quando as salas ficam no mesmo andar, e some
+/// quando a sala está a definir.
+String _local(Aula aula) {
+  final andares = {for (final andar in aula.andares) andar.rotulo};
+  return andares.isEmpty ? 'Sala ${aula.sala}' : 'Sala ${aula.sala} · ${andares.join('/')}';
+}
 
 const _avisoGradeNaoPublicada = _Aviso('Grade ainda não publicada');
-
-/// Largura máxima do conteúdo em telas grandes.
-const _larguraMaxima = 1200.0;
 
 /// A partir desta largura de tela cabem seis dias lado a lado; abaixo dela, a grade vira lista.
 const _larguraDaGradeDeHorarios = 840.0;
@@ -130,56 +133,6 @@ class _AoCarregar<T> extends StatelessWidget {
         if (snapshot.data case final dados?) return builder(dados);
         return const Center(child: CircularProgressIndicator());
       },
-    );
-  }
-}
-
-/// Faixa vermelha do topo, com o nome da faculdade e o semestre letivo.
-class _Cabecalho extends StatelessWidget {
-  const _Cabecalho({this.semestreLetivo});
-
-  final SemestreLetivo? semestreLetivo;
-
-  @override
-  Widget build(BuildContext context) {
-    final textos = Theme.of(context).textTheme;
-    return Material(
-      color: vermelhoFatec,
-      child: SafeArea(
-        bottom: false,
-        child: _Coluna(
-          children: [
-            const SizedBox(height: 20),
-            Text('FATEC RIBEIRÃO PRETO', style: textos.labelLarge?.copyWith(color: Colors.white70, letterSpacing: 1.5)),
-            if (semestreLetivo case final semestre?)
-              Text(
-                'Grade ${semestre.rotulo}',
-                style: textos.headlineMedium?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
-              ),
-            const SizedBox(height: 20),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-/// Limita a largura do conteúdo em telas grandes, com margem lateral no celular.
-class _Coluna extends StatelessWidget {
-  const _Coluna({required this.children});
-
-  final List<Widget> children;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: _larguraMaxima),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: children),
-        ),
-      ),
     );
   }
 }

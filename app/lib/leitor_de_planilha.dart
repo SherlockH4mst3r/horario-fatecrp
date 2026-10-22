@@ -23,7 +23,7 @@ class PlanilhaIlegivel implements Exception {
 Planilha lerPlanilhaXlsx(Uint8List bytes) {
   final Excel arquivo;
   try {
-    arquivo = Excel.decodeBytes(_comCaminhosRelativos(bytes));
+    arquivo = Excel.decodeBytes(_compativelComOPacoteExcel(bytes));
   } catch (_) {
     throw const PlanilhaIlegivel('o arquivo não é uma planilha .xlsx');
   }
@@ -36,27 +36,37 @@ Planilha lerPlanilhaXlsx(Uint8List bytes) {
   return Planilha(cabecalho: cabecalho, linhas: linhas);
 }
 
-/// O pacote excel só acha as abas quando o arquivo aponta para elas por caminho relativo, como o Excel grava.
-/// O openpyxl e outras ferramentas gravam o caminho absoluto (`/xl/worksheets/...`), também válido no formato;
-/// aqui ele vira relativo antes da leitura.
-List<int> _comCaminhosRelativos(Uint8List bytes) {
-  const absoluto = 'Target="/xl/';
+/// O pacote excel tropeça em dois jeitos válidos de gravar .xlsx, comuns no openpyxl e em outras ferramentas:
+/// - caminho absoluto para as abas (`/xl/worksheets/...`), em vez do relativo que o Excel grava;
+/// - célula de texto vazia gravada como `<c t="inlineStr"/>`, sem o texto dentro.
+/// Aqui os dois viram o jeito que o pacote entende, antes da leitura.
+List<int> _compativelComOPacoteExcel(Uint8List bytes) {
   final zip = ZipDecoder().decodeBytes(bytes);
-  final relacoes = zip.findFile('xl/_rels/workbook.xml.rels');
-  if (relacoes == null) return bytes;
-  final texto = utf8.decode(relacoes.content as List<int>);
-  if (!texto.contains(absoluto)) return bytes;
-
   final corrigido = Archive();
+  var mudou = false;
   for (final arquivo in zip.files) {
-    if (arquivo.name == relacoes.name) {
-      final conteudo = utf8.encode(texto.replaceAll(absoluto, 'Target="'));
-      corrigido.addFile(ArchiveFile(arquivo.name, conteudo.length, conteudo));
-    } else {
+    final original = switch (_correcaoPara(arquivo.name)) {
+      final corrigir? => (texto: utf8.decode(arquivo.content as List<int>), corrigir: corrigir),
+      null => null,
+    };
+    final novo = original?.corrigir(original.texto);
+    if (original == null || novo == original.texto) {
       corrigido.addFile(arquivo);
+      continue;
     }
+    mudou = true;
+    final conteudo = utf8.encode(novo!);
+    corrigido.addFile(ArchiveFile(arquivo.name, conteudo.length, conteudo));
   }
-  return ZipEncoder().encode(corrigido)!;
+  return mudou ? ZipEncoder().encode(corrigido)! : bytes;
+}
+
+String Function(String xml)? _correcaoPara(String caminho) {
+  if (caminho == 'xl/_rels/workbook.xml.rels') return (xml) => xml.replaceAll('Target="/xl/', 'Target="');
+  if (caminho.startsWith('xl/worksheets/') && caminho.endsWith('.xml')) {
+    return (xml) => xml.replaceAll(RegExp(r'\s+t="inlineStr"\s*/>'), '/>');
+  }
+  return null;
 }
 
 String _comoTexto(CellValue? valor) => switch (valor) {

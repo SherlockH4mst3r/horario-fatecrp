@@ -29,6 +29,8 @@ Aula aula({
   String disciplina = 'Contabilidade',
   String inicio = '19:00',
   String fim = '22:30',
+  String sala = 'Lab 1',
+  List<Andar> andares = const [Andar.segundo],
 }) => Aula(
   turma: Turma(curso: curso, turno: turno, semestre: semestre),
   dia: dia,
@@ -36,8 +38,8 @@ Aula aula({
   fim: Horario.parse(fim),
   disciplina: disciplina,
   professor: 'Rita Alves',
-  sala: 'Lab 1',
-  andar: Andar.segundo,
+  sala: sala,
+  andares: andares,
 );
 
 /// Simula o navegador que bloqueia o armazenamento.
@@ -310,5 +312,30 @@ void main() {
       expect(find.text('Banco de Dados'), findsNothing);
       expect(tester.takeException(), isNull);
     });
+  });
+
+  testWidgets('sala dupla mostra os dois andares; andar repetido e sala a definir aparecem sem sobra', (tester) async {
+    await abrirSite(
+      tester,
+      RepositorioGradeEmMemoria(
+        Grade(
+          semestreLetivo: grade.semestreLetivo,
+          aulas: [
+            for (final (dia, sala, andares) in [
+              (DiaDaSemana.segunda, 'S4/L3', [Andar.primeiro, Andar.terceiro]),
+              (DiaDaSemana.terca, 'L1/S2', [Andar.primeiro, Andar.primeiro]),
+              (DiaDaSemana.quarta, 'A definir – ADS Noite 1º', <Andar>[]),
+            ])
+              aula(curso: 'ADS', turno: Turno.noite, semestre: 1, dia: dia, sala: sala, andares: andares),
+          ],
+        ),
+      ),
+    );
+    await escolher(tester, 'Curso', 'ADS – Noite');
+    await escolher(tester, 'Semestre', '1º');
+
+    expect(find.text('Sala S4/L3 · 1º andar/3º andar'), findsOneWidget);
+    expect(find.text('Sala L1/S2 · 1º andar'), findsOneWidget);
+    expect(find.text('Sala A definir – ADS Noite 1º'), findsOneWidget);
   });
 }

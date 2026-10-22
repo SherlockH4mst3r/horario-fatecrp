@@ -92,7 +92,7 @@ O admin entra num painel com login. Lá ele importa a planilha do semestre letiv
 - **Banco Supabase.** Tabelas, função de substituição, constraint e RLS.
 
 ### Dados
-- Tabela de aulas com curso, turno e sala em texto (sem tabelas de cadastro), semestre, dia da semana (segunda a sábado), início, fim, disciplina, professor, andar (térreo a 3º) e semestre letivo.
+- Tabela de aulas com curso, turno e sala em texto (sem tabelas de cadastro), semestre, dia da semana (segunda a sábado), início, fim, disciplina, professor, andares (térreo a 3º; um por sala, numa sala dupla, e nenhum numa sala a definir) e semestre letivo.
 - Turma = curso + turno + semestre. É derivada das aulas, não é tabela.
 - Só uma grade (a do semestre letivo vigente) existe por vez. Não há histórico.
 
