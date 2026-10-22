@@ -11,9 +11,12 @@ void main() {
 }
 
 class AppDaGrade extends StatelessWidget {
-  const AppDaGrade({super.key, required this.consulta});
+  const AppDaGrade({super.key, required this.consulta, this.relogio = DateTime.now});
 
   final ConsultaDeGrade consulta;
+
+  /// Os testes trocam por uma data fixa.
+  final DateTime Function() relogio;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +25,7 @@ class AppDaGrade extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: temaFatec(Brightness.light),
       darkTheme: temaFatec(Brightness.dark),
-      home: TelaDaGrade(consulta: consulta),
+      home: TelaDaGrade(consulta: consulta, relogio: relogio),
     );
   }
 }

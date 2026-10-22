@@ -20,7 +20,14 @@ enum DiaDaSemana {
 
   const DiaDaSemana(this.rotulo);
 
+  /// O dia letivo de uma data; `null` no domingo, que não tem aula.
+  static DiaDaSemana? letivoDe(DateTime data) =>
+      data.weekday == DateTime.sunday ? null : DiaDaSemana.values[data.weekday - 1];
+
   final String rotulo;
+
+  /// Os dias seguintes a este, voltando à segunda depois do sábado.
+  List<DiaDaSemana> get seguintes => [...values.skip(index + 1), ...values.take(index)];
 }
 
 /// O andar do prédio onde fica a sala. O prédio da FATEC RP tem térreo e mais três andares.
@@ -78,6 +85,12 @@ class Horario implements Comparable<Horario> {
 
   @override
   int compareTo(Horario other) => _minutosDoDia.compareTo(other._minutosDoDia);
+
+  @override
+  bool operator ==(Object other) => other is Horario && other._minutosDoDia == _minutosDoDia;
+
+  @override
+  int get hashCode => _minutosDoDia.hashCode;
 
   @override
   String toString() => '${hora.toString().padLeft(2, '0')}:${minuto.toString().padLeft(2, '0')}';

@@ -5,9 +5,10 @@ import '../tema.dart';
 
 /// Tela pública: o aluno escolhe curso e semestre e vê as aulas da turma.
 class TelaDaGrade extends StatefulWidget {
-  const TelaDaGrade({super.key, required this.consulta});
+  const TelaDaGrade({super.key, required this.consulta, required this.relogio});
 
   final ConsultaDeGrade consulta;
+  final DateTime Function() relogio;
 
   @override
   State<TelaDaGrade> createState() => _TelaDaGradeState();
@@ -32,7 +33,10 @@ class _TelaDaGradeState extends State<TelaDaGrade> {
     if (curso == null || semestre == null) return;
     setState(() {
       _semestre = semestre;
-      _resultado = widget.consulta.gradeDaTurma(Turma(curso: curso.curso, turno: curso.turno, semestre: semestre));
+      _resultado = widget.consulta.gradeDaTurma(
+        Turma(curso: curso.curso, turno: curso.turno, semestre: semestre),
+        hoje: widget.relogio(),
+      );
     });
   }
 
@@ -72,7 +76,10 @@ class _TelaDaGradeState extends State<TelaDaGrade> {
                 builder: (resultado) => switch (resultado) {
                   GradeNaoPublicada() => _avisoGradeNaoPublicada,
                   TurmaSemAulas() => const _Aviso('Esta turma não tem aulas nesta grade.'),
-                  AulasDaTurma(:final dias) => _ListaPorDia(dias),
+                  AulasDaTurma aulas =>
+                    MediaQuery.sizeOf(context).width >= _larguraDaTabela
+                        ? _TabelaDaSemana(aulas)
+                        : _ListaAPartirDeHoje(aulas),
                 },
               ),
           ],
@@ -82,7 +89,15 @@ class _TelaDaGradeState extends State<TelaDaGrade> {
   }
 }
 
+String _local(Aula aula) => 'Sala ${aula.sala} · ${aula.andar.rotulo}';
+
 const _avisoGradeNaoPublicada = _Aviso('Grade ainda não publicada');
+
+/// Largura máxima do conteúdo em telas grandes.
+const _larguraMaxima = 1200.0;
+
+/// A partir desta largura de tela cabem seis dias lado a lado; abaixo dela, a grade vira lista.
+const _larguraDaTabela = 840.0;
 
 /// Espera a consulta: mostra o progresso enquanto carrega e um aviso se ela falhar.
 class _AoCarregar<T> extends StatelessWidget {
@@ -150,7 +165,7 @@ class _Coluna extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 720),
+        constraints: const BoxConstraints(maxWidth: _larguraMaxima),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: children),
@@ -205,31 +220,120 @@ class _SeletorDeTurma extends StatelessWidget {
   }
 }
 
-class _ListaPorDia extends StatelessWidget {
-  const _ListaPorDia(this.dias);
+/// Semana em tabela, para telas largas: uma coluna por dia e uma linha por horário de início.
+class _TabelaDaSemana extends StatelessWidget {
+  const _TabelaDaSemana(this.aulas);
 
-  final List<DiaComAulas> dias;
+  final AulasDaTurma aulas;
+
+  @override
+  Widget build(BuildContext context) {
+    final cores = Theme.of(context).colorScheme;
+    final textos = Theme.of(context).textTheme;
+    return Table(
+      border: TableBorder.all(color: cores.outlineVariant),
+      columnWidths: const {0: IntrinsicColumnWidth()},
+      children: [
+        TableRow(
+          decoration: const BoxDecoration(color: vermelhoFatec),
+          children: [
+            const SizedBox.shrink(),
+            for (final DiaComAulas(:dia) in aulas.semana)
+              Padding(
+                padding: const EdgeInsets.all(12),
+                child: Text(dia.rotulo, style: textos.titleSmall?.copyWith(color: Colors.white)),
+              ),
+          ],
+        ),
+        for (final inicio in aulas.inicios)
+          TableRow(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(12),
+                child: Text(
+                  '$inicio',
+                  style: TextStyle(color: cores.primary, fontWeight: FontWeight.bold),
+                ),
+              ),
+              for (final DiaComAulas(aulas: aulasDoDia) in aulas.semana)
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    for (final aula in aulasDoDia)
+                      if (aula.inicio == inicio) _AulaNaTabela(aula),
+                  ],
+                ),
+            ],
+          ),
+      ],
+    );
+  }
+}
+
+class _AulaNaTabela extends StatelessWidget {
+  const _AulaNaTabela(this.aula);
+
+  final Aula aula;
+
+  @override
+  Widget build(BuildContext context) {
+    final textos = Theme.of(context).textTheme;
+    return Padding(
+      padding: const EdgeInsets.all(12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(aula.disciplina, style: textos.titleSmall),
+          Text(aula.professor, style: textos.bodySmall),
+          Text(_local(aula), style: textos.bodySmall),
+          Text('${aula.inicio} – ${aula.fim}', style: textos.bodySmall),
+        ],
+      ),
+    );
+  }
+}
+
+/// Lista para telas estreitas: hoje primeiro (exceto no domingo), depois os próximos dias com aula.
+class _ListaAPartirDeHoje extends StatelessWidget {
+  const _ListaAPartirDeHoje(this.grade);
+
+  final AulasDaTurma grade;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        for (final DiaComAulas(:dia, :aulas) in dias) ...[
-          Padding(
-            padding: const EdgeInsets.only(bottom: 4),
-            child: Text(
-              dia.rotulo,
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                color: Theme.of(context).colorScheme.primary,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          for (final aula in aulas) _CartaoDaAula(aula),
+        if (grade.hoje case final hoje?) ...[
+          _TituloDoDia('${hoje.dia.rotulo} · hoje'),
+          if (hoje.aulas.isEmpty) const _Aviso('Sem aulas hoje') else ...hoje.aulas.map(_CartaoDaAula.new),
+          const SizedBox(height: 16),
+        ],
+        for (final DiaComAulas(:dia, :aulas) in grade.proximosDias) ...[
+          _TituloDoDia(dia.rotulo),
+          ...aulas.map(_CartaoDaAula.new),
           const SizedBox(height: 16),
         ],
       ],
+    );
+  }
+}
+
+class _TituloDoDia extends StatelessWidget {
+  const _TituloDoDia(this.titulo);
+
+  final String titulo;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 4),
+      child: Text(
+        titulo,
+        style: Theme.of(
+          context,
+        ).textTheme.titleMedium?.copyWith(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.bold),
+      ),
     );
   }
 }
@@ -249,8 +353,11 @@ class _CartaoDaAula extends StatelessWidget {
           style: TextStyle(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.bold),
         ),
         title: Text(aula.disciplina),
-        subtitle: Text(aula.professor),
-        trailing: Text('Sala ${aula.sala} · ${aula.andar.rotulo}', style: Theme.of(context).textTheme.titleSmall),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [Text(aula.professor), Text(_local(aula))],
+        ),
+        isThreeLine: true,
       ),
     );
   }

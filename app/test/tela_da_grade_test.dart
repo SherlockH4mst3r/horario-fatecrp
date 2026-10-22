@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:grade/grade.dart';
 import 'package:grade_app/main.dart';
@@ -8,6 +9,15 @@ final grade = Grade(
   aulas: [
     aula(curso: 'ADS', turno: Turno.noite, semestre: 3, dia: DiaDaSemana.quarta, disciplina: 'Banco de Dados'),
     aula(curso: 'Gestão Empresarial', turno: Turno.manha, semestre: 2),
+  ],
+);
+
+/// A mesma grade, com uma aula de ADS 3º no sábado.
+final gradeComSabado = Grade(
+  semestreLetivo: grade.semestreLetivo,
+  aulas: [
+    ...grade.aulas,
+    aula(curso: 'ADS', turno: Turno.noite, semestre: 3, dia: DiaDaSemana.sabado, disciplina: 'Projeto Integrador'),
   ],
 );
 
@@ -35,14 +45,24 @@ class RepositorioQueFalha implements RepositorioGrade {
 }
 
 void main() {
-  Future<void> abrirSite(WidgetTester tester, RepositorioGrade repositorio) async {
-    await tester.pumpWidget(AppDaGrade(consulta: ConsultaDeGrade(repositorio)));
+  /// Abre o site numa quinta, salvo outra data.
+  Future<void> abrirSite(WidgetTester tester, RepositorioGrade repositorio, {DateTime? em}) async {
+    final hoje = em ?? DateTime(2026, 10, 22);
+    await tester.pumpWidget(AppDaGrade(consulta: ConsultaDeGrade(repositorio), relogio: () => hoje));
     await tester.pumpAndSettle();
   }
 
-  // O rótulo do DropdownMenu aparece duas vezes na árvore; qualquer uma abre o menu.
+  void usarTela(WidgetTester tester, double largura, double altura) {
+    tester.view.physicalSize = Size(largura, altura);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+  }
+
+  // Toca no menu, não no rótulo: o DropdownMenu desenha o rótulo duas vezes, uma delas fora do alvo.
   Future<void> abrirMenu(WidgetTester tester, String campo) async {
-    await tester.tap(find.text(campo).first);
+    await tester.tap(
+      find.ancestor(of: find.text(campo).first, matching: find.byWidgetPredicate((w) => w is DropdownMenu)),
+    );
     await tester.pumpAndSettle();
   }
 
@@ -102,5 +122,56 @@ void main() {
     await abrirSite(tester, RepositorioQueFalha());
 
     expect(find.text('Não foi possível carregar a grade. Tente recarregar a página.'), findsOneWidget);
+  });
+
+  group('no celular', () {
+    testWidgets('a lista abre na quinta (hoje), sem aulas, e segue a semana', (tester) async {
+      usarTela(tester, 360, 740);
+      await abrirSite(tester, RepositorioGradeEmMemoria(grade));
+      await escolher(tester, 'Curso', 'ADS – Noite');
+      await escolher(tester, 'Semestre', '3º');
+
+      expect(find.byType(Table), findsNothing);
+      expect(find.text('Sem aulas hoje'), findsOneWidget);
+      final topo = [
+        for (final texto in ['Quinta · hoje', 'Sem aulas hoje', 'Quarta']) tester.getTopLeft(find.text(texto)).dy,
+      ];
+      expect(topo, orderedEquals([...topo]..sort()));
+    });
+  });
+
+  testWidgets('no celular, no domingo, a lista começa na segunda sem marcar hoje', (tester) async {
+    usarTela(tester, 360, 740);
+    await abrirSite(tester, RepositorioGradeEmMemoria(grade), em: DateTime(2026, 10, 25));
+    await escolher(tester, 'Curso', 'ADS – Noite');
+    await escolher(tester, 'Semestre', '3º');
+
+    expect(find.textContaining('hoje'), findsNothing);
+    expect(find.text('Quarta'), findsOneWidget);
+  });
+
+  group('no computador', () {
+    testWidgets('a grade é uma tabela de dias × horários, com o sábado quando há aula', (tester) async {
+      usarTela(tester, 1280, 800);
+      await abrirSite(tester, RepositorioGradeEmMemoria(gradeComSabado));
+      await escolher(tester, 'Curso', 'ADS – Noite');
+      await escolher(tester, 'Semestre', '3º');
+
+      expect(find.byType(Table), findsOneWidget);
+      for (final dia in ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado']) {
+        expect(find.descendant(of: find.byType(Table), matching: find.text(dia)), findsOneWidget);
+      }
+      expect(find.text('Banco de Dados'), findsOneWidget);
+      expect(find.text('Sem aulas hoje'), findsNothing);
+    });
+
+    testWidgets('turma sem aula no sábado não mostra a coluna', (tester) async {
+      usarTela(tester, 1280, 800);
+      await abrirSite(tester, RepositorioGradeEmMemoria(grade));
+      await escolher(tester, 'Curso', 'Gestão Empresarial – Manhã');
+      await escolher(tester, 'Semestre', '2º');
+
+      expect(find.descendant(of: find.byType(Table), matching: find.text('Sábado')), findsNothing);
+    });
   });
 }
