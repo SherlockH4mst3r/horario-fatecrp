@@ -39,11 +39,11 @@ class _TelaDaGradeState extends State<TelaDaGrade> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FutureBuilder(
+      body: _AoCarregar(
         future: _situacao,
-        builder: (context, snapshot) => switch (snapshot.data) {
-          null => const Center(child: CircularProgressIndicator()),
-          GradeNaoPublicada() => const Column(children: [_Cabecalho(), _Aviso('Grade ainda não publicada')]),
+        aoFalhar: (aviso) => Column(children: [const _Cabecalho(), aviso]),
+        builder: (situacao) => switch (situacao) {
+          GradeNaoPublicada() => const Column(children: [_Cabecalho(), _avisoGradeNaoPublicada]),
           GradePublicada publicada => _conteudo(publicada),
         },
       ),
@@ -67,11 +67,10 @@ class _TelaDaGradeState extends State<TelaDaGrade> {
             ),
             const SizedBox(height: 24),
             if (_resultado case final resultado?)
-              FutureBuilder(
+              _AoCarregar(
                 future: resultado,
-                builder: (context, snapshot) => switch (snapshot.data) {
-                  null => const Center(child: CircularProgressIndicator()),
-                  GradeNaoPublicada() => const _Aviso('Grade ainda não publicada'),
+                builder: (resultado) => switch (resultado) {
+                  GradeNaoPublicada() => _avisoGradeNaoPublicada,
                   TurmaSemAulas() => const _Aviso('Esta turma não tem aulas nesta grade.'),
                   AulasDaTurma(:final dias) => _ListaPorDia(dias),
                 },
@@ -79,6 +78,34 @@ class _TelaDaGradeState extends State<TelaDaGrade> {
           ],
         ),
       ],
+    );
+  }
+}
+
+const _avisoGradeNaoPublicada = _Aviso('Grade ainda não publicada');
+
+/// Espera a consulta: mostra o progresso enquanto carrega e um aviso se ela falhar.
+class _AoCarregar<T> extends StatelessWidget {
+  const _AoCarregar({required this.future, required this.builder, this.aoFalhar});
+
+  final Future<T> future;
+  final Widget Function(T dados) builder;
+
+  /// Encaixa o aviso de falha na tela; sem ele, o aviso aparece sozinho.
+  final Widget Function(Widget aviso)? aoFalhar;
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: future,
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          const aviso = _Aviso('Não foi possível carregar a grade. Tente recarregar a página.');
+          return aoFalhar?.call(aviso) ?? aviso;
+        }
+        if (snapshot.data case final dados?) return builder(dados);
+        return const Center(child: CircularProgressIndicator());
+      },
     );
   }
 }
