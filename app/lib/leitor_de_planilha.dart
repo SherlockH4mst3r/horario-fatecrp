@@ -24,8 +24,9 @@ Planilha lerPlanilhaXlsx(Uint8List bytes) {
   final Excel arquivo;
   try {
     arquivo = Excel.decodeBytes(_compativelComOPacoteExcel(bytes));
-  } catch (_) {
-    throw const PlanilhaIlegivel('o arquivo não é uma planilha .xlsx');
+  } catch (erro) {
+    // O detalhe técnico vai junto: sem ele, não há como saber por que um .xlsx de verdade foi recusado.
+    throw PlanilhaIlegivel('o arquivo não é uma planilha .xlsx (${bytes.length} bytes; detalhe: $erro)');
   }
   final aba = arquivo.tables[arquivo.getDefaultSheet()] ?? arquivo.tables.values.firstOrNull;
   if (aba == null || aba.rows.isEmpty) throw const PlanilhaIlegivel('a planilha está vazia');
