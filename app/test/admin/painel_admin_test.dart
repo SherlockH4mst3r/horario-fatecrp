@@ -77,7 +77,9 @@ void main() {
       await abrirPainel(tester, jaEntrou: false);
 
       expect(find.widgetWithText(TextField, 'Token do GitHub'), findsOneWidget);
-      expect(find.textContaining('marque SherlockH4mst3r/horario-fatecrp'), findsOneWidget);
+      expect(find.textContaining('marque o repositório horario-fatecrp'), findsOneWidget);
+      expect(find.textContaining('peça a quem administra o site'), findsOneWidget);
+      expect(find.textContaining('SherlockH4mst3r'), findsNothing, reason: 'as instruções não citam o dono');
       expect(find.text('Escolher planilha .xlsx'), findsNothing);
     });
 

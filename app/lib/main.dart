@@ -6,6 +6,7 @@ import 'package:grade/grade.dart';
 
 import 'admin/painel_admin.dart';
 import 'github/guarda_do_token.dart';
+import 'github/repositorio_do_site.dart';
 import 'github/repositorio_grade_no_github.dart';
 import 'github/repositorio_grade_publicado.dart';
 import 'github/sessao_no_github.dart';
@@ -14,38 +15,40 @@ import 'preferencia_de_tema.dart';
 import 'tema.dart';
 import 'telas/tela_da_grade.dart';
 
-/// O repositório da grade no GitHub, como "dono/nome". O GitHub passa o dele no build
-/// (`--dart-define=GITHUB_REPO=...`); rodando na máquina, vale o repositório oficial.
-const _repositorioNoGitHub = String.fromEnvironment('GITHUB_REPO', defaultValue: 'SherlockH4mst3r/horario-fatecrp');
-
 /// O arquivo da grade no repositório. Fica em `app/web`, para sair junto com o site publicado.
 const _caminhoDaGrade = 'app/web/dados/grade.json';
 
-/// A consulta lê a grade publicada com o site; o painel lê e grava a grade no repositório, com o token do admin.
+/// A consulta lê a grade publicada com o site. O painel lê e grava a grade no repositório de onde o site é
+/// publicado, com o token do admin; sem saber que repositório é esse, o site fica só com a consulta.
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  final sessao = SessaoNoGitHub(repositorio: _repositorioNoGitHub, guarda: guardaDaAba());
-  final noRepositorio = RepositorioGradeNoGitHub(
-    repositorio: _repositorioNoGitHub,
-    caminho: _caminhoDaGrade,
-    token: () => sessao.token,
-  );
+  final repositorio = repositorioDoSite(Uri.base, definidoNoBuild: const String.fromEnvironment('GITHUB_REPO'));
   runApp(
     AppDaGrade(
       consulta: ConsultaDeGrade(
         RepositorioGradePublicado(endereco: Uri.base.resolve('dados/grade.json')),
         memoria: MemoriaNoNavegador(),
       ),
-      painelAdmin: PainelAdmin(
-        sessao: sessao,
-        repositorio: _repositorioNoGitHub,
-        importacao: ImportacaoDeGrade(noRepositorio),
-        edicao: EdicaoDeAulas(noRepositorio),
-        escolherPlanilha: _escolherPlanilhaNoNavegador,
-        salvarPlanilha: _baixarNoNavegador,
-      ),
+      painelAdmin: repositorio == null ? null : _painel(repositorio),
       preferenciaDeTema: PreferenciaDeTemaNoNavegador(),
     ),
+  );
+}
+
+PainelAdmin _painel(String repositorio) {
+  final sessao = SessaoNoGitHub(repositorio: repositorio, guarda: guardaDaAba());
+  final noRepositorio = RepositorioGradeNoGitHub(
+    repositorio: repositorio,
+    caminho: _caminhoDaGrade,
+    token: () => sessao.token,
+  );
+  return PainelAdmin(
+    sessao: sessao,
+    repositorio: repositorio,
+    importacao: ImportacaoDeGrade(noRepositorio),
+    edicao: EdicaoDeAulas(noRepositorio),
+    escolherPlanilha: _escolherPlanilhaNoNavegador,
+    salvarPlanilha: _baixarNoNavegador,
   );
 }
 

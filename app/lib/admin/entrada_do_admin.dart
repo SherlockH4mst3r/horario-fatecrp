@@ -76,21 +76,26 @@ class _EntradaDoAdminState extends State<EntradaDoAdmin> {
   }
 }
 
-/// O passo a passo do token fino do GitHub, que só dá acesso a este repositório.
+/// O passo a passo do token fino do GitHub, que só dá acesso a este repositório. Cita só o nome do repositório,
+/// e não o dono: o site pode ser publicado por qualquer conta ou organização.
 class _ComoGerarOToken extends StatelessWidget {
   const _ComoGerarOToken(this.repositorio);
 
+  /// Como "dono/nome".
   final String repositorio;
 
   @override
   Widget build(BuildContext context) {
+    final nome = repositorio.split('/').last;
     return _Quadro([
-      'Como gerar o token (uma vez por semestre):',
+      'Para ser admin, peça a quem administra o site acesso de escrita ao repositório $nome no GitHub. '
+          'Depois, gere o seu token (uma vez por semestre):',
       '1. No GitHub, abra Settings › Developer settings › Personal access tokens › Fine-grained tokens '
           '(github.com/settings/personal-access-tokens/new).',
-      '2. Em "Repository access", escolha "Only select repositories" e marque $repositorio.',
-      '3. Em "Permissions › Repository permissions", deixe "Contents" como "Read and write".',
-      '4. Em "Expiration", escolha o fim do semestre. Gere o token e cole aqui.',
+      '2. Em "Resource owner", escolha a organização (ou conta) dona do repositório.',
+      '3. Em "Repository access", escolha "Only select repositories" e marque o repositório $nome.',
+      '4. Em "Permissions", dê a "Contents" o acesso "Read and write".',
+      '5. Em "Expiration", escolha o fim do semestre. Gere o token e cole aqui.',
       'O token fica só nesta aba e some quando ela fecha. Não o envie a ninguém.',
     ]);
   }

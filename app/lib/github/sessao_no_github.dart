@@ -17,6 +17,9 @@ class SessaoNoGitHub implements Sessao {
 
   /// Como "dono/nome".
   final String repositorio;
+
+  /// Só o nome do repositório, para as mensagens: o site pode ser de qualquer conta ou organização.
+  String get _nome => repositorio.split('/').last;
   final GuardaDoToken _guarda;
   final http.Client _cliente;
   String? _token;
@@ -71,7 +74,7 @@ class SessaoNoGitHub implements Sessao {
             'O GitHub não reconheceu o token. Confira se ele foi copiado inteiro e se não expirou.',
           );
         case 403 || 404:
-          return EntradaRecusada('O token não dá acesso ao repositório $repositorio. Gere um token para ele.');
+          return EntradaRecusada('O token não dá acesso ao repositório $_nome. Gere um token para ele.');
         case 200:
           break;
         default:
@@ -82,7 +85,9 @@ class SessaoNoGitHub implements Sessao {
         _ => false,
       };
       if (!podeEscrever) {
-        return EntradaRecusada('Esta conta não pode escrever no repositório $repositorio; peça acesso ao dono dele.');
+        return EntradaRecusada(
+          'Esta conta não pode escrever no repositório $_nome; peça acesso a quem administra o site.',
+        );
       }
       final usuario = await _cliente.get(
         apiDoGitHub.replace(path: '/user', queryParameters: semCache()),

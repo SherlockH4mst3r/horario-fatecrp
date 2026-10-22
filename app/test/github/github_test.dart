@@ -81,7 +81,14 @@ void main() {
 
       final resultado = await simulada.entrar('outro_repo');
 
-      expect(resultado, isA<EntradaRecusada>().having((r) => r.motivo, 'motivo', contains(repositorio)));
+      expect(
+        resultado,
+        isA<EntradaRecusada>().having(
+          (r) => r.motivo,
+          'motivo',
+          allOf(contains('horario-fatecrp'), isNot(contains('SherlockH4mst3r'))),
+        ),
+      );
     });
 
     test('conta que só lê o repositório é recusada', () async {
