@@ -6,6 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:grade/grade.dart';
 import 'package:grade_app/admin/painel_admin.dart';
 import 'package:grade_app/admin/sessao.dart';
+import 'package:grade_app/github/repositorio_grade_no_github.dart';
 import 'package:grade_app/leitor_de_planilha.dart';
 import 'package:grade_app/tema.dart';
 import 'package:grade_app/telas/avisos.dart';
@@ -33,13 +34,14 @@ void main() {
     repositorio = RepositorioGradeEmMemoria(publicada ?? gradeAtual);
     escolhas = 0;
     salvos = [];
-    final sessao = SessaoSimulada(email: 'admin@fatecrp.local', senha: 'admin123');
-    if (jaEntrou) await sessao.entrar(email: 'admin@fatecrp.local', senha: 'admin123');
+    final sessao = SessaoSimulada(tokenAceito: 'token-certo');
+    if (jaEntrou) await sessao.entrar('token-certo');
     await tester.pumpWidget(
       MaterialApp(
         theme: temaFatec(Brightness.light),
         home: PainelAdmin(
           sessao: sessao,
+          repositorio: 'SherlockH4mst3r/horario-fatecrp',
           importacao: ImportacaoDeGrade(repositorioQueFalha ?? repositorio),
           edicao: EdicaoDeAulas(repositorioQueFalha ?? repositorio),
           escolherPlanilha: () async {
@@ -70,36 +72,36 @@ void main() {
       tester.widget<FilledButton>(find.widgetWithText(FilledButton, 'Publicar')).onPressed != null;
 
   group('entrada', () {
-    testWidgets('sem sessão, o painel pede e-mail e senha', (tester) async {
+    testWidgets('sem sessão, o painel pede o token e explica como gerá-lo para o repositório', (tester) async {
       await abrirPainel(tester, jaEntrou: false);
 
-      expect(find.widgetWithText(TextField, 'E-mail'), findsOneWidget);
-      expect(find.widgetWithText(TextField, 'Senha'), findsOneWidget);
+      expect(find.widgetWithText(TextField, 'Token do GitHub'), findsOneWidget);
+      expect(find.textContaining('marque SherlockH4mst3r/horario-fatecrp'), findsOneWidget);
       expect(find.text('Escolher planilha .xlsx'), findsNothing);
     });
 
-    testWidgets('senha errada mostra erro e não abre o painel', (tester) async {
+    testWidgets('token recusado mostra o motivo em amarelo e não abre o painel', (tester) async {
       await abrirPainel(tester, jaEntrou: false);
 
-      await digitar(tester, 'E-mail', 'admin@fatecrp.local');
-      await digitar(tester, 'Senha', 'errada');
+      await digitar(tester, 'Token do GitHub', 'errado');
       await tocar(tester, 'Entrar');
 
-      expect(find.text('E-mail ou senha incorretos.'), findsOneWidget);
+      final faixa = tester.widget<FaixaDeAviso>(find.byType(FaixaDeAviso));
+      expect([faixa.tipo, faixa.titulo], [TipoDeAviso.alerta, 'Token incorreto.']);
       expect(find.text('Escolher planilha .xlsx'), findsNothing);
     });
 
-    testWidgets('e-mail e senha do admin abrem o painel, e sair volta para a entrada', (tester) async {
+    testWidgets('token aceito abre o painel com o nome da conta, e sair volta para a entrada', (tester) async {
       await abrirPainel(tester, jaEntrou: false);
 
-      await digitar(tester, 'Senha', 'admin123');
-      await digitar(tester, 'E-mail', 'admin@fatecrp.local');
+      await digitar(tester, 'Token do GitHub', 'token-certo');
       await tester.testTextInput.receiveAction(TextInputAction.done);
       await tester.pumpAndSettle();
-      expect(find.text('Escolher planilha .xlsx'), findsOneWidget, reason: 'Enter no e-mail também entra');
+      expect(find.text('Escolher planilha .xlsx'), findsOneWidget, reason: 'Enter no campo também entra');
+      expect(find.text('Conectado como admin (simulação)'), findsOneWidget);
 
       await tocar(tester, 'Sair');
-      expect(find.widgetWithText(TextField, 'Senha'), findsOneWidget);
+      expect(find.widgetWithText(TextField, 'Token do GitHub'), findsOneWidget);
     });
   });
 
@@ -355,6 +357,16 @@ void main() {
       expect(salvos, isEmpty);
       expect(corDoSnackbar(tester), TipoDeAviso.erro.fundo);
     });
+
+    testWidgets('se outro admin publicou antes, publicar explica o conflito em amarelo', (tester) async {
+      await abrirPainel(tester, arquivo: planilha('grade_exemplo.xlsx'), repositorioQueFalha: _PublicacaoComConflito());
+      await importar(tester);
+
+      await tocar(tester, 'Publicar');
+
+      expect(corDoSnackbar(tester), TipoDeAviso.alerta.fundo);
+      expect(find.textContaining('outro admin publicou?'), findsWidgets);
+    });
   });
 }
 
@@ -372,4 +384,12 @@ class _LeituraQueFalha implements RepositorioGrade {
 
   @override
   Future<void> substituir(Grade grade) async {}
+}
+
+class _PublicacaoComConflito implements RepositorioGrade {
+  @override
+  Future<Grade?> gradeAtual() async => null;
+
+  @override
+  Future<void> substituir(Grade grade) async => throw GradeMudouNoGitHub();
 }

@@ -84,11 +84,9 @@ class _ImportacaoDaPlanilhaState extends State<ImportacaoDaPlanilha> {
     } on PlanilhaIlegivel catch (erro) {
       _mostrar(_Inicio(problema: 'Não deu para ler o arquivo: ${erro.mensagem}.'), aviso: TipoDeAviso.alerta);
       return;
-    } catch (_) {
-      _mostrar(
-        const _Inicio(problema: 'Não deu para ler a grade publicada, para comparar. Tente de novo.'),
-        aviso: TipoDeAviso.erro,
-      );
+    } catch (erro) {
+      final aviso = avisoDaFalha(erro, 'Não deu para ler a grade publicada, para comparar. Tente de novo.');
+      _mostrar(_Inicio(problema: aviso.mensagem), aviso: aviso.tipo);
       return;
     }
     _mostrar(proxima);
@@ -106,15 +104,19 @@ class _ImportacaoDaPlanilhaState extends State<ImportacaoDaPlanilha> {
     setState(() => _ocupado = true);
     try {
       await widget.importacao.publicar(previa);
-    } catch (_) {
-      _mostrar(
-        _NaPrevia(previa, problema: 'Não deu para publicar. A grade publicada não mudou; tente de novo.'),
-        aviso: TipoDeAviso.erro,
-      );
+    } catch (erro) {
+      final aviso = avisoDaFalha(erro, 'Não deu para publicar. A grade publicada não mudou; tente de novo.');
+      _mostrar(_NaPrevia(previa, problema: aviso.mensagem), aviso: aviso.tipo);
       return;
     }
     _mostrar(_Publicada(previa.semestreLetivo));
-    if (mounted) mostrarAviso(context, 'Grade ${previa.semestreLetivo.rotulo} publicada.', TipoDeAviso.sucesso);
+    if (mounted) {
+      mostrarAviso(
+        context,
+        'Grade ${previa.semestreLetivo.rotulo} publicada. A consulta pública a mostra em até alguns minutos.',
+        TipoDeAviso.sucesso,
+      );
+    }
   }
 
   /// Troca de etapa; com [aviso], repete o problema da etapa num snackbar dessa cor.
@@ -185,8 +187,9 @@ class _ImportacaoDaPlanilhaState extends State<ImportacaoDaPlanilha> {
         'Grade ${exportada.semestreLetivo.rotulo} baixada. Edite no Excel e importe de volta.',
         TipoDeAviso.sucesso,
       );
-    } catch (_) {
-      _avisar('Não deu para baixar a grade publicada. Tente de novo.', TipoDeAviso.erro);
+    } catch (erro) {
+      final aviso = avisoDaFalha(erro, 'Não deu para baixar a grade publicada. Tente de novo.');
+      _avisar(aviso.mensagem, aviso.tipo);
     }
   }
 

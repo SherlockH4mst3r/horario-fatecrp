@@ -15,3 +15,5 @@
 ## Comments
 
 **2026-10-22, painel simulado.** Enquanto não há Supabase, `/#/admin` usa a porta `Sessao` (em `app/lib/admin/sessao.dart`) com `SessaoSimulada`: um admin fixo (admin@fatecrp.local / admin123), sessão só enquanto a página está aberta. A grade fica no localStorage (`RepositorioGradeNoNavegador`), então o que o painel publica aparece na consulta pública ao recarregar. Já valem: tela de login sem sessão, senha errada com mensagem, "Sair", e nenhum link do painel na tela pública. Faltam: login e RLS do Supabase e o teste de integração no banco (ticket 10).
+
+**2026-10-22, decisão nova (docs/adr/0001-publicar-pelo-github.md).** O site vai para o GitHub Pages, a grade fica em `app/web/dados/grade.json` no repositório e o admin entra com um token fino do GitHub. Este ticket fica substituído por essa decisão.

@@ -6,6 +6,10 @@ import 'package:grade/grade.dart';
 
 import 'admin/painel_admin.dart';
 import 'admin/sessao.dart';
+import 'github/guarda_do_token.dart';
+import 'github/repositorio_grade_no_github.dart';
+import 'github/repositorio_grade_publicado.dart';
+import 'github/sessao_no_github.dart';
 import 'grade_semeada.dart';
 import 'memoria_no_navegador.dart';
 import 'preferencia_de_tema.dart';
@@ -13,24 +17,53 @@ import 'repositorio_grade_no_navegador.dart';
 import 'tema.dart';
 import 'telas/tela_da_grade.dart';
 
+/// O repositório da grade no GitHub, como "dono/nome", passado no build (`--dart-define=GITHUB_REPO=...`), como o
+/// GitHub faz ao publicar o site. Sem ele, o site roda a simulação local, com a grade no navegador.
+const _repositorioNoGitHub = String.fromEnvironment('GITHUB_REPO');
+
+/// O arquivo da grade no repositório. Fica em `app/web`, para sair junto com o site publicado.
+const _caminhoDaGrade = 'app/web/dados/grade.json';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final repositorio = RepositorioGradeNoNavegador();
-  await _semearNaPrimeiraVisita(repositorio);
-  runApp(
-    AppDaGrade(
-      consulta: ConsultaDeGrade(repositorio, memoria: MemoriaNoNavegador()),
-      painelAdmin: PainelAdmin(
-        sessao: SessaoSimulada(email: 'admin@fatecrp.local', senha: 'admin123'),
-        importacao: ImportacaoDeGrade(repositorio),
-        edicao: EdicaoDeAulas(repositorio),
-        escolherPlanilha: _escolherPlanilhaNoNavegador,
-        salvarPlanilha: _baixarNoNavegador,
-      ),
-      preferenciaDeTema: PreferenciaDeTemaNoNavegador(),
+  final (consulta, painel) = _repositorioNoGitHub.isEmpty ? await _simulacaoLocal() : _peloGitHub();
+  runApp(AppDaGrade(consulta: consulta, painelAdmin: painel, preferenciaDeTema: PreferenciaDeTemaNoNavegador()));
+}
+
+/// A consulta lê a grade publicada com o site; o painel lê e grava a grade no repositório, com o token do admin.
+(ConsultaDeGrade, PainelAdmin) _peloGitHub() {
+  final sessao = SessaoNoGitHub(repositorio: _repositorioNoGitHub, guarda: guardaDaAba());
+  final noRepositorio = RepositorioGradeNoGitHub(
+    repositorio: _repositorioNoGitHub,
+    caminho: _caminhoDaGrade,
+    token: () => sessao.token,
+  );
+  return (
+    ConsultaDeGrade(
+      RepositorioGradePublicado(endereco: Uri.base.resolve('dados/grade.json')),
+      memoria: MemoriaNoNavegador(),
     ),
+    _painel(sessao, noRepositorio, repositorio: _repositorioNoGitHub),
   );
 }
+
+Future<(ConsultaDeGrade, PainelAdmin)> _simulacaoLocal() async {
+  final noNavegador = RepositorioGradeNoNavegador();
+  await _semearNaPrimeiraVisita(noNavegador);
+  return (
+    ConsultaDeGrade(noNavegador, memoria: MemoriaNoNavegador()),
+    _painel(SessaoSimulada(tokenAceito: 'admin123'), noNavegador, repositorio: null),
+  );
+}
+
+PainelAdmin _painel(Sessao sessao, RepositorioGrade grade, {required String? repositorio}) => PainelAdmin(
+  sessao: sessao,
+  repositorio: repositorio,
+  importacao: ImportacaoDeGrade(grade),
+  edicao: EdicaoDeAulas(grade),
+  escolherPlanilha: _escolherPlanilhaNoNavegador,
+  salvarPlanilha: _baixarNoNavegador,
+);
 
 /// Enquanto não há banco, o navegador começa com a grade semeada; depois, vale o que o admin publicar.
 Future<void> _semearNaPrimeiraVisita(RepositorioGrade repositorio) async {

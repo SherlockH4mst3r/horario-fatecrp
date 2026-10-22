@@ -1,0 +1,64 @@
+# Confere a grade e publica o site no GitHub Pages a cada push na main, inclusive quando o painel grava a grade.
+# Se um passo falha (teste quebrado ou grade com erro), nada é publicado e o site continua como estava.
+name: Publicar o site
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Uma publicação por vez; a mais nova espera a anterior terminar.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  conferir-e-gerar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.6'
+          channel: stable
+          cache: true
+
+      - name: Testar o domínio e conferir a grade publicada
+        working-directory: grade
+        run: |
+          dart pub get
+          dart test
+          dart run bin/conferir_grade.dart ../app/web/dados/grade.json
+
+      - name: Testar o site
+        working-directory: app
+        run: |
+          flutter pub get
+          flutter test
+
+      - name: Gerar o site
+        working-directory: app
+        run: >-
+          flutter build web --release
+          --base-href "/${{ github.event.repository.name }}/"
+          --dart-define=GITHUB_REPO=${{ github.repository }}
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: app/build/web
+
+  publicar:
+    needs: conferir-e-gerar
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.publicacao.outputs.page_url }}
+    steps:
+      - id: publicacao
+        uses: actions/deploy-pages@v4

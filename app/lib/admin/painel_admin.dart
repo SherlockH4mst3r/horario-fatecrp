@@ -14,6 +14,7 @@ class PainelAdmin extends StatefulWidget {
   const PainelAdmin({
     super.key,
     required this.sessao,
+    required this.repositorio,
     required this.importacao,
     required this.edicao,
     required this.escolherPlanilha,
@@ -21,6 +22,9 @@ class PainelAdmin extends StatefulWidget {
   });
 
   final Sessao sessao;
+
+  /// O repositório da grade no GitHub, como "dono/nome"; `null` na simulação local.
+  final String? repositorio;
   final ImportacaoDeGrade importacao;
   final EdicaoDeAulas edicao;
   final EscolherPlanilha escolherPlanilha;
@@ -34,6 +38,14 @@ enum _Area { importar, corrigir }
 
 class _PainelAdminState extends State<PainelAdmin> {
   _Area _area = _Area.importar;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.sessao.retomar().then((_) {
+      if (mounted) setState(() {});
+    });
+  }
 
   Future<void> _sair() async {
     await widget.sessao.sair();
@@ -63,6 +75,8 @@ class _PainelAdminState extends State<PainelAdmin> {
             children: [
               const SizedBox(height: 24),
               if (ativa) ...[
+                Text('Conectado como ${widget.sessao.quem}', style: Theme.of(context).textTheme.bodySmall),
+                const SizedBox(height: 12),
                 SegmentedButton<_Area>(
                   segments: const [
                     ButtonSegment(
@@ -85,7 +99,7 @@ class _PainelAdminState extends State<PainelAdmin> {
                   _Area.corrigir => CorrecaoDeAulas(edicao: widget.edicao),
                 },
               ] else
-                EntradaDoAdmin(sessao: widget.sessao, aoEntrar: () => setState(() {})),
+                EntradaDoAdmin(sessao: widget.sessao, repositorio: widget.repositorio, aoEntrar: () => setState(() {})),
             ],
           ),
         ],

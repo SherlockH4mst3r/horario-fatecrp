@@ -14,7 +14,9 @@ dependencies:
     sdk: flutter
   grade:
     path: ../grade
+  http: ^1.6.0
   shared_preferences: ^2.5.6
+  web: ^1.1.1
 
 dev_dependencies:
   flutter_lints: ^6.0.0

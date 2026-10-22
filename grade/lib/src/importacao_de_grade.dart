@@ -2,6 +2,7 @@ import 'diferencas.dart';
 import 'edicao_de_aulas.dart';
 import 'grade.dart';
 import 'repositorio_grade.dart';
+import 'repositorio_grade_em_memoria.dart';
 
 /// O conteúdo de uma planilha como texto: o cabeçalho (linha 1) e as linhas de dados, a partir da linha 2.
 class Planilha {
@@ -231,6 +232,14 @@ class ImportacaoDeGrade {
     final porSala = a.sala.compareTo(b.sala);
     return porSala != 0 ? porSala : a.andar.index.compareTo(b.andar.index);
   }
+}
+
+/// Confere uma grade já pronta (a guardada no repositório, por exemplo) com as mesmas regras da importação.
+/// O GitHub usa isto para não publicar uma grade que alguém gravou sem passar pelo painel.
+Future<Previa> conferirGrade(Grade grade) async {
+  final importacao = ImportacaoDeGrade(RepositorioGradeEmMemoria(grade));
+  final exportada = (await importacao.exportar())!;
+  return importacao.importar(exportada.planilha, exportada.semestreLetivo);
 }
 
 /// As colunas que a planilha precisa ter, como o admin as escreve no cabeçalho.

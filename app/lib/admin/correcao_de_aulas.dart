@@ -58,7 +58,7 @@ class _CorrecaoDeAulasState extends State<CorrecaoDeAulas> {
     }
   }
 
-  static const _naConsulta = 'A consulta pública mostra a mudança ao recarregar.';
+  static const _naConsulta = 'A consulta pública mostra a mudança em até alguns minutos.';
 
   /// Uma aula em branco na turma escolhida, no primeiro horário do turno.
   AulaDigitada _aulaNova(Turma? turma) {
@@ -92,10 +92,9 @@ class _CorrecaoDeAulasState extends State<CorrecaoDeAulas> {
     if (!(confirmou ?? false)) return;
     try {
       await widget.edicao.excluir(aula);
-    } catch (_) {
-      if (mounted) {
-        mostrarAviso(context, 'Não deu para excluir: falha ao gravar a grade. Tente de novo.', TipoDeAviso.erro);
-      }
+    } catch (erro) {
+      final aviso = avisoDaFalha(erro, 'Não deu para excluir: falha ao gravar a grade. Tente de novo.');
+      if (mounted) mostrarAviso(context, aviso.mensagem, aviso.tipo);
       return;
     }
     await _carregar();
@@ -198,8 +197,8 @@ class _FormularioDeAulaState extends State<_FormularioDeAula> {
   late final _andar = TextEditingController(text: widget.inicial.andar);
   Map<String, String> _erros = const {};
 
-  /// Falha do sistema ao gravar, sem culpa do que foi digitado.
-  String? _falha;
+  /// Falha ao gravar, sem culpa do que foi digitado: do sistema, ou algo que o admin resolve fora do formulário.
+  ({String mensagem, TipoDeAviso tipo})? _falha;
   bool _salvando = false;
 
   @override
@@ -232,11 +231,11 @@ class _FormularioDeAulaState extends State<_FormularioDeAula> {
         ),
         original: widget.original,
       );
-    } catch (_) {
+    } catch (erro) {
       if (mounted) {
         setState(() {
           _salvando = false;
-          _falha = 'Não deu para salvar: falha ao gravar a grade. Tente de novo.';
+          _falha = avisoDaFalha(erro, 'Não deu para salvar: falha ao gravar a grade. Tente de novo.');
         });
       }
       return;
@@ -264,8 +263,8 @@ class _FormularioDeAulaState extends State<_FormularioDeAula> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              if (_falha case final falha?) ...[
-                FaixaDeAviso(tipo: TipoDeAviso.erro, titulo: falha),
+              if (_falha case (:final mensagem, :final tipo)) ...[
+                FaixaDeAviso(tipo: tipo, titulo: mensagem),
                 const SizedBox(height: 12),
               ] else if (_erros.isNotEmpty) ...[
                 FaixaDeAviso(

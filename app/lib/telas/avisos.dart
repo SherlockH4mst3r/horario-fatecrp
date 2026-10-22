@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../problema_para_o_admin.dart';
+
 /// De onde vem o aviso, e por isso a cor dele.
 enum TipoDeAviso {
   /// Deu certo: verde.
@@ -87,3 +89,10 @@ TextStyle estiloDoDetalhe(BuildContext context, TipoDeAviso tipo) {
   final corrido = DefaultTextStyle.of(context).style.fontSize ?? Theme.of(context).textTheme.bodyMedium?.fontSize ?? 14;
   return TextStyle(color: tipo.texto, fontSize: corrido - 2, fontWeight: FontWeight.bold);
 }
+
+/// O aviso de uma falha: a explicação em amarelo, quando é algo que o admin resolve ([ProblemaParaOAdmin]), ou
+/// [mensagemDoSistema] em vermelho, quando a falha é do sistema.
+({String mensagem, TipoDeAviso tipo}) avisoDaFalha(Object erro, String mensagemDoSistema) => switch (erro) {
+  ProblemaParaOAdmin(:final explicacao) => (mensagem: explicacao, tipo: TipoDeAviso.alerta),
+  _ => (mensagem: mensagemDoSistema, tipo: TipoDeAviso.erro),
+};
