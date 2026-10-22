@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../preferencia_de_tema.dart';
 import '../tema.dart';
 
 /// Largura máxima do conteúdo em telas grandes.
@@ -40,7 +41,8 @@ class CabecalhoFatec extends StatelessWidget {
                     ],
                   ),
                 ),
-                ?acao,
+                const BotaoDeTema(),
+                if (acao case final acao?) ...[const SizedBox(width: 8), acao],
               ],
             ),
             const SizedBox(height: 20),
@@ -67,6 +69,23 @@ class ColunaDeConteudo extends StatelessWidget {
           child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: children),
         ),
       ),
+    );
+  }
+}
+
+/// Troca entre o tema claro e o escuro. Some fora do app (nos testes de uma tela só, por exemplo).
+class BotaoDeTema extends StatelessWidget {
+  const BotaoDeTema({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final controle = ControleDeTema.deste(context);
+    if (controle == null) return const SizedBox.shrink();
+    return IconButton(
+      tooltip: controle.escuro ? 'Usar o tema claro' : 'Usar o tema escuro',
+      color: Colors.white,
+      icon: Icon(controle.escuro ? Icons.light_mode_outlined : Icons.dark_mode_outlined),
+      onPressed: controle.alternar,
     );
   }
 }

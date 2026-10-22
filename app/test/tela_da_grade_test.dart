@@ -348,4 +348,50 @@ void main() {
       expect([textos.bodyLarge?.fontSize, textos.bodyMedium?.fontSize], [tamanho, tamanho]);
     });
   }
+
+  group('recarregar', () {
+    late RepositorioGradeEmMemoria repositorio;
+
+    Future<void> publicarRedesEmOutraAba(WidgetTester tester) => tester.runAsync(
+      () => repositorio.substituir(
+        Grade(
+          semestreLetivo: grade.semestreLetivo,
+          aulas: [
+            ...grade.aulas,
+            aula(curso: 'ADS', turno: Turno.noite, semestre: 3, dia: DiaDaSemana.sexta, disciplina: 'Redes'),
+          ],
+        ),
+      ),
+    );
+
+    testWidgets('no computador, o botão Recarregar traz a grade nova e mantém a turma escolhida', (tester) async {
+      usarTela(tester, 1280, 800);
+      repositorio = RepositorioGradeEmMemoria(grade);
+      await abrirSite(tester, repositorio);
+      await escolher(tester, 'Curso', 'ADS – Noite');
+      await escolher(tester, 'Semestre', '3º');
+      await publicarRedesEmOutraAba(tester);
+
+      await tester.tap(find.byTooltip('Recarregar'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Redes'), findsOneWidget);
+      expect(find.text('Banco de Dados'), findsOneWidget);
+    });
+
+    testWidgets('no celular, puxar a tela para baixo recarrega', (tester) async {
+      usarTela(tester, 360, 740);
+      repositorio = RepositorioGradeEmMemoria(grade);
+      await abrirSite(tester, repositorio);
+      await escolher(tester, 'Curso', 'ADS – Noite');
+      await escolher(tester, 'Semestre', '3º');
+      await publicarRedesEmOutraAba(tester);
+      expect(find.byTooltip('Recarregar'), findsNothing, reason: 'no celular, o gesto substitui o botão');
+
+      await tester.fling(find.text('Grade 2026/2'), const Offset(0, 400), 1000);
+      await tester.pumpAndSettle();
+
+      expect(find.text('Redes'), findsOneWidget);
+    });
+  });
 }

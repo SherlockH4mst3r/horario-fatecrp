@@ -21,8 +21,16 @@ ThemeData comFonteDaTela(ThemeData tema, double larguraDaTela) {
 /// Vermelho da marca Fatec, aproximado da logo (não há manual público com o código oficial).
 const vermelhoFatec = Color(0xFFB20000);
 
+/// Fundo do tema claro: creme claro, que cansa menos que o branco puro.
+const fundoClaro = Color(0xFFFBF7EF);
+
+/// Fundo do tema escuro: azul-acinzentado, como jeans, neutro ao lado do vermelho da Fatec.
+const fundoEscuro = Color(0xFF1E2631);
+
 ThemeData temaFatec(Brightness brilho) {
   final escuro = brilho == Brightness.dark;
+  // Os neutros (fundos, contornos e texto) saem do creme ou do jeans, e não do vermelho, para não cansar a vista;
+  // o vermelho fica nos destaques.
   final cores =
       ColorScheme.fromSeed(
         seedColor: vermelhoFatec,
@@ -31,7 +39,16 @@ ThemeData temaFatec(Brightness brilho) {
       ).copyWith(
         primary: escuro ? const Color(0xFFFFB4A8) : vermelhoFatec,
         onPrimary: escuro ? const Color(0xFF690000) : Colors.white,
-        surface: escuro ? null : Colors.white,
+        surface: escuro ? fundoEscuro : fundoClaro,
+        onSurface: escuro ? const Color(0xFFE3E7EC) : const Color(0xFF221D18),
+        onSurfaceVariant: escuro ? const Color(0xFFB4BCC6) : const Color(0xFF5E564C),
+        surfaceContainerLowest: escuro ? const Color(0xFF19202A) : const Color(0xFFFFFDF8),
+        surfaceContainerLow: escuro ? const Color(0xFF222A35) : const Color(0xFFF7F2E8),
+        surfaceContainer: escuro ? const Color(0xFF26303B) : const Color(0xFFF3EDE1),
+        surfaceContainerHigh: escuro ? const Color(0xFF2C3642) : const Color(0xFFEEE7DA),
+        surfaceContainerHighest: escuro ? const Color(0xFF333E4B) : const Color(0xFFE8E0D1),
+        outline: escuro ? const Color(0xFF6B7684) : const Color(0xFF8A8073),
+        outlineVariant: escuro ? const Color(0xFF3B4552) : const Color(0xFFDCD3C4),
       );
   return ThemeData(
     colorScheme: cores,
@@ -39,7 +56,7 @@ ThemeData temaFatec(Brightness brilho) {
     scaffoldBackgroundColor: cores.surface,
     cardTheme: CardThemeData(
       elevation: 0,
-      color: cores.surface,
+      color: escuro ? cores.surfaceContainerLow : cores.surfaceContainerLowest,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
         side: BorderSide(color: cores.outlineVariant),

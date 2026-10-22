@@ -17,7 +17,7 @@ class TelaDaGrade extends StatefulWidget {
 
 class _TelaDaGradeState extends State<TelaDaGrade> {
   // A falha ao carregar já aparece na tela pelo _AoCarregar; aqui só não há turma para abrir.
-  late final Future<SituacaoDaGrade> _situacao = widget.consulta.cursosDisponiveis()
+  late Future<SituacaoDaGrade> _situacao = widget.consulta.cursosDisponiveis()
     ..then(_abrirTurmaLembrada, onError: (Object _) {});
   CursoOferecido? _curso;
   int? _semestre;
@@ -31,6 +31,37 @@ class _TelaDaGradeState extends State<TelaDaGrade> {
         _resultado = widget.consulta.gradeDaTurma(curso.turma(semestre), hoje: widget.relogio());
       });
     }
+  }
+
+  /// Relê a grade publicada (o painel pode ter publicado em outra aba) e mantém a turma escolhida, se ela
+  /// ainda existir.
+  Future<void> _recarregar() async {
+    final situacao = widget.consulta.cursosDisponiveis();
+    setState(() {
+      _situacao = situacao;
+    });
+    final SituacaoDaGrade recarregada;
+    try {
+      recarregada = await situacao;
+    } catch (_) {
+      return; // O aviso de falha já aparece na tela.
+    }
+    if (!mounted) return;
+    final escolhido = _curso;
+    final curso = switch (recarregada) {
+      GradePublicada(:final cursos) when escolhido != null =>
+        cursos.where((c) => c.curso == escolhido.curso && c.turno == escolhido.turno).firstOrNull,
+      _ => null,
+    };
+    final semestre = _semestre;
+    setState(() {
+      _curso = curso;
+      _semestre = curso == null ? null : semestre;
+      _resultado = curso == null || semestre == null
+          ? null
+          : widget.consulta.gradeDaTurma(curso.turma(semestre), hoje: widget.relogio());
+    });
+    await _resultado;
   }
 
   void _escolherCurso(CursoOferecido? curso) {
@@ -55,47 +86,52 @@ class _TelaDaGradeState extends State<TelaDaGrade> {
     return Scaffold(
       body: _AoCarregar(
         future: _situacao,
-        aoFalhar: (aviso) => Column(children: [const CabecalhoFatec(), aviso]),
+        aoFalhar: (aviso) => _rolavel([const CabecalhoFatec(), aviso]),
         builder: (situacao) => switch (situacao) {
-          GradeNaoPublicada() => const Column(children: [CabecalhoFatec(), _avisoGradeNaoPublicada]),
+          GradeNaoPublicada() => _rolavel(const [CabecalhoFatec(), _avisoGradeNaoPublicada]),
           GradePublicada publicada => _conteudo(publicada),
         },
       ),
     );
   }
 
+  /// Puxar a tela para baixo recarrega a grade, inclusive quando ela ainda não foi publicada ou falhou.
+  Widget _rolavel(List<Widget> filhos) => RefreshIndicator(
+    onRefresh: _recarregar,
+    child: ListView(physics: const AlwaysScrollableScrollPhysics(), children: filhos),
+  );
+
   Widget _conteudo(GradePublicada publicada) {
-    return ListView(
-      children: [
-        CabecalhoFatec(titulo: 'Grade ${publicada.semestreLetivo.rotulo}'),
-        ColunaDeConteudo(
-          children: [
-            const SizedBox(height: 24),
-            _SeletorDeTurma(
-              cursos: publicada.cursos,
-              semestres: publicada.semestres,
-              curso: _curso,
-              semestre: _semestre,
-              aoEscolherCurso: _escolherCurso,
-              aoEscolherSemestre: _escolherSemestre,
+    return _rolavel([
+      CabecalhoFatec(titulo: 'Grade ${publicada.semestreLetivo.rotulo}'),
+      ColunaDeConteudo(
+        children: [
+          const SizedBox(height: 24),
+          _SeletorDeTurma(
+            cursos: publicada.cursos,
+            semestres: publicada.semestres,
+            curso: _curso,
+            semestre: _semestre,
+            aoEscolherCurso: _escolherCurso,
+            aoEscolherSemestre: _escolherSemestre,
+            aoRecarregar: _recarregar,
+          ),
+          const SizedBox(height: 24),
+          if (_resultado case final resultado?)
+            _AoCarregar(
+              future: resultado,
+              builder: (resultado) => switch (resultado) {
+                GradeNaoPublicada() => _avisoGradeNaoPublicada,
+                TurmaSemAulas() => const _Aviso('Esta turma não tem aulas nesta grade.'),
+                AulasDaTurma aulas =>
+                  MediaQuery.sizeOf(context).width >= larguraDeComputador
+                      ? _GradeDeHorarios(aulas)
+                      : _ListaAPartirDeHoje(aulas),
+              },
             ),
-            const SizedBox(height: 24),
-            if (_resultado case final resultado?)
-              _AoCarregar(
-                future: resultado,
-                builder: (resultado) => switch (resultado) {
-                  GradeNaoPublicada() => _avisoGradeNaoPublicada,
-                  TurmaSemAulas() => const _Aviso('Esta turma não tem aulas nesta grade.'),
-                  AulasDaTurma aulas =>
-                    MediaQuery.sizeOf(context).width >= larguraDeComputador
-                        ? _GradeDeHorarios(aulas)
-                        : _ListaAPartirDeHoje(aulas),
-                },
-              ),
-          ],
-        ),
-      ],
-    );
+        ],
+      ),
+    ]);
   }
 }
 
@@ -139,6 +175,7 @@ class _SeletorDeTurma extends StatelessWidget {
     required this.semestre,
     required this.aoEscolherCurso,
     required this.aoEscolherSemestre,
+    required this.aoRecarregar,
   });
 
   final List<CursoOferecido> cursos;
@@ -147,11 +184,13 @@ class _SeletorDeTurma extends StatelessWidget {
   final int? semestre;
   final ValueChanged<CursoOferecido?> aoEscolherCurso;
   final ValueChanged<int?> aoEscolherSemestre;
+  final VoidCallback aoRecarregar;
 
   @override
   Widget build(BuildContext context) {
     return Wrap(
       spacing: 16,
+      crossAxisAlignment: WrapCrossAlignment.center,
       runSpacing: 16,
       children: [
         DropdownMenu<CursoOferecido>(
@@ -171,6 +210,9 @@ class _SeletorDeTurma extends StatelessWidget {
           onSelected: aoEscolherSemestre,
           dropdownMenuEntries: [for (final s in semestres) DropdownMenuEntry(value: s, label: '$sº')],
         ),
+        // No celular, puxar a tela para baixo faz o mesmo.
+        if (MediaQuery.sizeOf(context).width >= larguraDeComputador)
+          IconButton.outlined(tooltip: 'Recarregar', icon: const Icon(Icons.refresh), onPressed: aoRecarregar),
       ],
     );
   }

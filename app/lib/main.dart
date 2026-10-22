@@ -8,6 +8,7 @@ import 'admin/painel_admin.dart';
 import 'admin/sessao.dart';
 import 'grade_semeada.dart';
 import 'memoria_no_navegador.dart';
+import 'preferencia_de_tema.dart';
 import 'repositorio_grade_no_navegador.dart';
 import 'tema.dart';
 import 'telas/tela_da_grade.dart';
@@ -25,6 +26,7 @@ Future<void> main() async {
         edicao: EdicaoDeAulas(repositorio),
         escolherPlanilha: _escolherPlanilhaNoNavegador,
       ),
+      preferenciaDeTema: PreferenciaDeTemaNoNavegador(),
     ),
   );
 }
@@ -43,8 +45,14 @@ Future<Uint8List?> _escolherPlanilhaNoNavegador() async {
   return escolhido?.readAsBytes();
 }
 
-class AppDaGrade extends StatelessWidget {
-  const AppDaGrade({super.key, required this.consulta, this.relogio = DateTime.now, this.painelAdmin});
+class AppDaGrade extends StatefulWidget {
+  const AppDaGrade({
+    super.key,
+    required this.consulta,
+    this.relogio = DateTime.now,
+    this.painelAdmin,
+    this.preferenciaDeTema,
+  });
 
   final ConsultaDeGrade consulta;
 
@@ -54,15 +62,50 @@ class AppDaGrade extends StatelessWidget {
   /// O painel em `/admin`. Sem ele, o site só tem a consulta pública.
   final Widget? painelAdmin;
 
+  /// Onde o tema escolhido fica guardado; sem ela, a escolha vale só até fechar a página.
+  final PreferenciaDeTema? preferenciaDeTema;
+
+  @override
+  State<AppDaGrade> createState() => _AppDaGradeState();
+}
+
+class _AppDaGradeState extends State<AppDaGrade> {
+  late final PreferenciaDeTema _preferencia = widget.preferenciaDeTema ?? PreferenciaDeTemaEmMemoria();
+  ThemeMode _tema = ThemeMode.system;
+
+  @override
+  void initState() {
+    super.initState();
+    _preferencia.lida().then((tema) {
+      if (mounted) setState(() => _tema = tema);
+    });
+  }
+
+  /// Troca para o tema oposto ao que está na tela e guarda a escolha.
+  void _alternar({required bool escuro}) {
+    final tema = escuro ? ThemeMode.light : ThemeMode.dark;
+    setState(() => _tema = tema);
+    _preferencia.guardar(tema);
+  }
+
   @override
   Widget build(BuildContext context) {
+    final AppDaGrade(:consulta, :relogio, :painelAdmin) = widget;
     return MaterialApp(
       title: 'Grade de aulas – FATEC RP',
       debugShowCheckedModeBanner: false,
       theme: temaFatec(Brightness.light),
       darkTheme: temaFatec(Brightness.dark),
-      builder: (context, tela) =>
-          Theme(data: comFonteDaTela(Theme.of(context), MediaQuery.sizeOf(context).width), child: tela!),
+      themeMode: _tema,
+      builder: (context, tela) {
+        final tema = Theme.of(context);
+        final escuro = tema.brightness == Brightness.dark;
+        return ControleDeTema(
+          escuro: escuro,
+          alternar: () => _alternar(escuro: escuro),
+          child: Theme(data: comFonteDaTela(tema, MediaQuery.sizeOf(context).width), child: tela!),
+        );
+      },
       routes: {
         '/': (_) => TelaDaGrade(consulta: consulta, relogio: relogio),
         if (painelAdmin case final painel?) '/admin': (_) => painel,
