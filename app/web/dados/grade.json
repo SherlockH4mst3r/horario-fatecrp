@@ -1,0 +1,3188 @@
+{
+  "semestreLetivo": {
+    "ano": 2026,
+    "periodo": 2
+  },
+  "aulas": [
+    {
+      "curso": "ADS",
+      "turno": "manha",
+      "semestre": 1,
+      "dia": "segunda",
+      "inicio": "09:30",
+      "fim": "13:00",
+      "disciplina": "ENG SOFT I",
+      "professor": "ELIZA",
+      "sala": "L1/S3",
+      "andares": [
+        "primeiro",
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "manha",
+      "semestre": 1,
+      "dia": "terca",
+      "inicio": "09:30",
+      "fim": "13:00",
+      "disciplina": "SO",
+      "professor": "MARCO A",
+      "sala": "LR",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "manha",
+      "semestre": 1,
+      "dia": "quarta",
+      "inicio": "07:40",
+      "fim": "09:20",
+      "disciplina": "COM EXP",
+      "professor": "CARLOS N",
+      "sala": "A definir – ADS Manhã 1º",
+      "andares": []
+    },
+    {
+      "curso": "ADS",
+      "turno": "manha",
+      "semestre": 1,
+      "dia": "quarta",
+      "inicio": "09:30",
+      "fim": "11:10",
+      "disciplina": "INGLÊS I",
+      "professor": "CLAUDIA",
+      "sala": "S20",
+      "andares": [
+        "terceiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "manha",
+      "semestre": 1,
+      "dia": "quarta",
+      "inicio": "11:20",
+      "fim": "13:00",
+      "disciplina": "PI ADS I",
+      "professor": "CARLOS E",
+      "sala": "S16",
+      "andares": [
+        "segundo"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "manha",
+      "semestre": 1,
+      "dia": "quinta",
+      "inicio": "09:30",
+      "fim": "13:00",
+      "disciplina": "ALG L P",
+      "professor": "JÚNIOR",
+      "sala": "L1/S2",
+      "andares": [
+        "primeiro",
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "manha",
+      "semestre": 1,
+      "dia": "sexta",
+      "inicio": "07:40",
+      "fim": "11:10",
+      "disciplina": "A O COMP",
+      "professor": "CARLOS E",
+      "sala": "S16",
+      "andares": [
+        "segundo"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "manha",
+      "semestre": 1,
+      "dia": "sexta",
+      "inicio": "11:20",
+      "fim": "13:00",
+      "disciplina": "COM EXP",
+      "professor": "CARLOS N",
+      "sala": "A definir – ADS Manhã 1º",
+      "andares": []
+    },
+    {
+      "curso": "ADS",
+      "turno": "manha",
+      "semestre": 2,
+      "dia": "segunda",
+      "inicio": "07:40",
+      "fim": "11:10",
+      "disciplina": "C SEG INF",
+      "professor": "CARLOS E",
+      "sala": "A definir – ADS Manhã 2º",
+      "andares": []
+    },
+    {
+      "curso": "ADS",
+      "turno": "manha",
+      "semestre": 2,
+      "dia": "terca",
+      "inicio": "07:40",
+      "fim": "11:10",
+      "disciplina": "LING PROG I",
+      "professor": "FERNANDO P",
+      "sala": "L6",
+      "andares": [
+        "segundo"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "manha",
+      "semestre": 2,
+      "dia": "terca",
+      "inicio": "11:20",
+      "fim": "13:00",
+      "disciplina": "INGLÊS II",
+      "professor": "MICHELLE",
+      "sala": "S21",
+      "andares": [
+        "terceiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "manha",
+      "semestre": 2,
+      "dia": "quarta",
+      "inicio": "07:40",
+      "fim": "09:20",
+      "disciplina": "PI ADS II",
+      "professor": "JEAN",
+      "sala": "L5/S13",
+      "andares": [
+        "primeiro",
+        "segundo"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "manha",
+      "semestre": 2,
+      "dia": "quarta",
+      "inicio": "09:30",
+      "fim": "13:00",
+      "disciplina": "ENG SOFT II",
+      "professor": "PLOTZE",
+      "sala": "L1",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "manha",
+      "semestre": 2,
+      "dia": "quinta",
+      "inicio": "09:30",
+      "fim": "13:00",
+      "disciplina": "BD I",
+      "professor": "GERALDO",
+      "sala": "LA",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "manha",
+      "semestre": 2,
+      "dia": "sexta",
+      "inicio": "07:40",
+      "fim": "11:10",
+      "disciplina": "DES WEB",
+      "professor": "JEAN",
+      "sala": "L3/S3",
+      "andares": [
+        "terceiro",
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "manha",
+      "semestre": 3,
+      "dia": "segunda",
+      "inicio": "07:40",
+      "fim": "09:20",
+      "disciplina": "ECON E FIN",
+      "professor": "FERNANDINA",
+      "sala": "S3",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "manha",
+      "semestre": 3,
+      "dia": "segunda",
+      "inicio": "09:30",
+      "fim": "13:00",
+      "disciplina": "ESTAT AP",
+      "professor": "VALÉRIA",
+      "sala": "S10",
+      "andares": [
+        "segundo"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "manha",
+      "semestre": 3,
+      "dia": "terca",
+      "inicio": "09:30",
+      "fim": "13:00",
+      "disciplina": "SO I",
+      "professor": "ELIZA",
+      "sala": "S2",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "manha",
+      "semestre": 3,
+      "dia": "quarta",
+      "inicio": "07:40",
+      "fim": "11:10",
+      "disciplina": "ENG SOFT II",
+      "professor": "RICARDO B",
+      "sala": "L6/S6",
+      "andares": [
+        "segundo",
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "manha",
+      "semestre": 3,
+      "dia": "quarta",
+      "inicio": "11:20",
+      "fim": "13:00",
+      "disciplina": "SOC TEC",
+      "professor": "SANTA FÉ",
+      "sala": "S15",
+      "andares": [
+        "segundo"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "manha",
+      "semestre": 3,
+      "dia": "quinta",
+      "inicio": "09:30",
+      "fim": "11:10",
+      "disciplina": "IHC",
+      "professor": "FABRÍCIO",
+      "sala": "L5",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "manha",
+      "semestre": 3,
+      "dia": "quinta",
+      "inicio": "11:20",
+      "fim": "13:00",
+      "disciplina": "INGLÊS III",
+      "professor": "MICHELLE",
+      "sala": "S20",
+      "andares": [
+        "terceiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "manha",
+      "semestre": 3,
+      "dia": "sexta",
+      "inicio": "09:30",
+      "fim": "13:00",
+      "disciplina": "ED",
+      "professor": "EDUARDO",
+      "sala": "L2",
+      "andares": [
+        "terceiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "manha",
+      "semestre": 4,
+      "dia": "segunda",
+      "inicio": "07:40",
+      "fim": "09:20",
+      "disciplina": "MPCT",
+      "professor": "ISABEL",
+      "sala": "S15",
+      "andares": [
+        "segundo"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "manha",
+      "semestre": 4,
+      "dia": "segunda",
+      "inicio": "09:30",
+      "fim": "13:00",
+      "disciplina": "ENG SOFT III",
+      "professor": "FABRÍCIO",
+      "sala": "L5",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "manha",
+      "semestre": 4,
+      "dia": "terca",
+      "inicio": "09:30",
+      "fim": "13:00",
+      "disciplina": "BD",
+      "professor": "GERALDO",
+      "sala": "LA",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "manha",
+      "semestre": 4,
+      "dia": "quarta",
+      "inicio": "07:40",
+      "fim": "09:20",
+      "disciplina": "P DISP MOVEIS",
+      "professor": "PLOTZE",
+      "sala": "L1",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "manha",
+      "semestre": 4,
+      "dia": "quarta",
+      "inicio": "09:30",
+      "fim": "13:00",
+      "disciplina": "PROG O O",
+      "professor": "DOUGLAS",
+      "sala": "L5",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "manha",
+      "semestre": 4,
+      "dia": "quinta",
+      "inicio": "07:40",
+      "fim": "09:20",
+      "disciplina": "P DISP MOVEIS",
+      "professor": "PLOTZE",
+      "sala": "L1",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "manha",
+      "semestre": 4,
+      "dia": "quinta",
+      "inicio": "09:30",
+      "fim": "11:10",
+      "disciplina": "INGLÊS IV",
+      "professor": "CLAUDIA",
+      "sala": "S20",
+      "andares": [
+        "terceiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "manha",
+      "semestre": 4,
+      "dia": "sexta",
+      "inicio": "09:30",
+      "fim": "13:00",
+      "disciplina": "SO II",
+      "professor": "MARCO A",
+      "sala": "LR",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "manha",
+      "semestre": 5,
+      "dia": "segunda",
+      "inicio": "07:40",
+      "fim": "11:10",
+      "disciplina": "LAB BD",
+      "professor": "GERALDO",
+      "sala": "LA",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "manha",
+      "semestre": 5,
+      "dia": "terca",
+      "inicio": "09:30",
+      "fim": "13:00",
+      "disciplina": "PROG L APLIC",
+      "professor": "JÚNIOR",
+      "sala": "L3",
+      "andares": [
+        "terceiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "manha",
+      "semestre": 5,
+      "dia": "quarta",
+      "inicio": "09:30",
+      "fim": "13:00",
+      "disciplina": "REDES COMP",
+      "professor": "MARCO A",
+      "sala": "LR/S5",
+      "andares": [
+        "primeiro",
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "manha",
+      "semestre": 5,
+      "dia": "quinta",
+      "inicio": "07:40",
+      "fim": "09:20",
+      "disciplina": "PROG WEB",
+      "professor": "RICARDO B",
+      "sala": "L5",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "manha",
+      "semestre": 5,
+      "dia": "quinta",
+      "inicio": "09:30",
+      "fim": "11:10",
+      "disciplina": "INGLÊS V",
+      "professor": "ANNA",
+      "sala": "S21/LR",
+      "andares": [
+        "terceiro",
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "manha",
+      "semestre": 5,
+      "dia": "quinta",
+      "inicio": "11:20",
+      "fim": "13:00",
+      "disciplina": "PROG WEB",
+      "professor": "RICARDO B",
+      "sala": "L5",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "manha",
+      "semestre": 5,
+      "dia": "sexta",
+      "inicio": "07:40",
+      "fim": "11:10",
+      "disciplina": "LAB ENG SOFT",
+      "professor": "LUCAS B",
+      "sala": "LA",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "manha",
+      "semestre": 5,
+      "dia": "sexta",
+      "inicio": "11:20",
+      "fim": "13:00",
+      "disciplina": "SEG INF",
+      "professor": "CARLOS E",
+      "sala": "L3/S16",
+      "andares": [
+        "terceiro",
+        "segundo"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "manha",
+      "semestre": 6,
+      "dia": "segunda",
+      "inicio": "07:40",
+      "fim": "11:10",
+      "disciplina": "INT ARTIF",
+      "professor": "RICARDO B",
+      "sala": "L6",
+      "andares": [
+        "segundo"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "manha",
+      "semestre": 6,
+      "dia": "terca",
+      "inicio": "07:40",
+      "fim": "09:20",
+      "disciplina": "GEST EQUIPES",
+      "professor": "SUZANA",
+      "sala": "S11",
+      "andares": [
+        "segundo"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "manha",
+      "semestre": 6,
+      "dia": "terca",
+      "inicio": "09:30",
+      "fim": "11:10",
+      "disciplina": "EMPREEND",
+      "professor": "SUZANA",
+      "sala": "S11",
+      "andares": [
+        "segundo"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "manha",
+      "semestre": 6,
+      "dia": "terca",
+      "inicio": "11:20",
+      "fim": "13:00",
+      "disciplina": "E RESP PROF",
+      "professor": "MARA",
+      "sala": "S10",
+      "andares": [
+        "segundo"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "manha",
+      "semestre": 6,
+      "dia": "quarta",
+      "inicio": "09:30",
+      "fim": "13:00",
+      "disciplina": "GEST GOV TI",
+      "professor": "FABRÍCIO",
+      "sala": "LA",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "manha",
+      "semestre": 6,
+      "dia": "quinta",
+      "inicio": "07:40",
+      "fim": "11:10",
+      "disciplina": "GEST PROJ",
+      "professor": "KELLY",
+      "sala": "L2",
+      "andares": [
+        "terceiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "manha",
+      "semestre": 6,
+      "dia": "quinta",
+      "inicio": "11:20",
+      "fim": "13:00",
+      "disciplina": "INGLÊS VI",
+      "professor": "ANNA",
+      "sala": "S21/LR",
+      "andares": [
+        "terceiro",
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "manha",
+      "semestre": 6,
+      "dia": "sexta",
+      "inicio": "07:40",
+      "fim": "11:10",
+      "disciplina": "TOP ESP INF",
+      "professor": "FABRÍCIO",
+      "sala": "L6",
+      "andares": [
+        "segundo"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "noite",
+      "semestre": 1,
+      "dia": "segunda",
+      "inicio": "19:00",
+      "fim": "22:30",
+      "disciplina": "ALG L P",
+      "professor": "JÚNIOR",
+      "sala": "L1/S2",
+      "andares": [
+        "primeiro",
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "noite",
+      "semestre": 1,
+      "dia": "terca",
+      "inicio": "19:00",
+      "fim": "22:30",
+      "disciplina": "SO",
+      "professor": "MARCO A",
+      "sala": "LR",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "noite",
+      "semestre": 1,
+      "dia": "quarta",
+      "inicio": "19:00",
+      "fim": "20:40",
+      "disciplina": "PI ADS I",
+      "professor": "CARLOS E",
+      "sala": "S16",
+      "andares": [
+        "segundo"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "noite",
+      "semestre": 1,
+      "dia": "quinta",
+      "inicio": "19:00",
+      "fim": "22:30",
+      "disciplina": "ENG SOFT I",
+      "professor": "ELIZA",
+      "sala": "L6/S2",
+      "andares": [
+        "segundo",
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "noite",
+      "semestre": 1,
+      "dia": "sexta",
+      "inicio": "19:00",
+      "fim": "22:30",
+      "disciplina": "COM EXP",
+      "professor": "CARLOS N",
+      "sala": "A definir – ADS Noite 1º",
+      "andares": []
+    },
+    {
+      "curso": "ADS",
+      "turno": "noite",
+      "semestre": 1,
+      "dia": "sabado",
+      "inicio": "07:40",
+      "fim": "11:10",
+      "disciplina": "A O COMP",
+      "professor": "CARLOS E",
+      "sala": "S16",
+      "andares": [
+        "segundo"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "noite",
+      "semestre": 1,
+      "dia": "sabado",
+      "inicio": "11:20",
+      "fim": "13:00",
+      "disciplina": "INGLÊS I",
+      "professor": "MICHELLE",
+      "sala": "S21",
+      "andares": [
+        "terceiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "noite",
+      "semestre": 2,
+      "dia": "segunda",
+      "inicio": "19:00",
+      "fim": "20:40",
+      "disciplina": "C SEG INF",
+      "professor": "CARLOS E",
+      "sala": "A definir – ADS Noite 2º",
+      "andares": []
+    },
+    {
+      "curso": "ADS",
+      "turno": "noite",
+      "semestre": 2,
+      "dia": "segunda",
+      "inicio": "20:50",
+      "fim": "22:30",
+      "disciplina": "INGLÊS II",
+      "professor": "MICHELLE",
+      "sala": "S20",
+      "andares": [
+        "terceiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "noite",
+      "semestre": 2,
+      "dia": "terca",
+      "inicio": "19:00",
+      "fim": "22:30",
+      "disciplina": "LING PROG I",
+      "professor": "ALEXANDRE",
+      "sala": "L1",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "noite",
+      "semestre": 2,
+      "dia": "quarta",
+      "inicio": "19:00",
+      "fim": "20:40",
+      "disciplina": "PI ADS II",
+      "professor": "JEAN",
+      "sala": "L1/S12",
+      "andares": [
+        "primeiro",
+        "segundo"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "noite",
+      "semestre": 2,
+      "dia": "quinta",
+      "inicio": "19:00",
+      "fim": "22:30",
+      "disciplina": "ENG SOFT II",
+      "professor": "PLOTZE",
+      "sala": "L1",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "noite",
+      "semestre": 2,
+      "dia": "sexta",
+      "inicio": "19:00",
+      "fim": "22:30",
+      "disciplina": "DES WEB",
+      "professor": "JEAN",
+      "sala": "L1",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "noite",
+      "semestre": 2,
+      "dia": "sabado",
+      "inicio": "07:40",
+      "fim": "09:20",
+      "disciplina": "C SEG INF",
+      "professor": "CARLOS E",
+      "sala": "A definir – ADS Noite 2º",
+      "andares": []
+    },
+    {
+      "curso": "ADS",
+      "turno": "noite",
+      "semestre": 2,
+      "dia": "sabado",
+      "inicio": "09:30",
+      "fim": "13:00",
+      "disciplina": "BD I",
+      "professor": "GERALDO",
+      "sala": "LA",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "noite",
+      "semestre": 3,
+      "dia": "segunda",
+      "inicio": "19:00",
+      "fim": "22:30",
+      "disciplina": "ENG SOFT II",
+      "professor": "ELIZA",
+      "sala": "L6/S5",
+      "andares": [
+        "segundo",
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "noite",
+      "semestre": 3,
+      "dia": "terca",
+      "inicio": "19:00",
+      "fim": "22:30",
+      "disciplina": "SO I",
+      "professor": "DOUGLAS",
+      "sala": "S7",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "noite",
+      "semestre": 3,
+      "dia": "quarta",
+      "inicio": "19:00",
+      "fim": "20:40",
+      "disciplina": "SOC TEC",
+      "professor": "SANTA FÉ",
+      "sala": "S7",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "noite",
+      "semestre": 3,
+      "dia": "quarta",
+      "inicio": "20:50",
+      "fim": "22:30",
+      "disciplina": "IHC",
+      "professor": "FABRÍCIO",
+      "sala": "L1",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "noite",
+      "semestre": 3,
+      "dia": "quinta",
+      "inicio": "19:00",
+      "fim": "20:40",
+      "disciplina": "INGLÊS III",
+      "professor": "MICHELLE",
+      "sala": "S20",
+      "andares": [
+        "terceiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "noite",
+      "semestre": 3,
+      "dia": "sexta",
+      "inicio": "19:00",
+      "fim": "22:30",
+      "disciplina": "ESTAT AP",
+      "professor": "ANDRÉ B",
+      "sala": "S6",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "noite",
+      "semestre": 3,
+      "dia": "sabado",
+      "inicio": "07:40",
+      "fim": "11:10",
+      "disciplina": "ED",
+      "professor": "HEBER",
+      "sala": "L6",
+      "andares": [
+        "segundo"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "noite",
+      "semestre": 3,
+      "dia": "sabado",
+      "inicio": "11:20",
+      "fim": "13:00",
+      "disciplina": "ECON E FIN",
+      "professor": "ANDRÉ S",
+      "sala": "S3",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "noite",
+      "semestre": 4,
+      "dia": "segunda",
+      "inicio": "19:00",
+      "fim": "20:40",
+      "disciplina": "INGLÊS IV",
+      "professor": "MICHELLE",
+      "sala": "S20",
+      "andares": [
+        "terceiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "noite",
+      "semestre": 4,
+      "dia": "terca",
+      "inicio": "19:00",
+      "fim": "22:30",
+      "disciplina": "ENG SOFT III",
+      "professor": "FABRÍCIO",
+      "sala": "L5",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "noite",
+      "semestre": 4,
+      "dia": "quarta",
+      "inicio": "19:00",
+      "fim": "22:30",
+      "disciplina": "SO II",
+      "professor": "MARCO A",
+      "sala": "LR",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "noite",
+      "semestre": 4,
+      "dia": "quinta",
+      "inicio": "19:00",
+      "fim": "22:30",
+      "disciplina": "BD",
+      "professor": "GERALDO",
+      "sala": "LA",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "noite",
+      "semestre": 4,
+      "dia": "sexta",
+      "inicio": "19:00",
+      "fim": "22:30",
+      "disciplina": "P DISP MOVEIS",
+      "professor": "PLOTZE",
+      "sala": "LR",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "noite",
+      "semestre": 4,
+      "dia": "sabado",
+      "inicio": "07:40",
+      "fim": "11:10",
+      "disciplina": "PROG O O",
+      "professor": "MAGNO",
+      "sala": "LR",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "noite",
+      "semestre": 4,
+      "dia": "sabado",
+      "inicio": "11:20",
+      "fim": "13:00",
+      "disciplina": "MPCT",
+      "professor": "MARA",
+      "sala": "S4/LR",
+      "andares": [
+        "primeiro",
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "noite",
+      "semestre": 5,
+      "dia": "segunda",
+      "inicio": "19:00",
+      "fim": "22:30",
+      "disciplina": "LAB BD",
+      "professor": "GERALDO",
+      "sala": "LA",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "noite",
+      "semestre": 5,
+      "dia": "terca",
+      "inicio": "19:00",
+      "fim": "22:30",
+      "disciplina": "PROG L APLIC",
+      "professor": "JÚNIOR",
+      "sala": "LA",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "noite",
+      "semestre": 5,
+      "dia": "quarta",
+      "inicio": "19:00",
+      "fim": "22:30",
+      "disciplina": "PROG WEB",
+      "professor": "EDUARDO",
+      "sala": "LA",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "noite",
+      "semestre": 5,
+      "dia": "quinta",
+      "inicio": "19:00",
+      "fim": "22:30",
+      "disciplina": "REDES COMP",
+      "professor": "MARCO A",
+      "sala": "LR/S5",
+      "andares": [
+        "primeiro",
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "noite",
+      "semestre": 5,
+      "dia": "sexta",
+      "inicio": "19:00",
+      "fim": "22:30",
+      "disciplina": "LAB ENG SOFT",
+      "professor": "LUCAS B",
+      "sala": "LA",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "noite",
+      "semestre": 5,
+      "dia": "sabado",
+      "inicio": "09:30",
+      "fim": "11:10",
+      "disciplina": "INGLÊS V",
+      "professor": "MICHELLE",
+      "sala": "S21",
+      "andares": [
+        "terceiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "noite",
+      "semestre": 5,
+      "dia": "sabado",
+      "inicio": "11:20",
+      "fim": "13:00",
+      "disciplina": "SEG INF",
+      "professor": "CARLOS E",
+      "sala": "L3",
+      "andares": [
+        "terceiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "noite",
+      "semestre": 6,
+      "dia": "segunda",
+      "inicio": "19:00",
+      "fim": "22:30",
+      "disciplina": "GEST GOV TI",
+      "professor": "FABRÍCIO",
+      "sala": "L2",
+      "andares": [
+        "terceiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "noite",
+      "semestre": 6,
+      "dia": "terca",
+      "inicio": "19:00",
+      "fim": "20:40",
+      "disciplina": "EMPREEND",
+      "professor": "SUZANA",
+      "sala": "S2",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "noite",
+      "semestre": 6,
+      "dia": "terca",
+      "inicio": "20:50",
+      "fim": "22:30",
+      "disciplina": "GEST EQUIPES",
+      "professor": "SUZANA",
+      "sala": "S2",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "noite",
+      "semestre": 6,
+      "dia": "quarta",
+      "inicio": "20:50",
+      "fim": "22:30",
+      "disciplina": "INGLÊS VI",
+      "professor": "MICHELLE",
+      "sala": "S20",
+      "andares": [
+        "terceiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "noite",
+      "semestre": 6,
+      "dia": "quinta",
+      "inicio": "19:00",
+      "fim": "22:30",
+      "disciplina": "GEST PROJ",
+      "professor": "FERNANDO P",
+      "sala": "L2",
+      "andares": [
+        "terceiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "noite",
+      "semestre": 6,
+      "dia": "sexta",
+      "inicio": "19:00",
+      "fim": "22:30",
+      "disciplina": "TOP ESP INF",
+      "professor": "FABRÍCIO",
+      "sala": "L5",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "noite",
+      "semestre": 6,
+      "dia": "sabado",
+      "inicio": "07:40",
+      "fim": "11:10",
+      "disciplina": "INT ARTIF",
+      "professor": "RICARDO B",
+      "sala": "L3",
+      "andares": [
+        "terceiro"
+      ]
+    },
+    {
+      "curso": "ADS",
+      "turno": "noite",
+      "semestre": 6,
+      "dia": "sabado",
+      "inicio": "11:20",
+      "fim": "13:00",
+      "disciplina": "E RESP PROF",
+      "professor": "ADRIANO",
+      "sala": "S11",
+      "andares": [
+        "segundo"
+      ]
+    },
+    {
+      "curso": "GNI",
+      "turno": "noite",
+      "semestre": 1,
+      "dia": "segunda",
+      "inicio": "19:00",
+      "fim": "20:40",
+      "disciplina": "INGLÊS I",
+      "professor": "CLAUDIA",
+      "sala": "S21",
+      "andares": [
+        "terceiro"
+      ]
+    },
+    {
+      "curso": "GNI",
+      "turno": "noite",
+      "semestre": 1,
+      "dia": "segunda",
+      "inicio": "20:50",
+      "fim": "22:30",
+      "disciplina": "PI I - GEST E INOV",
+      "professor": "CLAYTON",
+      "sala": "S24",
+      "andares": [
+        "terceiro"
+      ]
+    },
+    {
+      "curso": "GNI",
+      "turno": "noite",
+      "semestre": 1,
+      "dia": "terca",
+      "inicio": "19:00",
+      "fim": "22:30",
+      "disciplina": "ADM GERAL",
+      "professor": "HELENITA",
+      "sala": "S6",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "GNI",
+      "turno": "noite",
+      "semestre": 1,
+      "dia": "quarta",
+      "inicio": "19:00",
+      "fim": "22:30",
+      "disciplina": "COM EMP",
+      "professor": "CARLOS N",
+      "sala": "S5",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "GNI",
+      "turno": "noite",
+      "semestre": 1,
+      "dia": "quinta",
+      "inicio": "19:00",
+      "fim": "22:30",
+      "disciplina": "CALCULO",
+      "professor": "JÚNIOR",
+      "sala": "S22",
+      "andares": [
+        "terceiro"
+      ]
+    },
+    {
+      "curso": "GNI",
+      "turno": "noite",
+      "semestre": 1,
+      "dia": "sexta",
+      "inicio": "19:00",
+      "fim": "22:30",
+      "disciplina": "EMP E INOV",
+      "professor": "SUZANA",
+      "sala": "S12",
+      "andares": [
+        "segundo"
+      ]
+    },
+    {
+      "curso": "GNI",
+      "turno": "noite",
+      "semestre": 1,
+      "dia": "sabado",
+      "inicio": "09:30",
+      "fim": "13:00",
+      "disciplina": "PROSP B INF TEC",
+      "professor": "FERNANDO P",
+      "sala": "S7/L1",
+      "andares": [
+        "primeiro",
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "GNI",
+      "turno": "noite",
+      "semestre": 2,
+      "dia": "segunda",
+      "inicio": "19:00",
+      "fim": "22:30",
+      "disciplina": "ECONOMIA",
+      "professor": "FERNANDINA",
+      "sala": "S14",
+      "andares": [
+        "segundo"
+      ]
+    },
+    {
+      "curso": "GNI",
+      "turno": "noite",
+      "semestre": 2,
+      "dia": "terca",
+      "inicio": "19:00",
+      "fim": "22:30",
+      "disciplina": "PROSP NEG",
+      "professor": "ADRIANO",
+      "sala": "S24",
+      "andares": [
+        "terceiro"
+      ]
+    },
+    {
+      "curso": "GNI",
+      "turno": "noite",
+      "semestre": 2,
+      "dia": "quarta",
+      "inicio": "19:00",
+      "fim": "22:30",
+      "disciplina": "MKT E INOV",
+      "professor": "SUZANA",
+      "sala": "S11",
+      "andares": [
+        "segundo"
+      ]
+    },
+    {
+      "curso": "GNI",
+      "turno": "noite",
+      "semestre": 2,
+      "dia": "quinta",
+      "inicio": "19:00",
+      "fim": "22:30",
+      "disciplina": "LEG EMP E PI",
+      "professor": "MARIA RAFAELA",
+      "sala": "S11",
+      "andares": [
+        "segundo"
+      ]
+    },
+    {
+      "curso": "GNI",
+      "turno": "noite",
+      "semestre": 2,
+      "dia": "sexta",
+      "inicio": "19:00",
+      "fim": "20:40",
+      "disciplina": "PI II - GEST E INOV",
+      "professor": "AMANDA",
+      "sala": "S24",
+      "andares": [
+        "terceiro"
+      ]
+    },
+    {
+      "curso": "GNI",
+      "turno": "noite",
+      "semestre": 2,
+      "dia": "sexta",
+      "inicio": "20:50",
+      "fim": "22:30",
+      "disciplina": "INGLÊS II",
+      "professor": "CLAUDIA",
+      "sala": "S21",
+      "andares": [
+        "terceiro"
+      ]
+    },
+    {
+      "curso": "GNI",
+      "turno": "noite",
+      "semestre": 2,
+      "dia": "sabado",
+      "inicio": "09:30",
+      "fim": "13:00",
+      "disciplina": "ESTATÍSTICA",
+      "professor": "VIVIANE F",
+      "sala": "S4",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "GNI",
+      "turno": "noite",
+      "semestre": 3,
+      "dia": "segunda",
+      "inicio": "19:00",
+      "fim": "22:30",
+      "disciplina": "G MOD PROT NEG",
+      "professor": "ADRIANO",
+      "sala": "L5",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "GNI",
+      "turno": "noite",
+      "semestre": 3,
+      "dia": "terca",
+      "inicio": "19:00",
+      "fim": "22:30",
+      "disciplina": "LEG TRIB CAL TRIB",
+      "professor": "MARIA RAFAELA",
+      "sala": "S11",
+      "andares": [
+        "segundo"
+      ]
+    },
+    {
+      "curso": "GNI",
+      "turno": "noite",
+      "semestre": 3,
+      "dia": "quarta",
+      "inicio": "19:00",
+      "fim": "22:30",
+      "disciplina": "PESQ OPER",
+      "professor": "JÚNIOR",
+      "sala": "L5",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "GNI",
+      "turno": "noite",
+      "semestre": 3,
+      "dia": "quinta",
+      "inicio": "19:00",
+      "fim": "22:30",
+      "disciplina": "G CICLO VIDA PROD",
+      "professor": "BONETTE",
+      "sala": "S24",
+      "andares": [
+        "terceiro"
+      ]
+    },
+    {
+      "curso": "GNI",
+      "turno": "noite",
+      "semestre": 3,
+      "dia": "sexta",
+      "inicio": "19:00",
+      "fim": "20:40",
+      "disciplina": "INGLÊS III",
+      "professor": "CLAUDIA",
+      "sala": "S21",
+      "andares": [
+        "terceiro"
+      ]
+    },
+    {
+      "curso": "GNI",
+      "turno": "noite",
+      "semestre": 3,
+      "dia": "sexta",
+      "inicio": "20:50",
+      "fim": "22:30",
+      "disciplina": "PI III - GEST E INOV",
+      "professor": "ANDRÉIA",
+      "sala": "S14",
+      "andares": [
+        "segundo"
+      ]
+    },
+    {
+      "curso": "GNI",
+      "turno": "noite",
+      "semestre": 3,
+      "dia": "sabado",
+      "inicio": "09:30",
+      "fim": "13:00",
+      "disciplina": "CONTAB GER",
+      "professor": "SILVÂNIA",
+      "sala": "S12",
+      "andares": [
+        "segundo"
+      ]
+    },
+    {
+      "curso": "GNI",
+      "turno": "noite",
+      "semestre": 4,
+      "dia": "segunda",
+      "inicio": "19:00",
+      "fim": "22:30",
+      "disciplina": "LEG T CALC ENC",
+      "professor": "MARIA RAFAELA",
+      "sala": "S6",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "GNI",
+      "turno": "noite",
+      "semestre": 4,
+      "dia": "terca",
+      "inicio": "19:00",
+      "fim": "22:30",
+      "disciplina": "NOVAS TEC DIG",
+      "professor": "FERNANDO P",
+      "sala": "L6",
+      "andares": [
+        "segundo"
+      ]
+    },
+    {
+      "curso": "GNI",
+      "turno": "noite",
+      "semestre": 4,
+      "dia": "quarta",
+      "inicio": "19:00",
+      "fim": "22:30",
+      "disciplina": "GEST PROJ",
+      "professor": "FERNANDO P",
+      "sala": "L6",
+      "andares": [
+        "segundo"
+      ]
+    },
+    {
+      "curso": "GNI",
+      "turno": "noite",
+      "semestre": 4,
+      "dia": "quinta",
+      "inicio": "19:00",
+      "fim": "22:30",
+      "disciplina": "LOG EMPR",
+      "professor": "ISABEL",
+      "sala": "S15",
+      "andares": [
+        "segundo"
+      ]
+    },
+    {
+      "curso": "GNI",
+      "turno": "noite",
+      "semestre": 4,
+      "dia": "sexta",
+      "inicio": "19:00",
+      "fim": "20:40",
+      "disciplina": "PI IV - GEST E INOV",
+      "professor": "RENATO",
+      "sala": "L6",
+      "andares": [
+        "segundo"
+      ]
+    },
+    {
+      "curso": "GNI",
+      "turno": "noite",
+      "semestre": 4,
+      "dia": "sexta",
+      "inicio": "20:50",
+      "fim": "22:30",
+      "disciplina": "INGLÊS IV",
+      "professor": "MICHELLE",
+      "sala": "S20",
+      "andares": [
+        "terceiro"
+      ]
+    },
+    {
+      "curso": "GNI",
+      "turno": "noite",
+      "semestre": 4,
+      "dia": "sabado",
+      "inicio": "07:40",
+      "fim": "11:10",
+      "disciplina": "GEST FIN CUSTOS",
+      "professor": "FERNANDINA",
+      "sala": "S14",
+      "andares": [
+        "segundo"
+      ]
+    },
+    {
+      "curso": "GNI",
+      "turno": "noite",
+      "semestre": 5,
+      "dia": "segunda",
+      "inicio": "19:00",
+      "fim": "22:30",
+      "disciplina": "GEST MAT",
+      "professor": "LUCIANA",
+      "sala": "S3/LR",
+      "andares": [
+        "primeiro",
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "GNI",
+      "turno": "noite",
+      "semestre": 5,
+      "dia": "terca",
+      "inicio": "19:00",
+      "fim": "22:30",
+      "disciplina": "GEST OP SERV",
+      "professor": "ISABEL",
+      "sala": "S15",
+      "andares": [
+        "segundo"
+      ]
+    },
+    {
+      "curso": "GNI",
+      "turno": "noite",
+      "semestre": 5,
+      "dia": "quarta",
+      "inicio": "19:00",
+      "fim": "20:40",
+      "disciplina": "INGLÊS V",
+      "professor": "CLAUDIA",
+      "sala": "S21",
+      "andares": [
+        "terceiro"
+      ]
+    },
+    {
+      "curso": "GNI",
+      "turno": "noite",
+      "semestre": 5,
+      "dia": "quarta",
+      "inicio": "20:50",
+      "fim": "22:30",
+      "disciplina": "INVEST E FIN",
+      "professor": "FERNANDINA",
+      "sala": "S10",
+      "andares": [
+        "segundo"
+      ]
+    },
+    {
+      "curso": "GNI",
+      "turno": "noite",
+      "semestre": 5,
+      "dia": "quinta",
+      "inicio": "19:00",
+      "fim": "20:40",
+      "disciplina": "INVEST E FIN",
+      "professor": "FERNANDINA",
+      "sala": "S10",
+      "andares": [
+        "segundo"
+      ]
+    },
+    {
+      "curso": "GNI",
+      "turno": "noite",
+      "semestre": 5,
+      "dia": "quinta",
+      "inicio": "20:50",
+      "fim": "22:30",
+      "disciplina": "ESPANHOL I",
+      "professor": "CÁSSIA",
+      "sala": "S21",
+      "andares": [
+        "terceiro"
+      ]
+    },
+    {
+      "curso": "GNI",
+      "turno": "noite",
+      "semestre": 5,
+      "dia": "sexta",
+      "inicio": "19:00",
+      "fim": "22:30",
+      "disciplina": "GEST VAREJO",
+      "professor": "FABIANO",
+      "sala": "S16",
+      "andares": [
+        "segundo"
+      ]
+    },
+    {
+      "curso": "GNI",
+      "turno": "noite",
+      "semestre": 5,
+      "dia": "sabado",
+      "inicio": "07:40",
+      "fim": "09:20",
+      "disciplina": "ÉTICA R S AMB",
+      "professor": "MARIA RAFAELA",
+      "sala": "S11",
+      "andares": [
+        "segundo"
+      ]
+    },
+    {
+      "curso": "GNI",
+      "turno": "noite",
+      "semestre": 5,
+      "dia": "sabado",
+      "inicio": "09:30",
+      "fim": "11:10",
+      "disciplina": "PI V - CONS G INOV",
+      "professor": "RENATO",
+      "sala": "S24",
+      "andares": [
+        "terceiro"
+      ]
+    },
+    {
+      "curso": "GNI",
+      "turno": "noite",
+      "semestre": 6,
+      "dia": "segunda",
+      "inicio": "19:00",
+      "fim": "20:40",
+      "disciplina": "NEGOCIAÇÃO",
+      "professor": "SUZANA",
+      "sala": "A definir – GNI Noite 6º",
+      "andares": []
+    },
+    {
+      "curso": "GNI",
+      "turno": "noite",
+      "semestre": 6,
+      "dia": "segunda",
+      "inicio": "20:50",
+      "fim": "22:30",
+      "disciplina": "INGLÊS VI",
+      "professor": "CLAUDIA",
+      "sala": "A definir – GNI Noite 6º",
+      "andares": []
+    },
+    {
+      "curso": "GNI",
+      "turno": "noite",
+      "semestre": 6,
+      "dia": "terca",
+      "inicio": "19:00",
+      "fim": "22:30",
+      "disciplina": "POL PUB EMP",
+      "professor": "LUCIANA",
+      "sala": "A definir – GNI Noite 6º",
+      "andares": []
+    },
+    {
+      "curso": "GNI",
+      "turno": "noite",
+      "semestre": 6,
+      "dia": "quarta",
+      "inicio": "19:00",
+      "fim": "22:30",
+      "disciplina": "NEG INTER",
+      "professor": "ISABEL",
+      "sala": "A definir – GNI Noite 6º",
+      "andares": []
+    },
+    {
+      "curso": "GNI",
+      "turno": "noite",
+      "semestre": 6,
+      "dia": "quinta",
+      "inicio": "19:00",
+      "fim": "20:40",
+      "disciplina": "ESPANHOL II",
+      "professor": "CÁSSIA",
+      "sala": "A definir – GNI Noite 6º",
+      "andares": []
+    },
+    {
+      "curso": "GNI",
+      "turno": "noite",
+      "semestre": 6,
+      "dia": "sexta",
+      "inicio": "19:00",
+      "fim": "22:30",
+      "disciplina": "COACHING EMP",
+      "professor": "HELENITA",
+      "sala": "A definir – GNI Noite 6º",
+      "andares": []
+    },
+    {
+      "curso": "GNI",
+      "turno": "noite",
+      "semestre": 6,
+      "dia": "sabado",
+      "inicio": "07:40",
+      "fim": "11:10",
+      "disciplina": "G MARCAS",
+      "professor": "ADRIANO",
+      "sala": "A definir – GNI Noite 6º",
+      "andares": []
+    },
+    {
+      "curso": "GNI",
+      "turno": "noite",
+      "semestre": 6,
+      "dia": "sabado",
+      "inicio": "11:20",
+      "fim": "13:00",
+      "disciplina": "PI VI - CONS G INOV",
+      "professor": "RENATO",
+      "sala": "A definir – GNI Noite 6º",
+      "andares": []
+    },
+    {
+      "curso": "GRH",
+      "turno": "manha",
+      "semestre": 1,
+      "dia": "segunda",
+      "inicio": "07:40",
+      "fim": "09:20",
+      "disciplina": "INGLES I",
+      "professor": "CLAUDIA",
+      "sala": "S20",
+      "andares": [
+        "terceiro"
+      ]
+    },
+    {
+      "curso": "GRH",
+      "turno": "manha",
+      "semestre": 1,
+      "dia": "segunda",
+      "inicio": "09:30",
+      "fim": "13:00",
+      "disciplina": "COM EMP",
+      "professor": "CARLOS N",
+      "sala": "S12",
+      "andares": [
+        "segundo"
+      ]
+    },
+    {
+      "curso": "GRH",
+      "turno": "manha",
+      "semestre": 1,
+      "dia": "terca",
+      "inicio": "09:30",
+      "fim": "13:00",
+      "disciplina": "TEORIA ORG",
+      "professor": "ADRIANO",
+      "sala": "S12",
+      "andares": [
+        "segundo"
+      ]
+    },
+    {
+      "curso": "GRH",
+      "turno": "manha",
+      "semestre": 1,
+      "dia": "quarta",
+      "inicio": "07:40",
+      "fim": "11:10",
+      "disciplina": "PSICO REL H",
+      "professor": "CARLA",
+      "sala": "S16",
+      "andares": [
+        "segundo"
+      ]
+    },
+    {
+      "curso": "GRH",
+      "turno": "manha",
+      "semestre": 1,
+      "dia": "quinta",
+      "inicio": "07:40",
+      "fim": "11:10",
+      "disciplina": "COMP ORG",
+      "professor": "OTÁVIA",
+      "sala": "S6",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "GRH",
+      "turno": "manha",
+      "semestre": 1,
+      "dia": "sexta",
+      "inicio": "07:40",
+      "fim": "09:20",
+      "disciplina": "MET PROD CON",
+      "professor": "ADRIANO",
+      "sala": "S12/L2",
+      "andares": [
+        "segundo",
+        "terceiro"
+      ]
+    },
+    {
+      "curso": "GRH",
+      "turno": "manha",
+      "semestre": 1,
+      "dia": "sexta",
+      "inicio": "09:30",
+      "fim": "13:00",
+      "disciplina": "MAT ELEM",
+      "professor": "VIVIANE F",
+      "sala": "S4",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "GRH",
+      "turno": "manha",
+      "semestre": 2,
+      "dia": "segunda",
+      "inicio": "07:40",
+      "fim": "11:10",
+      "disciplina": "DIR PUB PRIV",
+      "professor": "MARIA RAFAELA",
+      "sala": "S5",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "GRH",
+      "turno": "manha",
+      "semestre": 2,
+      "dia": "terca",
+      "inicio": "07:40",
+      "fim": "11:10",
+      "disciplina": "ESTAT",
+      "professor": "VALÉRIA",
+      "sala": "S10",
+      "andares": [
+        "segundo"
+      ]
+    },
+    {
+      "curso": "GRH",
+      "turno": "manha",
+      "semestre": 2,
+      "dia": "quarta",
+      "inicio": "07:40",
+      "fim": "11:10",
+      "disciplina": "ET RESP S EMP",
+      "professor": "SANTA FÉ",
+      "sala": "S15",
+      "andares": [
+        "segundo"
+      ]
+    },
+    {
+      "curso": "GRH",
+      "turno": "manha",
+      "semestre": 2,
+      "dia": "quarta",
+      "inicio": "11:20",
+      "fim": "13:00",
+      "disciplina": "INGLES II",
+      "professor": "CLAUDIA",
+      "sala": "S20",
+      "andares": [
+        "terceiro"
+      ]
+    },
+    {
+      "curso": "GRH",
+      "turno": "manha",
+      "semestre": 2,
+      "dia": "quinta",
+      "inicio": "09:30",
+      "fim": "13:00",
+      "disciplina": "CAP SEL TAL",
+      "professor": "SUZANA",
+      "sala": "S11",
+      "andares": [
+        "segundo"
+      ]
+    },
+    {
+      "curso": "GRH",
+      "turno": "manha",
+      "semestre": 2,
+      "dia": "sexta",
+      "inicio": "07:40",
+      "fim": "11:10",
+      "disciplina": "SI AP RH",
+      "professor": "RICARDO B",
+      "sala": "L1",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "GRH",
+      "turno": "manha",
+      "semestre": 2,
+      "dia": "sexta",
+      "inicio": "11:20",
+      "fim": "13:00",
+      "disciplina": "PI EM RH I",
+      "professor": "ADRIANO",
+      "sala": "S12/LA",
+      "andares": [
+        "segundo",
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "GRH",
+      "turno": "manha",
+      "semestre": 3,
+      "dia": "segunda",
+      "inicio": "07:40",
+      "fim": "11:10",
+      "disciplina": "G ROT PES I",
+      "professor": "KELLY",
+      "sala": "S7",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "GRH",
+      "turno": "manha",
+      "semestre": 3,
+      "dia": "terca",
+      "inicio": "07:40",
+      "fim": "11:10",
+      "disciplina": "ED CORP",
+      "professor": "OTÁVIA",
+      "sala": "S24",
+      "andares": [
+        "terceiro"
+      ]
+    },
+    {
+      "curso": "GRH",
+      "turno": "manha",
+      "semestre": 3,
+      "dia": "quarta",
+      "inicio": "07:40",
+      "fim": "11:10",
+      "disciplina": "DIR TRAB PREV",
+      "professor": "MARINA",
+      "sala": "S10",
+      "andares": [
+        "segundo"
+      ]
+    },
+    {
+      "curso": "GRH",
+      "turno": "manha",
+      "semestre": 3,
+      "dia": "quarta",
+      "inicio": "11:20",
+      "fim": "13:00",
+      "disciplina": "PI EM RH II",
+      "professor": "ISABEL",
+      "sala": "S10/L3",
+      "andares": [
+        "segundo",
+        "terceiro"
+      ]
+    },
+    {
+      "curso": "GRH",
+      "turno": "manha",
+      "semestre": 3,
+      "dia": "quinta",
+      "inicio": "07:40",
+      "fim": "11:10",
+      "disciplina": "G CONHEC",
+      "professor": "FABIANO",
+      "sala": "S15",
+      "andares": [
+        "segundo"
+      ]
+    },
+    {
+      "curso": "GRH",
+      "turno": "manha",
+      "semestre": 3,
+      "dia": "quinta",
+      "inicio": "11:20",
+      "fim": "13:00",
+      "disciplina": "INGLES III",
+      "professor": "CLAUDIA",
+      "sala": "S15",
+      "andares": [
+        "segundo"
+      ]
+    },
+    {
+      "curso": "GRH",
+      "turno": "manha",
+      "semestre": 3,
+      "dia": "sexta",
+      "inicio": "09:30",
+      "fim": "13:00",
+      "disciplina": "G CULT CL ORG",
+      "professor": "ISABEL",
+      "sala": "S15",
+      "andares": [
+        "segundo"
+      ]
+    },
+    {
+      "curso": "GRH",
+      "turno": "manha",
+      "semestre": 4,
+      "dia": "segunda",
+      "inicio": "07:40",
+      "fim": "11:10",
+      "disciplina": "G ROT PES II",
+      "professor": "LAÍS",
+      "sala": "S4",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "GRH",
+      "turno": "manha",
+      "semestre": 4,
+      "dia": "segunda",
+      "inicio": "11:20",
+      "fim": "13:00",
+      "disciplina": "INGLES IV",
+      "professor": "CLAUDIA",
+      "sala": "S20",
+      "andares": [
+        "terceiro"
+      ]
+    },
+    {
+      "curso": "GRH",
+      "turno": "manha",
+      "semestre": 4,
+      "dia": "terca",
+      "inicio": "07:40",
+      "fim": "11:10",
+      "disciplina": "G PES ADM PUB",
+      "professor": "HELENITA",
+      "sala": "S7",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "GRH",
+      "turno": "manha",
+      "semestre": 4,
+      "dia": "quarta",
+      "inicio": "07:40",
+      "fim": "11:10",
+      "disciplina": "PLAN G CAR",
+      "professor": "FABIANO",
+      "sala": "S7",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "GRH",
+      "turno": "manha",
+      "semestre": 4,
+      "dia": "quarta",
+      "inicio": "11:20",
+      "fim": "13:00",
+      "disciplina": "PI EM RH III",
+      "professor": "ADRIANO",
+      "sala": "S7",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "GRH",
+      "turno": "manha",
+      "semestre": 4,
+      "dia": "quinta",
+      "inicio": "09:30",
+      "fim": "13:00",
+      "disciplina": "G CONF NEG",
+      "professor": "HELENITA",
+      "sala": "S7",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "GRH",
+      "turno": "manha",
+      "semestre": 4,
+      "dia": "sexta",
+      "inicio": "07:40",
+      "fim": "11:10",
+      "disciplina": "G CAR SAL BEN",
+      "professor": "KELLY",
+      "sala": "S7",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "GRH",
+      "turno": "manha",
+      "semestre": 5,
+      "dia": "segunda",
+      "inicio": "07:40",
+      "fim": "11:10",
+      "disciplina": "AV DES G COMP",
+      "professor": "RENATO",
+      "sala": "S2",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "GRH",
+      "turno": "manha",
+      "semestre": 5,
+      "dia": "segunda",
+      "inicio": "11:20",
+      "fim": "13:00",
+      "disciplina": "PI EM RH IV",
+      "professor": "RENATO",
+      "sala": "S2",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "GRH",
+      "turno": "manha",
+      "semestre": 5,
+      "dia": "terca",
+      "inicio": "07:40",
+      "fim": "11:10",
+      "disciplina": "INOV E EMP",
+      "professor": "FABIANO",
+      "sala": "S15",
+      "andares": [
+        "segundo"
+      ]
+    },
+    {
+      "curso": "GRH",
+      "turno": "manha",
+      "semestre": 5,
+      "dia": "quarta",
+      "inicio": "09:30",
+      "fim": "13:00",
+      "disciplina": "PLAN EST RH",
+      "professor": "HELENITA",
+      "sala": "S2",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "GRH",
+      "turno": "manha",
+      "semestre": 5,
+      "dia": "quinta",
+      "inicio": "07:40",
+      "fim": "09:20",
+      "disciplina": "INGLES V",
+      "professor": "CLAUDIA",
+      "sala": "S20",
+      "andares": [
+        "terceiro"
+      ]
+    },
+    {
+      "curso": "GRH",
+      "turno": "manha",
+      "semestre": 5,
+      "dia": "quinta",
+      "inicio": "09:30",
+      "fim": "13:00",
+      "disciplina": "EC FIN CORP",
+      "professor": "FERNANDINA",
+      "sala": "S12",
+      "andares": [
+        "segundo"
+      ]
+    },
+    {
+      "curso": "GRH",
+      "turno": "manha",
+      "semestre": 5,
+      "dia": "sexta",
+      "inicio": "07:40",
+      "fim": "11:10",
+      "disciplina": "PLAN G H OF",
+      "professor": "FABIANO",
+      "sala": "S2",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "GRH",
+      "turno": "manha",
+      "semestre": 6,
+      "dia": "segunda",
+      "inicio": "07:40",
+      "fim": "11:10",
+      "disciplina": "ENDOMKT",
+      "professor": "SUZANA",
+      "sala": "S11",
+      "andares": [
+        "segundo"
+      ]
+    },
+    {
+      "curso": "GRH",
+      "turno": "manha",
+      "semestre": 6,
+      "dia": "segunda",
+      "inicio": "11:20",
+      "fim": "13:00",
+      "disciplina": "PI EM RH V",
+      "professor": "SUZANA",
+      "sala": "S11",
+      "andares": [
+        "segundo"
+      ]
+    },
+    {
+      "curso": "GRH",
+      "turno": "manha",
+      "semestre": 6,
+      "dia": "terca",
+      "inicio": "07:40",
+      "fim": "11:10",
+      "disciplina": "CONS AUD G PES",
+      "professor": "MARA",
+      "sala": "S4/L2",
+      "andares": [
+        "primeiro",
+        "terceiro"
+      ]
+    },
+    {
+      "curso": "GRH",
+      "turno": "manha",
+      "semestre": 6,
+      "dia": "quarta",
+      "inicio": "07:40",
+      "fim": "09:20",
+      "disciplina": "INGLES VI",
+      "professor": "CLAUDIA",
+      "sala": "S20",
+      "andares": [
+        "terceiro"
+      ]
+    },
+    {
+      "curso": "GRH",
+      "turno": "manha",
+      "semestre": 6,
+      "dia": "quarta",
+      "inicio": "09:30",
+      "fim": "13:00",
+      "disciplina": "REM ESTRAT",
+      "professor": "MARA",
+      "sala": "S4",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "GRH",
+      "turno": "manha",
+      "semestre": 6,
+      "dia": "quinta",
+      "inicio": "07:40",
+      "fim": "11:10",
+      "disciplina": "JOG EMP AP RH",
+      "professor": "ADRIANO",
+      "sala": "S24",
+      "andares": [
+        "terceiro"
+      ]
+    },
+    {
+      "curso": "GRH",
+      "turno": "manha",
+      "semestre": 6,
+      "dia": "sexta",
+      "inicio": "09:30",
+      "fim": "13:00",
+      "disciplina": "Q V S S OCUP",
+      "professor": "HELENITA",
+      "sala": "S5",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "SBM",
+      "turno": "noite",
+      "semestre": 1,
+      "dia": "segunda",
+      "inicio": "19:00",
+      "fim": "20:40",
+      "disciplina": "COM E EXP I",
+      "professor": "CARLOS N",
+      "sala": "S12",
+      "andares": [
+        "segundo"
+      ]
+    },
+    {
+      "curso": "SBM",
+      "turno": "noite",
+      "semestre": 1,
+      "dia": "terca",
+      "inicio": "19:00",
+      "fim": "22:30",
+      "disciplina": "ELETRICIDADE",
+      "professor": "CRISTIAN",
+      "sala": "S13",
+      "andares": [
+        "segundo"
+      ]
+    },
+    {
+      "curso": "SBM",
+      "turno": "noite",
+      "semestre": 1,
+      "dia": "quarta",
+      "inicio": "19:00",
+      "fim": "20:40",
+      "disciplina": "INGLÊS I",
+      "professor": "MICHELLE",
+      "sala": "S20",
+      "andares": [
+        "terceiro"
+      ]
+    },
+    {
+      "curso": "SBM",
+      "turno": "noite",
+      "semestre": 1,
+      "dia": "quarta",
+      "inicio": "20:50",
+      "fim": "22:30",
+      "disciplina": "INT DES TEC",
+      "professor": "CARLOS E",
+      "sala": "S21",
+      "andares": [
+        "terceiro"
+      ]
+    },
+    {
+      "curso": "SBM",
+      "turno": "noite",
+      "semestre": 1,
+      "dia": "quinta",
+      "inicio": "19:00",
+      "fim": "22:30",
+      "disciplina": "CÁLCULO I",
+      "professor": "VIVIANE F",
+      "sala": "S4",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "SBM",
+      "turno": "noite",
+      "semestre": 1,
+      "dia": "sexta",
+      "inicio": "19:00",
+      "fim": "22:30",
+      "disciplina": "BIO CEL MICRO",
+      "professor": "ANALU",
+      "sala": "S2",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "SBM",
+      "turno": "noite",
+      "semestre": 1,
+      "dia": "sabado",
+      "inicio": "07:40",
+      "fim": "11:10",
+      "disciplina": "QUIM GERAL",
+      "professor": "MARIANA",
+      "sala": "S6",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "SBM",
+      "turno": "noite",
+      "semestre": 1,
+      "dia": "sabado",
+      "inicio": "11:20",
+      "fim": "13:00",
+      "disciplina": "FIS AP MED I",
+      "professor": "CRISTIAN",
+      "sala": "S13",
+      "andares": [
+        "segundo"
+      ]
+    },
+    {
+      "curso": "SBM",
+      "turno": "noite",
+      "semestre": 2,
+      "dia": "segunda",
+      "inicio": "19:00",
+      "fim": "20:40",
+      "disciplina": "INT D A COMP",
+      "professor": "CARLOS E",
+      "sala": "L3",
+      "andares": [
+        "terceiro"
+      ]
+    },
+    {
+      "curso": "SBM",
+      "turno": "noite",
+      "semestre": 2,
+      "dia": "segunda",
+      "inicio": "20:50",
+      "fim": "22:30",
+      "disciplina": "COM EXP II",
+      "professor": "CARLOS N",
+      "sala": "S12",
+      "andares": [
+        "segundo"
+      ]
+    },
+    {
+      "curso": "SBM",
+      "turno": "noite",
+      "semestre": 2,
+      "dia": "terca",
+      "inicio": "19:00",
+      "fim": "22:30",
+      "disciplina": "A CIRCUITOS",
+      "professor": "DUARTE",
+      "sala": "S12",
+      "andares": [
+        "segundo"
+      ]
+    },
+    {
+      "curso": "SBM",
+      "turno": "noite",
+      "semestre": 2,
+      "dia": "quarta",
+      "inicio": "19:00",
+      "fim": "22:30",
+      "disciplina": "CÁLCULO II",
+      "professor": "ALEXANDRE",
+      "sala": "S6",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "SBM",
+      "turno": "noite",
+      "semestre": 2,
+      "dia": "quinta",
+      "inicio": "19:00",
+      "fim": "22:30",
+      "disciplina": "BIOQUIM",
+      "professor": "LUIZ FLÁVIO",
+      "sala": "S16",
+      "andares": [
+        "segundo"
+      ]
+    },
+    {
+      "curso": "SBM",
+      "turno": "noite",
+      "semestre": 2,
+      "dia": "sexta",
+      "inicio": "19:00",
+      "fim": "20:40",
+      "disciplina": "INGLÊS II",
+      "professor": "MICHELLE",
+      "sala": "S20",
+      "andares": [
+        "terceiro"
+      ]
+    },
+    {
+      "curso": "SBM",
+      "turno": "noite",
+      "semestre": 2,
+      "dia": "sabado",
+      "inicio": "07:40",
+      "fim": "11:10",
+      "disciplina": "FIS AP MED II",
+      "professor": "CRISTIAN",
+      "sala": "S13",
+      "andares": [
+        "segundo"
+      ]
+    },
+    {
+      "curso": "SBM",
+      "turno": "noite",
+      "semestre": 2,
+      "dia": "sabado",
+      "inicio": "11:20",
+      "fim": "13:00",
+      "disciplina": "EL MEC PREC I",
+      "professor": "TOMIO",
+      "sala": "S10",
+      "andares": [
+        "segundo"
+      ]
+    },
+    {
+      "curso": "SBM",
+      "turno": "noite",
+      "semestre": 3,
+      "dia": "segunda",
+      "inicio": "19:00",
+      "fim": "22:30",
+      "disciplina": "MICROB APLIC",
+      "professor": "ANALU",
+      "sala": "S4",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "SBM",
+      "turno": "noite",
+      "semestre": 3,
+      "dia": "terca",
+      "inicio": "19:00",
+      "fim": "22:30",
+      "disciplina": "EL ELETRÔNICA",
+      "professor": "TANAKA",
+      "sala": "S3/L2",
+      "andares": [
+        "primeiro",
+        "terceiro"
+      ]
+    },
+    {
+      "curso": "SBM",
+      "turno": "noite",
+      "semestre": 3,
+      "dia": "quarta",
+      "inicio": "19:00",
+      "fim": "20:40",
+      "disciplina": "FUND ANAT HUM",
+      "professor": "ANALU",
+      "sala": "S4",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "SBM",
+      "turno": "noite",
+      "semestre": 3,
+      "dia": "quarta",
+      "inicio": "20:50",
+      "fim": "22:30",
+      "disciplina": "MPCT",
+      "professor": "ANALU",
+      "sala": "L3/S4",
+      "andares": [
+        "terceiro",
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "SBM",
+      "turno": "noite",
+      "semestre": 3,
+      "dia": "quinta",
+      "inicio": "19:00",
+      "fim": "20:40",
+      "disciplina": "TEC MAT",
+      "professor": "ALESSANDRO F",
+      "sala": "S7",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "SBM",
+      "turno": "noite",
+      "semestre": 3,
+      "dia": "quinta",
+      "inicio": "20:50",
+      "fim": "22:30",
+      "disciplina": "OPT TEC",
+      "professor": "CRISTIAN",
+      "sala": "S13",
+      "andares": [
+        "segundo"
+      ]
+    },
+    {
+      "curso": "SBM",
+      "turno": "noite",
+      "semestre": 3,
+      "dia": "sexta",
+      "inicio": "19:00",
+      "fim": "22:30",
+      "disciplina": "ESTATÍSTICA",
+      "professor": "VIVIANE F",
+      "sala": "S4",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "SBM",
+      "turno": "noite",
+      "semestre": 3,
+      "dia": "sabado",
+      "inicio": "07:40",
+      "fim": "11:10",
+      "disciplina": "EL MEC PREC II",
+      "professor": "TOMIO",
+      "sala": "S10",
+      "andares": [
+        "segundo"
+      ]
+    },
+    {
+      "curso": "SBM",
+      "turno": "noite",
+      "semestre": 4,
+      "dia": "segunda",
+      "inicio": "19:00",
+      "fim": "20:40",
+      "disciplina": "A EQ MED HOSP",
+      "professor": "WILLIAN",
+      "sala": "S10",
+      "andares": [
+        "segundo"
+      ]
+    },
+    {
+      "curso": "SBM",
+      "turno": "noite",
+      "semestre": 4,
+      "dia": "segunda",
+      "inicio": "20:50",
+      "fim": "22:30",
+      "disciplina": "A EQ MED HOSP",
+      "professor": "WILLIAN",
+      "sala": "L3/S10",
+      "andares": [
+        "terceiro",
+        "segundo"
+      ]
+    },
+    {
+      "curso": "SBM",
+      "turno": "noite",
+      "semestre": 4,
+      "dia": "terca",
+      "inicio": "19:00",
+      "fim": "22:30",
+      "disciplina": "SIST DIGIT",
+      "professor": "MOMENTÉ",
+      "sala": "S16",
+      "andares": [
+        "segundo"
+      ]
+    },
+    {
+      "curso": "SBM",
+      "turno": "noite",
+      "semestre": 4,
+      "dia": "quarta",
+      "inicio": "19:00",
+      "fim": "22:30",
+      "disciplina": "SIST ANALÓG",
+      "professor": "RICARDO R",
+      "sala": "L2/S2",
+      "andares": [
+        "terceiro",
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "SBM",
+      "turno": "noite",
+      "semestre": 4,
+      "dia": "quinta",
+      "inicio": "19:00",
+      "fim": "20:40",
+      "disciplina": "FUND DE IMUN",
+      "professor": "ANALU",
+      "sala": "S3",
+      "andares": [
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "SBM",
+      "turno": "noite",
+      "semestre": 4,
+      "dia": "quinta",
+      "inicio": "20:50",
+      "fim": "22:30",
+      "disciplina": "TEC DE FAB",
+      "professor": "ALESSANDRO F",
+      "sala": "L3/S7",
+      "andares": [
+        "terceiro",
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "SBM",
+      "turno": "noite",
+      "semestre": 4,
+      "dia": "sexta",
+      "inicio": "19:00",
+      "fim": "20:40",
+      "disciplina": "FUND FIS HUM",
+      "professor": "LUIZ FLÁVIO",
+      "sala": "S10",
+      "andares": [
+        "segundo"
+      ]
+    },
+    {
+      "curso": "SBM",
+      "turno": "noite",
+      "semestre": 4,
+      "dia": "sexta",
+      "inicio": "20:50",
+      "fim": "22:30",
+      "disciplina": "INST BIOM",
+      "professor": "DUARTE",
+      "sala": "S13",
+      "andares": [
+        "segundo"
+      ]
+    },
+    {
+      "curso": "SBM",
+      "turno": "noite",
+      "semestre": 4,
+      "dia": "sabado",
+      "inicio": "09:30",
+      "fim": "13:00",
+      "disciplina": "INF MÉDICA",
+      "professor": "JEAN",
+      "sala": "L2/S18",
+      "andares": [
+        "terceiro",
+        "terceiro"
+      ]
+    },
+    {
+      "curso": "SBM",
+      "turno": "noite",
+      "semestre": 5,
+      "dia": "segunda",
+      "inicio": "19:00",
+      "fim": "22:30",
+      "disciplina": "S M EQ MED HOSP",
+      "professor": "MARCELO A",
+      "sala": "LE/S13",
+      "andares": [
+        "terceiro",
+        "segundo"
+      ]
+    },
+    {
+      "curso": "SBM",
+      "turno": "noite",
+      "semestre": 5,
+      "dia": "terca",
+      "inicio": "19:00",
+      "fim": "22:30",
+      "disciplina": "MANUT SIST BIOM",
+      "professor": "WILLIAN",
+      "sala": "LE/S10",
+      "andares": [
+        "terceiro",
+        "segundo"
+      ]
+    },
+    {
+      "curso": "SBM",
+      "turno": "noite",
+      "semestre": 5,
+      "dia": "quarta",
+      "inicio": "19:00",
+      "fim": "20:40",
+      "disciplina": "EL EC POL PUB S",
+      "professor": "FERNANDINA",
+      "sala": "S10",
+      "andares": [
+        "segundo"
+      ]
+    },
+    {
+      "curso": "SBM",
+      "turno": "noite",
+      "semestre": 5,
+      "dia": "quarta",
+      "inicio": "20:50",
+      "fim": "22:30",
+      "disciplina": "TEC AUTOMAÇÃO I",
+      "professor": "DUARTE",
+      "sala": "S12",
+      "andares": [
+        "segundo"
+      ]
+    },
+    {
+      "curso": "SBM",
+      "turno": "noite",
+      "semestre": 5,
+      "dia": "quinta",
+      "inicio": "19:00",
+      "fim": "20:40",
+      "disciplina": "BIOFÍSICA",
+      "professor": "CRISTIAN",
+      "sala": "S13",
+      "andares": [
+        "segundo"
+      ]
+    },
+    {
+      "curso": "SBM",
+      "turno": "noite",
+      "semestre": 5,
+      "dia": "quinta",
+      "inicio": "20:50",
+      "fim": "22:30",
+      "disciplina": "R C EQ MED HOSP",
+      "professor": "WILLIAN",
+      "sala": "L5/S6",
+      "andares": [
+        "primeiro",
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "SBM",
+      "turno": "noite",
+      "semestre": 5,
+      "dia": "sexta",
+      "inicio": "19:00",
+      "fim": "22:30",
+      "disciplina": "PRJ EQ MED HOSP",
+      "professor": "ALESSANDRO F",
+      "sala": "L3/S7",
+      "andares": [
+        "terceiro",
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "SBM",
+      "turno": "noite",
+      "semestre": 5,
+      "dia": "sabado",
+      "inicio": "09:30",
+      "fim": "13:00",
+      "disciplina": "PROC SINAIS",
+      "professor": "RICARDO R",
+      "sala": "L5/S5",
+      "andares": [
+        "primeiro",
+        "primeiro"
+      ]
+    },
+    {
+      "curso": "SBM",
+      "turno": "noite",
+      "semestre": 6,
+      "dia": "segunda",
+      "inicio": "19:00",
+      "fim": "22:30",
+      "disciplina": "GEST QUAL",
+      "professor": "ISABEL",
+      "sala": "A definir – SBM Noite 6º",
+      "andares": []
+    },
+    {
+      "curso": "SBM",
+      "turno": "noite",
+      "semestre": 6,
+      "dia": "terca",
+      "inicio": "19:00",
+      "fim": "20:40",
+      "disciplina": "GEST TRAB GRAD",
+      "professor": "ANALU",
+      "sala": "A definir – SBM Noite 6º",
+      "andares": []
+    },
+    {
+      "curso": "SBM",
+      "turno": "noite",
+      "semestre": 6,
+      "dia": "terca",
+      "inicio": "20:50",
+      "fim": "22:30",
+      "disciplina": "HEMATOLOGIA",
+      "professor": "ANALU",
+      "sala": "A definir – SBM Noite 6º",
+      "andares": []
+    },
+    {
+      "curso": "SBM",
+      "turno": "noite",
+      "semestre": 6,
+      "dia": "quarta",
+      "inicio": "19:00",
+      "fim": "22:30",
+      "disciplina": "TEC AUTOMAÇÃO II",
+      "professor": "WILLIAN",
+      "sala": "A definir – SBM Noite 6º",
+      "andares": []
+    },
+    {
+      "curso": "SBM",
+      "turno": "noite",
+      "semestre": 6,
+      "dia": "quinta",
+      "inicio": "19:00",
+      "fim": "20:40",
+      "disciplina": "R C A SERV SAUDE",
+      "professor": "WILLIAN",
+      "sala": "A definir – SBM Noite 6º",
+      "andares": []
+    },
+    {
+      "curso": "SBM",
+      "turno": "noite",
+      "semestre": 6,
+      "dia": "sexta",
+      "inicio": "19:00",
+      "fim": "22:30",
+      "disciplina": "CONST EQ MED HOSP",
+      "professor": "RICARDO R",
+      "sala": "A definir – SBM Noite 6º",
+      "andares": []
+    },
+    {
+      "curso": "SBM",
+      "turno": "noite",
+      "semestre": 6,
+      "dia": "sabado",
+      "inicio": "07:40",
+      "fim": "09:20",
+      "disciplina": "SAUDE SEG OCUP",
+      "professor": "DANIELA R",
+      "sala": "A definir – SBM Noite 6º",
+      "andares": []
+    },
+    {
+      "curso": "SBM",
+      "turno": "noite",
+      "semestre": 6,
+      "dia": "sabado",
+      "inicio": "09:30",
+      "fim": "13:00",
+      "disciplina": "GEST MANUT",
+      "professor": "DUARTE",
+      "sala": "A definir – SBM Noite 6º",
+      "andares": []
+    }
+  ]
+}
