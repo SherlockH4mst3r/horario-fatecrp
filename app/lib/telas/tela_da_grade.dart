@@ -99,12 +99,9 @@ class _TelaDaGradeState extends State<TelaDaGrade> {
   }
 }
 
-/// "Sala S4/L3 · 1º andar/3º andar"; o andar aparece uma vez quando as salas ficam no mesmo andar, e some
-/// quando a sala está a definir.
-String _local(Aula aula) {
-  final andares = {for (final andar in aula.andares) andar.rotulo};
-  return andares.isEmpty ? 'Sala ${aula.sala}' : 'Sala ${aula.sala} · ${andares.join('/')}';
-}
+/// "Sala S4/L3 · 1º andar/3º andar"; sem andar quando a sala está a definir.
+String _salaComAndar(Aula aula) =>
+    aula.andares.isEmpty ? 'Sala ${aula.sala}' : 'Sala ${aula.sala} · ${aula.andaresPorExtenso}';
 
 const _avisoGradeNaoPublicada = _Aviso('Grade ainda não publicada');
 
@@ -300,7 +297,7 @@ class _BlocoDaAula extends StatelessWidget {
             linha(aula.disciplina, textos.titleSmall),
             linha('${aula.inicio} – ${aula.fim}', textos.bodySmall),
             linha(aula.professor, textos.bodySmall, secundaria: true),
-            linha(_local(aula), textos.bodySmall),
+            linha(_salaComAndar(aula), textos.bodySmall),
           ],
         ),
       ),
@@ -377,7 +374,7 @@ class _CartaoDaAula extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(aula.professor, style: TextStyle(color: corDoTexto.secundaria)),
-            Text(_local(aula), style: TextStyle(color: corDoTexto.principal)),
+            Text(_salaComAndar(aula), style: TextStyle(color: corDoTexto.principal)),
           ],
         ),
         isThreeLine: true,

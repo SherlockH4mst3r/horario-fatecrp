@@ -52,8 +52,8 @@ void main() {
     ]);
   });
 
-  test('a planilha lida passa pela importação sem erros', () {
-    final previa = ImportacaoDeGrade(
+  test('a planilha lida passa pela importação sem erros', () async {
+    final previa = await ImportacaoDeGrade(
       RepositorioGradeEmMemoria(),
     ).importar(lerPlanilhaXlsx(gradeDeExemplo()), const SemestreLetivo(ano: 2027, periodo: 1));
 

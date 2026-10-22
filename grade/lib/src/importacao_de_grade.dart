@@ -1,3 +1,4 @@
+import 'diferencas.dart';
 import 'grade.dart';
 import 'repositorio_grade.dart';
 
@@ -27,6 +28,7 @@ class Previa {
     required this.erros,
     required this.turmas,
     required this.salas,
+    required this.diferencas,
     required List<Aula> aulas,
   }) : _aulas = aulas;
 
@@ -42,6 +44,10 @@ class Previa {
   /// Uma sala com dois andares aparece duas vezes, para o admin ver o problema.
   final List<SalaEncontrada> salas;
 
+  /// O que muda em relação à grade publicada; `null` enquanto a planilha tem erro, porque as linhas com erro
+  /// pareceriam aulas removidas.
+  final Diferencas? diferencas;
+
   /// Só as linhas sem erro; com qualquer erro na planilha, nada é publicado.
   final List<Aula> _aulas;
 
@@ -56,20 +62,28 @@ class ImportacaoDeGrade {
 
   final RepositorioGrade _repositorio;
 
-  /// Lê e valida a planilha sem tocar na grade publicada.
-  Previa importar(Planilha planilha, SemestreLetivo semestreLetivo) {
+  /// Lê e valida a planilha e a compara com a grade publicada, sem alterá-la.
+  Future<Previa> importar(Planilha planilha, SemestreLetivo semestreLetivo) async {
     final (:colunas, errosDoCabecalho: erros) = _lerCabecalho(planilha.cabecalho);
     final linhas = erros.isEmpty ? _lerLinhas(planilha.linhas, colunas) : const <_LinhaLida>[];
     erros.addAll([for (final linha in linhas) ...linha.erros]);
     erros.addAll(_conflitosDeSala(linhas));
     erros.addAll(_salasEmAndaresDiferentes(linhas));
 
+    final aulas = [for (final linha in linhas) ?linha.aula];
+    final diferencas = erros.isEmpty
+        ? Diferencas.entre(
+            publicada: await _repositorio.gradeAtual(),
+            importada: Grade(semestreLetivo: semestreLetivo, aulas: aulas),
+          )
+        : null;
     return Previa._(
       semestreLetivo: semestreLetivo,
       erros: [for (final erro in _emOrdem(erros)) erro.paraOAdmin],
+      diferencas: diferencas,
       turmas: {for (final linha in linhas) ?linha.turma}.toList()..sort(),
       salas: {for (final linha in linhas) ...linha.salasEncontradas}.toList()..sort(_porSalaEAndar),
-      aulas: [for (final linha in linhas) ?linha.aula],
+      aulas: aulas,
     );
   }
 
@@ -254,7 +268,19 @@ class _LinhaLida {
       return partes.cast<Andar>();
     }
 
-    final sala = texto(_Coluna.sala);
+    /// Uma sala, ou duas separadas por barra ("L1/S2"), sem espaços em volta da barra.
+    String? salaLida() {
+      final lido = texto(_Coluna.sala);
+      if (lido == null) return null;
+      final salas = [for (final parte in lido.split('/')) parte.trim()];
+      if (salas.contains('')) {
+        erros.add(_Erro(numero, _Coluna.sala, 'sala dupla com uma das salas vazia, como em "L1/"'));
+        return null;
+      }
+      return salas.join('/');
+    }
+
+    final sala = salaLida();
     final inicio = horario(_Coluna.inicio);
     var fim = horario(_Coluna.fim);
     if (inicio != null && fim != null && fim.compareTo(inicio) <= 0) {

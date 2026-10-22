@@ -57,6 +57,12 @@ class SemestreLetivo {
   final int periodo;
 
   String get rotulo => '$ano/$periodo';
+
+  @override
+  bool operator ==(Object other) => other is SemestreLetivo && other.ano == ano && other.periodo == periodo;
+
+  @override
+  int get hashCode => Object.hash(ano, periodo);
 }
 
 /// O grupo de alunos de um curso, num turno e num semestre.
@@ -73,6 +79,9 @@ class Turma implements Comparable<Turma> {
 
   @override
   int get hashCode => Object.hash(curso, turno, semestre);
+
+  /// Como "ADS – Noite – 3º".
+  String get rotulo => '$curso – ${turno.rotulo} – $semestreº';
 
   /// Por curso, turno e semestre.
   @override
@@ -150,6 +159,9 @@ class Aula {
 
   /// O andar de cada sala, na ordem em que elas aparecem em [sala]; vazio quando a sala ainda está a definir.
   final List<Andar> andares;
+
+  /// Como o aluno lê: "1º andar/3º andar", um andar só quando as salas ficam no mesmo, e vazio na sala a definir.
+  String get andaresPorExtenso => {for (final andar in andares) andar.rotulo}.join('/');
 }
 
 /// O conjunto de aulas de um semestre letivo.

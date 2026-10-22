@@ -17,11 +17,17 @@ void main() {
   late int escolhas;
 
   /// Abre o painel; [arquivo] é o que o admin escolhe na janela de arquivos (`null` = desistiu).
-  Future<void> abrirPainel(WidgetTester tester, {Uint8List? arquivo, bool jaEntrou = true}) async {
+  Future<void> abrirPainel(
+    WidgetTester tester, {
+    Uint8List? arquivo,
+    bool jaEntrou = true,
+    Grade? publicada,
+    RepositorioGrade? repositorioQueFalha,
+  }) async {
     tester.view.physicalSize = const Size(1280, 2400);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);
-    repositorio = RepositorioGradeEmMemoria(gradeAtual);
+    repositorio = RepositorioGradeEmMemoria(publicada ?? gradeAtual);
     escolhas = 0;
     final sessao = SessaoSimulada(email: 'admin@fatecrp.local', senha: 'admin123');
     if (jaEntrou) await sessao.entrar(email: 'admin@fatecrp.local', senha: 'admin123');
@@ -30,7 +36,7 @@ void main() {
         theme: temaFatec(Brightness.light),
         home: PainelAdmin(
           sessao: sessao,
-          importacao: ImportacaoDeGrade(repositorio),
+          importacao: ImportacaoDeGrade(repositorioQueFalha ?? repositorio),
           escolherPlanilha: () async {
             escolhas++;
             return arquivo;
@@ -80,10 +86,11 @@ void main() {
     testWidgets('e-mail e senha do admin abrem o painel, e sair volta para a entrada', (tester) async {
       await abrirPainel(tester, jaEntrou: false);
 
-      await digitar(tester, 'E-mail', 'admin@fatecrp.local');
       await digitar(tester, 'Senha', 'admin123');
-      await tocar(tester, 'Entrar');
-      expect(find.text('Escolher planilha .xlsx'), findsOneWidget);
+      await digitar(tester, 'E-mail', 'admin@fatecrp.local');
+      await tester.testTextInput.receiveAction(TextInputAction.done);
+      await tester.pumpAndSettle();
+      expect(find.text('Escolher planilha .xlsx'), findsOneWidget, reason: 'Enter no e-mail também entra');
 
       await tocar(tester, 'Sair');
       expect(find.widgetWithText(TextField, 'Senha'), findsOneWidget);
@@ -167,5 +174,91 @@ void main() {
       expect(find.textContaining('Prévia da grade'), findsNothing);
       expect(find.text('Escolher planilha .xlsx'), findsOneWidget);
     });
+
+    testWidgets('a prévia mostra as aulas novas, removidas e alteradas em relação à grade publicada', (tester) async {
+      Aula publicada({required DiaDaSemana dia, required String disciplina, required String sala}) => Aula(
+        turma: const Turma(curso: 'ADS', turno: Turno.noite, semestre: 1),
+        dia: dia,
+        inicio: Horario.parse('19:00'),
+        fim: Horario.parse('20:40'),
+        disciplina: disciplina,
+        professor: 'Ana Souza',
+        sala: sala,
+        andares: const [Andar.primeiro],
+      );
+      await abrirPainel(
+        tester,
+        arquivo: planilha('grade_exemplo.xlsx'),
+        publicada: Grade(
+          semestreLetivo: gradeAtual.semestreLetivo,
+          aulas: [
+            publicada(dia: DiaDaSemana.segunda, disciplina: 'Algoritmos', sala: 'B14'),
+            publicada(dia: DiaDaSemana.sexta, disciplina: 'Redes', sala: 'B12'),
+          ],
+        ),
+      );
+
+      await importar(tester);
+
+      expect(find.text('Novas (3)'), findsOneWidget);
+      expect(find.text('Removidas (1)'), findsOneWidget);
+      expect(find.text('ADS – Noite – 1º · Sexta 19:00–20:40 · Redes'), findsOneWidget);
+      expect(find.text('Alteradas (1)'), findsOneWidget);
+      expect(find.text('Sala: B14 → B12'), findsOneWidget);
+    });
+
+    testWidgets('planilha igual à grade publicada mostra "Nenhuma mudança"', (tester) async {
+      await abrirPainel(tester, arquivo: planilha('grade_exemplo.xlsx'));
+      await importar(tester);
+      await tocar(tester, 'Publicar');
+      await tocar(tester, 'Importar outra planilha');
+
+      await importar(tester);
+
+      expect(find.text('Nenhuma mudança'), findsOneWidget);
+    });
+
+    testWidgets('a prévia avisa a troca de semestre letivo', (tester) async {
+      await abrirPainel(tester, arquivo: planilha('grade_exemplo.xlsx'));
+
+      await importar(tester);
+
+      expect(find.text('Semestre letivo: 2026/2 → 2027/1'), findsOneWidget);
+    });
+
+    testWidgets('se a publicação falha, o painel avisa e deixa tentar de novo', (tester) async {
+      await abrirPainel(tester, arquivo: planilha('grade_exemplo.xlsx'), repositorioQueFalha: _PublicacaoQueFalha());
+      await importar(tester);
+
+      await tocar(tester, 'Publicar');
+
+      expect(find.textContaining('Não deu para publicar'), findsOneWidget);
+      expect(publicarHabilitado(tester), isTrue);
+    });
+
+    testWidgets('se a grade publicada não pode ser lida, o painel avisa em vez de mostrar a prévia', (tester) async {
+      await abrirPainel(tester, arquivo: planilha('grade_exemplo.xlsx'), repositorioQueFalha: _LeituraQueFalha());
+
+      await importar(tester);
+
+      expect(find.textContaining('Não deu para ler a grade publicada'), findsOneWidget);
+      expect(find.textContaining('Prévia da grade'), findsNothing);
+    });
   });
+}
+
+class _PublicacaoQueFalha implements RepositorioGrade {
+  @override
+  Future<Grade?> gradeAtual() async => null;
+
+  @override
+  Future<void> substituir(Grade grade) async => throw Exception('armazenamento cheio');
+}
+
+class _LeituraQueFalha implements RepositorioGrade {
+  @override
+  Future<Grade?> gradeAtual() async => throw const FormatException('grade ilegível');
+
+  @override
+  Future<void> substituir(Grade grade) async {}
 }

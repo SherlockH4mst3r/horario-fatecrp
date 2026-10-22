@@ -109,6 +109,7 @@ class _EntradaState extends State<_Entrada> {
               controller: _email,
               decoration: const InputDecoration(labelText: 'E-mail', border: OutlineInputBorder()),
               keyboardType: TextInputType.emailAddress,
+              onSubmitted: (_) => _entrar(),
             ),
             const SizedBox(height: 12),
             TextField(
@@ -165,9 +166,12 @@ class _Inicio extends _Etapa {
 }
 
 class _NaPrevia extends _Etapa {
-  const _NaPrevia(this.previa);
+  const _NaPrevia(this.previa, {this.problema});
 
   final Previa previa;
+
+  /// O que impediu a última tentativa de publicar, se houve.
+  final String? problema;
 }
 
 class _Publicada extends _Etapa {
@@ -203,23 +207,38 @@ class _ImportacaoState extends State<_Importacao> {
       setState(() => _etapa = const _Inicio(problema: 'Use ano/período, como 2027/1.'));
       return;
     }
-    final arquivo = await widget.escolherPlanilha();
-    if (arquivo == null || !mounted) return;
+    setState(() => _ocupado = true);
+    final _Etapa proxima;
     try {
-      final previa = widget.importacao.importar(lerPlanilhaXlsx(arquivo), semestreLetivo);
-      setState(() => _etapa = _NaPrevia(previa));
+      final arquivo = await widget.escolherPlanilha();
+      proxima = arquivo == null
+          ? const _Inicio()
+          : _NaPrevia(await widget.importacao.importar(lerPlanilhaXlsx(arquivo), semestreLetivo));
     } on PlanilhaIlegivel catch (erro) {
-      setState(() => _etapa = _Inicio(problema: 'Não deu para ler o arquivo: ${erro.mensagem}.'));
+      _mostrar(_Inicio(problema: 'Não deu para ler o arquivo: ${erro.mensagem}.'));
+      return;
+    } catch (_) {
+      _mostrar(const _Inicio(problema: 'Não deu para ler a grade publicada, para comparar. Tente de novo.'));
+      return;
     }
+    _mostrar(proxima);
   }
 
   Future<void> _publicar(Previa previa) async {
     setState(() => _ocupado = true);
-    await widget.importacao.publicar(previa);
+    try {
+      await widget.importacao.publicar(previa);
+      _mostrar(_Publicada(previa.semestreLetivo));
+    } catch (_) {
+      _mostrar(_NaPrevia(previa, problema: 'Não deu para publicar. A grade publicada não mudou; tente de novo.'));
+    }
+  }
+
+  void _mostrar(_Etapa etapa) {
     if (!mounted) return;
     setState(() {
       _ocupado = false;
-      _etapa = _Publicada(previa.semestreLetivo);
+      _etapa = etapa;
     });
   }
 
@@ -229,8 +248,9 @@ class _ImportacaoState extends State<_Importacao> {
   Widget build(BuildContext context) {
     return switch (_etapa) {
       _Inicio(:final problema) => _escolha(problema),
-      _NaPrevia(:final previa) => _VistaDaPrevia(
+      _NaPrevia(:final previa, :final problema) => _VistaDaPrevia(
         previa: previa,
+        problema: problema,
         ocupado: _ocupado,
         aoPublicar: () => _publicar(previa),
         aoCancelar: _recomecar,
@@ -247,7 +267,8 @@ class _ImportacaoState extends State<_Importacao> {
             children: [
               FilledButton(onPressed: _recomecar, child: const Text('Importar outra planilha')),
               OutlinedButton(
-                onPressed: () => Navigator.of(context).pushNamed('/'),
+                // Abre a consulta do zero, para ela ler a grade recém-publicada.
+                onPressed: () => Navigator.of(context).pushNamedAndRemoveUntil('/', (_) => false),
                 child: const Text('Ver a grade pública'),
               ),
             ],
@@ -282,7 +303,7 @@ class _ImportacaoState extends State<_Importacao> {
         ),
         const SizedBox(height: 16),
         FilledButton.icon(
-          onPressed: _escolherPlanilha,
+          onPressed: _ocupado ? null : _escolherPlanilha,
           icon: const Icon(Icons.upload_file),
           label: const Text('Escolher planilha .xlsx'),
         ),
@@ -298,12 +319,14 @@ class _ImportacaoState extends State<_Importacao> {
 class _VistaDaPrevia extends StatelessWidget {
   const _VistaDaPrevia({
     required this.previa,
+    required this.problema,
     required this.ocupado,
     required this.aoPublicar,
     required this.aoCancelar,
   });
 
   final Previa previa;
+  final String? problema;
   final bool ocupado;
   final VoidCallback aoPublicar;
   final VoidCallback aoCancelar;
@@ -332,12 +355,11 @@ class _VistaDaPrevia extends StatelessWidget {
               child: Text('Linha $linha · $coluna: $mensagem', style: TextStyle(color: cores.error)),
             ),
         ],
+        if (previa.diferencas case final diferencas?) ...[const SizedBox(height: 24), _OQueMuda(diferencas)],
         const SizedBox(height: 24),
         Text('Turmas encontradas (${previa.turmas.length})', style: textos.titleMedium),
         const SizedBox(height: 8),
-        _Etiquetas([
-          for (final Turma(:curso, :turno, :semestre) in previa.turmas) '$curso – ${turno.rotulo} – $semestreº',
-        ]),
+        _Etiquetas([for (final turma in previa.turmas) turma.rotulo]),
         const SizedBox(height: 16),
         Text('Salas encontradas (${previa.salas.length})', style: textos.titleMedium),
         const SizedBox(height: 8),
@@ -352,6 +374,10 @@ class _VistaDaPrevia extends StatelessWidget {
             OutlinedButton(onPressed: ocupado ? null : aoCancelar, child: const Text('Cancelar')),
           ],
         ),
+        if (problema case final problema?) ...[
+          const SizedBox(height: 12),
+          Text(problema, style: TextStyle(color: cores.error)),
+        ],
       ],
     );
   }
@@ -365,5 +391,57 @@ class _Etiquetas extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Wrap(spacing: 8, runSpacing: 8, children: [for (final texto in textos) Chip(label: Text(texto))]);
+  }
+}
+
+/// As diferenças da prévia contra a grade publicada: aulas novas, removidas e alteradas, campo a campo.
+class _OQueMuda extends StatelessWidget {
+  const _OQueMuda(this.diferencas);
+
+  final Diferencas diferencas;
+
+  @override
+  Widget build(BuildContext context) {
+    final textos = Theme.of(context).textTheme;
+    final Diferencas(:novas, :removidas, :alteradas) = diferencas;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('O que muda na grade publicada', style: textos.titleMedium),
+        const SizedBox(height: 8),
+        if (diferencas.nenhuma)
+          const Text('Nenhuma mudança')
+        else ...[
+          if (diferencas.semestreLetivo case (:final antes, :final depois)) ...[
+            Text('Semestre letivo: ${antes.rotulo} → ${depois.rotulo}'),
+            const SizedBox(height: 12),
+          ],
+          if (novas.isNotEmpty)
+            ..._grupo(textos, 'Novas', novas.length, [for (final aula in novas) Text(_descricao(aula))]),
+          if (removidas.isNotEmpty)
+            ..._grupo(textos, 'Removidas', removidas.length, [for (final aula in removidas) Text(_descricao(aula))]),
+          if (alteradas.isNotEmpty)
+            ..._grupo(textos, 'Alteradas', alteradas.length, [
+              for (final AulaAlterada(:antes, :mudancas) in alteradas) ...[
+                Text(_descricao(antes)),
+                for (final MudancaDeCampo(:campo, antes: de, depois: para) in mudancas)
+                  Padding(padding: const EdgeInsets.only(left: 16), child: Text('$campo: $de → $para')),
+              ],
+            ]),
+        ],
+      ],
+    );
+  }
+
+  List<Widget> _grupo(TextTheme textos, String titulo, int quantidade, List<Widget> linhas) => [
+    Text('$titulo ($quantidade)', style: textos.titleSmall),
+    const SizedBox(height: 4),
+    ...linhas,
+    const SizedBox(height: 12),
+  ];
+
+  String _descricao(Aula aula) {
+    final Aula(:turma, :dia, :inicio, :fim, :disciplina) = aula;
+    return '${turma.rotulo} · ${dia.rotulo} $inicio–$fim · $disciplina';
   }
 }

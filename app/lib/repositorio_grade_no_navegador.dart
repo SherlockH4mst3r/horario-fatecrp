@@ -10,7 +10,10 @@ class RepositorioGradeNoNavegador implements RepositorioGrade {
 
   @override
   Future<Grade?> gradeAtual() async {
-    final guardada = (await SharedPreferences.getInstance()).getString(_chave);
+    final guardado = await SharedPreferences.getInstance();
+    // Relê o navegador: outra aba (o painel, por exemplo) pode ter publicado desde a última leitura.
+    await guardado.reload();
+    final guardada = guardado.getString(_chave);
     if (guardada == null) return null;
     return _grade(jsonDecode(guardada));
   }
