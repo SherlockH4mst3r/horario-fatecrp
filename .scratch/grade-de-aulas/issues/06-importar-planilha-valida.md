@@ -15,3 +15,5 @@
 ## Comments
 
 **2026-10-22, domínio pronto.** `ImportacaoDeGrade` (em `grade/lib/src/importacao_de_grade.dart`) lê a planilha como texto, monta a prévia (turmas e salas encontradas) e publica pela porta `RepositorioGrade.substituir`. Importar não toca na grade publicada. Testado com linhas brutas em memória. Faltam: leitor de .xlsx com teste de fumaça, tela do painel (depende do 05) e o teste de tudo ou nada no banco (depende do 10).
+
+**2026-10-22, leitor de .xlsx pronto.** `lerPlanilhaXlsx` (em `app/lib/leitor_de_planilha.dart`) converte a primeira aba em texto: hora como `HH:MM`, inteiro sem casas decimais. Teste de fumaça com `app/test/planilhas/grade_exemplo.xlsx`, gerada pelo openpyxl (script ao lado), que passa pela importação sem erros. Aceita arquivos com caminhos internos absolutos (openpyxl) e relativos (Excel). Faltam: tela do painel (05) e o teste de tudo ou nada no banco (10).
